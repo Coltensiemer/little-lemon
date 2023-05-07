@@ -1,21 +1,24 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import OnboardButton from './components/Templates/Organisms/Molecules/Atoms/OnboardButton';
 
-export default function App() {
+import * as React from 'react';
+import { View, Text } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import HomeScreen from './components/Page/HomeScreen';
+import FirstName from './components/Atoms/FirstName';
+
+
+
+const Stack = createNativeStackNavigator();
+
+function App() {
   return (
-    <View style={styles.container}>
-      <OnboardButton /> 
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator >
+        <Stack.Screen name="Home" component={HomeScreen} options={{title:"Home"}} />
+        <Stack.Screen name="FirstName" component={FirstName} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'green',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;

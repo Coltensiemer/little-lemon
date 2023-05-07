@@ -9,14 +9,12 @@ import {
 import React from 'react';
 
 
-
-export default function OnboardButton() {
+export default function OnboardButton({ navigation }) {
   return (
     <View style={styles.container}>
       <Button
-	  
-	  onPress={() => {null}}
-	  // @ts-ignore
+
+        // @ts-ignore
         style={styles.buttons}
         title='Get Started'
         accessibilityLabel='Get Started with onboarding'
@@ -33,9 +31,12 @@ type styles = {
 const styles = StyleSheet.create<styles>({
   container: {
     backgroundColor: 'yellow',
+    flex: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   buttons: {
     fontSize: 64,
-	color: "red"
+    color: 'red',
   },
 });
