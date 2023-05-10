@@ -14,6 +14,7 @@
     "@types/react": "~18.0.0",
     "@types/react-native": "~0.69.1",
     "expo": "^46.0.21",
+    "expo-cli": "^6.3.7",
     "expo-status-bar": "~1.4.4",
     "react": "18.2.0",
     "react-native": "0.71.7",

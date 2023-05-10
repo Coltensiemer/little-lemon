@@ -5,14 +5,27 @@ export default function FirstName() {
 
 	const [isName, setName] = React.useState("")
   return (
-	<SafeAreaView>
+	<SafeAreaView
+	style={styles.container}>
 	  <TextInput 
 	    // @ts-ignore
 	  onTextInput={setName}
 	  placeholder='First Name'
+	  style={styles.inputtext}
 	  />
 	</SafeAreaView>
   )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+	container: { 
+		flex:0, 
+		alignItems: "center"
+	},
+	inputtext:  { 
+		width:200, 
+		height: 50,
+		marginBottom: 40, 
+		backgroundColor: "white",
+	}
+})

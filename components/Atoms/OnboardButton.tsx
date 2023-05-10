@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ViewStyle,
   TextStyle,
+  Pressable,
 } from 'react-native';
 import React from 'react';
 
@@ -12,13 +13,13 @@ import React from 'react';
 export default function OnboardButton({ navigation }) {
   return (
     <View style={styles.container}>
-      <Button
-
-        // @ts-ignore
-        style={styles.buttons}
-        title='Get Started'
-        accessibilityLabel='Get Started with onboarding'
-      />
+      <Pressable
+      style={styles.buttons}
+       onPress={() => { 
+        navigation.navigate("FirstName")
+      }}>
+        <Text>Get Started </Text> 
+      </Pressable>
     </View>
   );
 }
@@ -30,12 +31,18 @@ type styles = {
 
 const styles = StyleSheet.create<styles>({
   container: {
-    backgroundColor: 'yellow',
-    flex: 0,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    
   },
   buttons: {
+    borderRadius:20, 
+    height:50, 
+    width:300, 
+    
+    alignSelf:"center",
+    backgroundColor: 'yellow',
     fontSize: 64,
     color: 'red',
   },
