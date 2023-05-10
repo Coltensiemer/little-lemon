@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import Header from '../Molecules/Header'
+import Header from '../Atoms/Header'
 import OnboardButton from '../Atoms/OnboardButton'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -12,22 +12,22 @@ export default function HomeScreen({navigation}) {
 	<View>
 	  <Header /> 
 	  <FirstName 
-	  //@ts-ignore
+	  style ={{ 
+		marginTop: 50, 
+	  }}
+	
+	  
 	/> 
 		<EmailInput 
 	/> 
 	  <OnboardButton 
 	  navigation={navigation}
+	  label={"Sign Up"}
+  //@ts-ignore
+	  style = {{
+		backgroundColor: "yellow"}} 
 	  /> 
 	</View>
   )
 }
 
-const styles = StyleSheet.create({
-	FirstName: { 
-		width: 500, 
-	},
-	EmailInput: { 
-		width: 500, 
-	}
-})

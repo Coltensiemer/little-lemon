@@ -10,15 +10,15 @@ import {
 import React from 'react';
 
 
-export default function OnboardButton({ navigation }) {
+export default function OnboardButton({ navigation, label, style }) {
   return (
     <View style={styles.container}>
       <Pressable
-      style={styles.buttons}
+      style={[styles.buttons, style]}
        onPress={() => { 
-        navigation.navigate("FirstName")
-      }}>
-        <Text>Get Started </Text> 
+        navigation.navigate("FirstName") 
+        }}>
+        <Text>{label}</Text> 
       </Pressable>
     </View>
   );
@@ -42,7 +42,7 @@ const styles = StyleSheet.create<styles>({
     width:300, 
     
     alignSelf:"center",
-    backgroundColor: 'yellow',
+  
     fontSize: 64,
     color: 'red',
   },
