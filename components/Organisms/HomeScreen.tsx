@@ -2,18 +2,16 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Header from '../Atoms/Header'
 import OnboardButton from '../Atoms/OnboardButton'
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import FirstName from '../Atoms/FirstName';
 import EmailInput from '../Atoms/EmailInput';
 
-export default function HomeScreen({navigation}) {
+export default function HomeScreen({ ScreenName}) {
   return (
 	<View>
 	  <Header /> 
 	  <FirstName 
 	  style ={{ 
-		marginTop: 50, 
+		marginTop: 100, 
 	  }}
 	
 	  
@@ -21,11 +19,11 @@ export default function HomeScreen({navigation}) {
 		<EmailInput 
 	/> 
 	  <OnboardButton 
-	  navigation={navigation}
 	  label={"Sign Up"}
+	  ScreenName={"FirstName"}
   //@ts-ignore
 	  style = {{
-		backgroundColor: "yellow"}} 
+		backgroundColor: "yellow",}} 
 	  /> 
 	</View>
   )

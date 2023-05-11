@@ -1,12 +1,14 @@
 import { StyleSheet, SafeAreaView, Text, View, TextInput } from 'react-native'
 import React from 'react'
 
-export default function FirstName() {
+export default function FirstName({style}) {
 
 	const [isName, setName] = React.useState("")
+
+
   return (
 	<SafeAreaView
-	style={styles.container}>
+	style={[styles.container, style]}>
 	  <TextInput 
 	    // @ts-ignore
 	  onTextInput={setName}
@@ -26,6 +28,7 @@ const styles = StyleSheet.create({
 		width:200, 
 		height: 50,
 		marginBottom: 40, 
-		backgroundColor: "white",
+		backgroundColor: "lightgray",
+
 	}
 })
