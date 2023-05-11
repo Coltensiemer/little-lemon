@@ -17,16 +17,16 @@ type OnboardButton = {
   ScreenName: string; 
 }
 
-export default function OnboardButton({ label, style, ScreenName }) {
+export default function OnboardButton({ label, style, styleContainer, ScreenName }) {
   const navigation = useNavigation();
 
   
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, styleContainer]}>
       <Pressable
         style={[styles.buttons, style]}
-     
+     //@ts-ignore
         onPress={() => navigation.navigate(ScreenName)}
       >
         <Text style={styles.text}>{label}</Text>
@@ -43,7 +43,6 @@ type styles = {
 
 const styles = StyleSheet.create<styles>({
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
