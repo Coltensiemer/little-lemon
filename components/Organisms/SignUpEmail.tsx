@@ -12,6 +12,7 @@ export default function SignUpEmail() {
       <EmailInput />
 	  <PassWordInput /> 
 	  <OnboardButton 
+	  ScreenName={null}
 	  styleContainer={null}
 	  style={{
 		backgroundColor: "yellow",

@@ -17,7 +17,7 @@ type OnboardButton = {
   ScreenName: string; 
 }
 
-export default function OnboardButton({ label, style, styleContainer, ScreenName }) {
+export default function OnboardButton({ label, style, styleContainer, styleText, ScreenName }) {
   const navigation = useNavigation();
 
   
@@ -26,10 +26,10 @@ export default function OnboardButton({ label, style, styleContainer, ScreenName
     <View style={[styles.container, styleContainer]}>
       <Pressable
         style={[styles.buttons, style]}
-     //@ts-ignore
+     //@ts-ignore //Need to look into 
         onPress={() => navigation.navigate(ScreenName)}
       >
-        <Text style={styles.text}>{label}</Text>
+        <Text style={[styles.text, styleText]}>{label}</Text>
       </Pressable>
     </View>
   );
