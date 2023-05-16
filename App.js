@@ -5,13 +5,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './components/Organisms/HomeScreen';
 import SignUpFirstName from './components/Organisms/SignUpFirstName';
 import SignUpEmail from './components/Organisms/SignUpEmail';
+import Menulist from './components/Organisms/Menulist';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator( );
 
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator >
         <Stack.Screen
           name='Home'
           component={HomeScreen}
@@ -27,7 +28,9 @@ function App() {
           }}
         />
         <Stack.Screen name='Email' component={SignUpEmail} /> 
-        <Stack.Screen name='FirstName' component={SignUpFirstName} />
+        <Stack.Screen name='FirstName' component={SignUpFirstName} /> 
+        <Stack.Screen name='Menulist' component={Menulist} /> 
+        
         
       </Stack.Navigator>
     </NavigationContainer>

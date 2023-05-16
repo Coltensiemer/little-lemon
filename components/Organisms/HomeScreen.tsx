@@ -6,14 +6,14 @@ import FirstName from '../Atoms/FirstName';
 import EmailInput from '../Atoms/EmailInput';
 import PassWordInput from '../Atoms/PassWordInput';
 
-export default function HomeScreen({ }) {
+export default function HomeScreen({ navigate }) {
   return (
     <View>
       <Header />
       <EmailInput />
       <PassWordInput />
       <OnboardButton
-	  styleText={null}
+        styleText={null}
         label={'Sign In'}
         ScreenName={null} // Going to Menu once setup
         //@ts-ignore
@@ -23,7 +23,7 @@ export default function HomeScreen({ }) {
         }}
       />
       <OnboardButton
-	  styleText={null}
+        styleText={null}
         label={'Sign Up'}
         style={{
           backgroundColor: 'white',
@@ -32,30 +32,28 @@ export default function HomeScreen({ }) {
         ScreenName={'FirstName'}
       />
 
-
       <Text
         style={{
           alignSelf: 'center',
-		  marginTop:50,
+          marginTop: 50,
         }}
       >
         Just Browsing?
       </Text>
       <OnboardButton
-	  	styleText={{
-			color: "yellow",
-			font: "bold"
-		}}
+        styleText={{
+          color: 'yellow',
+          font: 'bold',
+        }}
         label={'See the Menu'}
         style={{
           backgroundColor: 'black',
-		  color: 'yellow'
-		  
+          color: 'yellow',
         }}
-        styleContainer={{ 
-			marginTop: 10, 
-		}}
-        ScreenName={null}
+        styleContainer={{
+          marginTop: 10,
+        }}
+        ScreenName={"Menulist"}
       />
     </View>
   );
