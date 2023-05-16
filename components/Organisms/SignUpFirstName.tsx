@@ -18,6 +18,7 @@ export default function SignUpFirstName({style, navigation}) {
 		label={"Click to Continue"} 
 		styleContainer={null}
 		style={{backgroundColor: "yellow"}} 
+		styleText={null}
 		// How to connect to Email sign up??? 
 		ScreenName={"Email"}
 		/> 

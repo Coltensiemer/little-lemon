@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function LastName({style}) {
 
-	const [isName, setName] = React.useState("")
+	const [isLastName, setLastName] = React.useState("")
 
 
   return (

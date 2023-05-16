@@ -17,6 +17,7 @@ export default function SignUpEmail() {
 	  style={{
 		backgroundColor: "yellow",
 	  }} 
+	  styleText={null}
 		label={"Click to Finish"}
 		
 	  /> 
