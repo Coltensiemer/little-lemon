@@ -43,7 +43,7 @@ export default function HomeScreen({ navigate }) {
       <OnboardButton
         styleText={{
           color: 'yellow',
-          font: 'bold',
+        
         }}
         label={'See the Menu'}
         style={{

@@ -1,4 +1,4 @@
-import { StyleSheet, SafeAreaView, Text, View, TextInput } from 'react-native'
+import { StyleSheet, SafeAreaView, Text, View, TextInput, ViewStyle, TextStyle } from 'react-native'
 import React from 'react'
 
 export default function FirstName({style}) {
@@ -10,13 +10,18 @@ export default function FirstName({style}) {
 	<SafeAreaView
 	style={[styles.container, style]}>
 	  <TextInput 
-	    // @ts-ignore
-	  onTextInput={setName}
+	  //@ts-ignore
+	  onChangeText={setName}
 	  placeholder='First Name'
 	  style={styles.inputtext}
 	  />
 	</SafeAreaView>
   )
+}
+
+type styles ={ 
+	container: ViewStyle,
+	inputtext: ViewStyle | TextStyle
 }
 
 const styles = StyleSheet.create({

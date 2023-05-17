@@ -11,7 +11,7 @@ export default function LastName({style}) {
 	style={[styles.container, style]}>
 	  <TextInput 
 	    // @ts-ignore
-	  onTextInput={setName}
+	  onTextInput={setLastName}
 	  placeholder='Last Name'
 	  style={styles.inputtext}
 	  />
