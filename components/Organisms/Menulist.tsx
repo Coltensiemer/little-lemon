@@ -20,13 +20,115 @@ export default function Menulist() {
       setLoading(false)
     }
   };
-console.log("first")
+console.log("firstasdfadf")
   console.log(isData)
-  console.log("last")
+  console.log("lastasdfsd")
 
   useEffect(() => {
     getMenu();
   }, []);
+
+
+ const values = {
+	"menu": [
+		{
+			"id": 1,
+			"title": "Spinach Artichoke Dip",
+			"price": "10",
+			"category": {
+				"title": "Appetizers"
+			}
+		},
+		{
+			"id": 2,
+			"title": "Hummus",
+			"price": "10",
+			"category": {
+				"title": "Appetizers"
+			}
+		},
+		{
+			"id": 3,
+			"title": "Fried Calamari Rings",
+			"price": "5",
+			"category": {
+				"title": "Appetizers"
+			}
+		},
+		{
+			"id": 4,
+			"title": "Fried Mushroom",
+			"price": "12",
+			"category": {
+				"title": "Appetizers"
+			}
+		},
+		{
+			"id": 5,
+			"title": "Greek",
+			"price": "7",
+			"category": {
+				"title": "Salads"
+			}
+		},
+		{
+			"id": 6,
+			"title": "Caesar",
+			"price": "7",
+			"category": {
+				"title": "Salads"
+			}
+		},
+		{
+			"id": 7,
+			"title": "Tuna Salad",
+			"price": "10",
+			"category": {
+				"title": "Salads"
+			}
+		},
+		{
+			"id": 8,
+			"title": "Grilled Chicken Salad",
+			"price": "12",
+			"category": {
+				"title": "Salads"
+			}
+		},
+		{
+			"id": 9,
+			"title": "Water",
+			"price": "3",
+			"category": {
+				"title": "Beverages"
+			}
+		},
+		{
+			"id": 10,
+			"title": "Coke",
+			"price": "3",
+			"category": {
+				"title": "Beverages"
+			}
+		},
+		{
+			"id": 11,
+			"title": "Beer",
+			"price": "7",
+			"category": {
+				"title": "Beverages"
+			}
+		},
+		{
+			"id": 12,
+			"title": "Iced Tea",
+			"price": "3",
+			"category": {
+				"title": "Beverages"
+			}
+		}
+	]
+}
 
   const Item = ({ name, price }) => (
     <View>
@@ -37,17 +139,17 @@ console.log("first")
 
     type Item = {
     id: number;
-    name: string;
+    title: string;
     price: number;
   }
 
   const renderItem = ({ item }) => (
-    <Item name={item.name} price={item.price} />
+    <Item name={item.object.title} price={item.Object.price} />
   );
 
   return (
     <View>
-      <Text>Menu</Text>
+      <Text> ViewMenu</Text>
       <FlatList
         data={isData}
         renderItem={renderItem}
