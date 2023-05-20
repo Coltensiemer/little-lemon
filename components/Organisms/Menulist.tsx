@@ -2,6 +2,106 @@ import { useEffect, useState } from 'react';
 import { FlatList, SectionList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+const values = [
+  {
+    id: 1,
+    title: 'Spinach Artichoke Dip',
+    price: '10',
+    category: {
+      title: 'Appetizers',
+    },
+  },
+  {
+    id: 2,
+    title: 'Hummus',
+    price: '10',
+    category: {
+      title: 'Appetizers',
+    },
+  },
+  {
+    id: 3,
+    title: 'Fried Calamari Rings',
+    price: '5',
+    category: {
+      title: 'Appetizers',
+    },
+  },
+  {
+    id: 4,
+    title: 'Fried Mushroom',
+    price: '12',
+    category: {
+      title: 'Appetizers',
+    },
+  },
+  {
+    id: 5,
+    title: 'Greek',
+    price: '7',
+    category: {
+      title: 'Salads',
+    },
+  },
+  {
+    id: 6,
+    title: 'Caesar',
+    price: '7',
+    category: {
+      title: 'Salads',
+    },
+  },
+  {
+    id: 7,
+    title: 'Tuna Salad',
+    price: '10',
+    category: {
+      title: 'Salads',
+    },
+  },
+  {
+    id: 8,
+    title: 'Grilled Chicken Salad',
+    price: '12',
+    category: {
+      title: 'Salads',
+    },
+  },
+  {
+    id: 9,
+    title: 'Water',
+    price: '3',
+    category: {
+      title: 'Beverages',
+    },
+  },
+  {
+    id: 10,
+    title: 'Coke',
+    price: '3',
+    category: {
+      title: 'Beverages',
+    },
+  },
+  {
+    id: 11,
+    title: 'Beer',
+    price: '7',
+    category: {
+      title: 'Beverages',
+    },
+  },
+  {
+    id: 12,
+    title: 'Iced Tea',
+    price: '3',
+    category: {
+      title: 'Beverages',
+    },
+  },
+];
+
+
 export default function Menulist() {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
@@ -19,166 +119,56 @@ export default function Menulist() {
   //   }
   // };
 
-  const convertStringtoJson = () => {
-    const values = `[
-    {
-      "id": 1,
-      "title": "Spinach Artichoke Dip",
-      "price": "10",
-      "category": {
-        "title": "Appetizers"
-      }
-    },
-    {
-      "id": 2,
-      "title": "Hummus",
-      "price": "10",
-      "category": {
-        "title": "Appetizers"
-      }
-    },
-    {
-      "id": 3,
-      "title": "Fried Calamari Rings",
-      "price": "5",
-      "category": {
-        "title": "Appetizers"
-      }
-    },
-    {
-      "id": 4,
-      "title": "Fried Mushroom",
-      "price": "12",
-      "category": {
-        "title": "Appetizers"
-      }
-    },
-    {
-      "id": 5,
-      "title": "Greek",
-      "price": "7",
-      "category": {
-        "title": "Salads"
-      }
-    },
-    {
-      "id": 6,
-      "title": "Caesar",
-      "price": "7",
-      "category": {
-        "title": "Salads"
-      }
-    },
-    {
-      "id": 7,
-      "title": "Tuna Salad",
-      "price": "10",
-      "category": {
-        "title": "Salads"
-      }
-    },
-    {
-      "id": 8,
-      "title": "Grilled Chicken Salad",
-      "price": "12",
-      "category": {
-        "title": "Salads"
-      }
-    },
-    {
-      "id": 9,
-      "title": "Water",
-      "price": "3",
-      "category": {
-        "title": "Beverages"
-      }
-    },
-    {
-      "id": 10,
-      "title": "Coke",
-      "price": "3",
-      "category": {
-        "title": "Beverages"
-      }
-    },
-    {
-      "id": 11,
-      "title": "Beer",
-      "price": "7",
-      "category": {
-        "title": "Beverages"
-      }
-    },
-    {
-      "id": 12,
-      "title": "Iced Tea",
-      "price": "3",
-      "category": {
-        "title": "Beverages"
-      }
-    }
-  ]`;
 
-    // converting string into an object
-    const result = JSON.parse(values);
-    //storing the results -now an object - in to State.
-    setData(result);
-  };
-
+  //rendering Data
   useEffect(() => {
-    convertStringtoJson();
+    setData(values);
   }, []);
 
+  //Grouping the Data by Category.title
+  const groupData = values.reduce((acc, value) => {
+    const category = value.category.title;
 
-    const sections = data.reduce((result, item) => { 
-          const section = result.find(sec => sec.title === item.category.title)
-            
-          // checking if section equals section. If so adds 'item' into the section
-            if (section) { 
-              section.data.push(item)
-            }
-            else 
-            { 
-              // if section DOES NOT make, creates a new array 
-              result.push({
-                title: item.category.title,
-                data: [item]
-              })
-            }
-            return result
-            
-    }, [])
+    // if not apart of category.title, make not category
+    if (!acc[category]) {
+      acc[category] = [];
+    }
 
-    console.log("first")
+    //if apart of category.title, push items into category
+    acc[category].push(value);
 
-  console.log(sections.section)
+    return acc;
+  }, {});
 
+  // converting GroupData to sections
+  const sections = Object.keys(groupData).map((category) => ({
+    title: category,
+    data: groupData[category],
+  }));
 
-  const Item = ({ name, price }: { name: string; price: string }) => (
-    <View style={styles.itemcontainer}>
-      <Text>{name}</Text>
-      <Text>${price}</Text>
-    </View>
-  );
+  const renderHeader = ({ section }) => {
+    return (
+      <View>
+        <Text>{section.title}</Text>
+      </View>
+    );
+  };
 
-  const renderHeader = ({section}) => { 
-    <Text>{section.title}</Text>
-  }
-
-  const renderItem = ({ item }) => (
-    <Item name={item.title} price={item.price} />
-  );
-
-
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.itemcontainer}>
+        <Text>{item.title}</Text>
+        <Text>${item.price}</Text>
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>ViewMenu</Text>
       <SectionList
         sections={sections}
         renderItem={renderItem}
-        keyExtractor={({ id }) => id} 
-        //@ts-ignore
+        keyExtractor={({ id }) => id}
         renderSectionHeader={renderHeader}
       />
     </SafeAreaView>
