@@ -149,7 +149,9 @@ export default function Menulist() {
             
     }, [])
 
-  console.log(sections)
+    console.log("first")
+
+  console.log(sections.section)
 
 
   const Item = ({ name, price }: { name: string; price: string }) => (
