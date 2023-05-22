@@ -8,15 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function SignUpFirstName({style, navigation}) {
 
-	const storeData =async (value) => {
-		try { 
-			await AsyncStorage.setItem('@storage_key', value)
-			console.log('stored successfuly')
-		} catch (e) {
-			console.log(e)
-		}
-		
-	}
+
 
   return (
 	<View>
@@ -24,6 +16,7 @@ export default function SignUpFirstName({style, navigation}) {
 		<FirstName 
 		style={null}
 		placeholder={null}
+		onchange={null}
 		/> 
 		<LastName 
 		style={null} 
