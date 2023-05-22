@@ -1,16 +1,30 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Header from '../Atoms/Header'
-import FirstName from '../Atoms/FirstName'
+import FirstName from '../Atoms/FullName'
 import OnboardButton from '../Atoms/OnboardButton'
 import LastName from '../Atoms/LastName'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function SignUpFirstName({style, navigation}) {
+
+	const storeData =async (value) => {
+		try { 
+			await AsyncStorage.setItem('@storage_key', value)
+			console.log('stored successfuly')
+		} catch (e) {
+			console.log(e)
+		}
+		
+	}
+
   return (
 	<View>
 		<Header /> 
 		<FirstName 
-		style={null} /> 
+		style={null}
+		placeholder={null}
+		/> 
 		<LastName 
 		style={null} 
 		/> 

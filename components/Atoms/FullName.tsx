@@ -1,7 +1,7 @@
 import { StyleSheet, SafeAreaView, Text, View, TextInput, ViewStyle, TextStyle } from 'react-native'
 import React from 'react'
 
-export default function FirstName({style}) {
+export default function FirstName({style, placeholder}) {
 
 	const [isName, setName] = React.useState("")
 
@@ -12,7 +12,7 @@ export default function FirstName({style}) {
 	  <TextInput 
 	  //@ts-ignore
 	  onChangeText={setName}
-	  placeholder='First Name'
+	  placeholder={placeholder}
 	  style={styles.inputtext}
 	  />
 	</SafeAreaView>

@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import Header from '../Atoms/Header';
 import OnboardButton from '../Atoms/OnboardButton';
-import FirstName from '../Atoms/FirstName';
+import FirstName from '../Atoms/FullName';
 import EmailInput from '../Atoms/EmailInput';
 import PassWordInput from '../Atoms/PassWordInput';
 
@@ -10,11 +10,17 @@ export default function HomeScreen({ navigate }) {
   return (
     <View>
       <Header />
-      <EmailInput />
-      <PassWordInput />
+      <FirstName 
+      style={null}
+      placeholder={"Enter Full Name"}/> 
+
+      {/* <EmailInput /> */}
+      {/* <PassWordInput /> */}
+
+
       <OnboardButton
         styleText={null}
-        label={'Sign In'}
+        label={'Make a Reservation'}
         ScreenName={null} // Going to Menu once setup
         //@ts-ignore
         styleContainer={null}
@@ -55,6 +61,13 @@ export default function HomeScreen({ navigate }) {
         }}
         ScreenName={"Menulist"}
       />
+      <OnboardButton 
+      styleText={null}
+      label={"Check Reservations"}
+      style={null}
+      styleContainer={null}
+      ScreenName={"WaitList"}
+      /> 
     </View>
   );
 }
