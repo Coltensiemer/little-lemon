@@ -1,48 +1,64 @@
-import { StyleSheet, Text, View } from 'react-native'
-import {useEffect, useState} from 'react'
-import FullName from '../Atoms/FullName'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import Saveinput from '../Atoms/Saveinput'
+import { StyleSheet, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import FullName from '../Atoms/FullName';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Saveinput from '../Atoms/Saveinput';
 
 export default function ReservationPage() {
+  const [isTextInput, setTextInput] = useState('');
+  const [customer, setCustomer] = useState([]);
 
-	const [isName, setName] = useState("")
-	const [customer, setCustomer] = useState([])
-
-	const storeData = async (value) => {
-		try {
-		  await AsyncStorage.setItem('Name', JSON.stringify(value))
-		  console.log("successfuly!!")
-		//   console.log(customer)
-		} catch (e) {
-		  console.log(e)
+  useEffect(() => { 
+	(async () => { 
+		try { 
+		const customer =	await AsyncStorage.getItem('customer')
+		setCustomer(customer === null ? [] : JSON.parse(customer))
 		}
-	  }
+		catch (e) { 
+			console.log(e)
+		}
+	})()
+  }, [])
 
-	  useEffect(() => { 
-		storeData(customer)
-	  })
+  
+  useEffect(() => {
+ (async () => {
+      try {
+        await AsyncStorage.setItem('customer', JSON.stringify(customer));
+      } catch (e) {
+        console.log(e);
+      }
+    })()
+  }, [customer]);
 
-console.log(isName)
 
-//onclick function pass down to SaveInput for when state is saved
+console.log('fir')
+console.log(customer)
 
   return (
-	<View>
-	  <Text>ReservationPage</Text>
-	  <FullName 
-	  onchange={setName}
-      style={null}
-      placeholder={"Enter Full Name"}/> 
-	  <Saveinput 
-	//   can not pass null? 
-	  onClick={null}
-	  label={'Save Name'}
-	  style={null}
-	  styleText={null}/> 
-	  <Text>{isName}</Text>
-	</View>
-  )
+    <View>
+      <Text>ReservationPage</Text>
+      <FullName
+	  	value={isTextInput}
+        onchange={(data: string) => setTextInput(data)}
+        style={null}
+        placeholder={'Enter Full Name'}
+      />
+      <Saveinput
+        //   can not pass null?
+        onClick={() => {
+          setCustomer([...customer, isTextInput]);
+          setTextInput('');
+        }}
+        label={'Save Name'}
+        style={null}
+        styleText={null}
+      />
+      {customer.map((customer) => (
+        <Text >{customer}</Text>
+      ))}
+    </View>
+  );
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
