@@ -17,6 +17,7 @@ export default function SignUpFirstName({style, navigation}) {
 		style={null}
 		placeholder={null}
 		onchange={null}
+		value={null}
 		/> 
 		<LastName 
 		style={null} 
