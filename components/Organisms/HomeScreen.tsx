@@ -2,14 +2,11 @@ import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Header from '../Atoms/Header';
 import OnboardButton from '../Atoms/OnboardButton';
-import FullName from '../Atoms/FullName';
-import EmailInput from '../Atoms/EmailInput';
-import PassWordInput from '../Atoms/PassWordInput';
 import ReservationPage from './ReservationPage';
 import { fetchUserData } from '../../assets/Database.js/reservationData';
 import { useIsFocused } from '@react-navigation/native';
 
-export default function HomeScreen({ navigate }) {
+export default function HomeScreen() {
 
 const isFocused = useIsFocused()
 

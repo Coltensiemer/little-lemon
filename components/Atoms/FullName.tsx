@@ -2,13 +2,14 @@ import { StyleSheet, SafeAreaView, Text, View, TextInput, ViewStyle, TextStyle }
 import React, { useEffect } from 'react'
 
 
-export default function FullName({style, placeholder, onchange}) {
+export default function FullName({style, placeholder, onchange, value}) {
 
 
   return (
 	<SafeAreaView
 	style={[styles.container, style]}>
 	  <TextInput 
+	  value={value}
 	  onChangeText={onchange}
 	  placeholder={placeholder}
 	  style={styles.inputtext}
