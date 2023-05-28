@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { MD3LightTheme as DefaultTheme, PaperProvider } from 'react-native-paper';
 import HomeScreen from './components/Organisms/HomeScreen';
 import SignUpFirstName from './components/Organisms/SignUpFirstName';
 import SignUpEmail from './components/Organisms/SignUpEmail';
@@ -10,8 +11,19 @@ import ReservationPage from './components/Organisms/ReservationPage';
 
 const Stack = createNativeStackNavigator( );
 
+
+// Refer to React Paper to Theme APP
+// const theme = { 
+//   ...DefaultTheme,
+//   myOwnPropert: true, 
+//   colors: { 
+//     myOwnColor: 'red', 
+//   }
+// }
+
 function App() {
   return (
+    <PaperProvider>
     <NavigationContainer>
       <Stack.Navigator >
         <Stack.Screen
@@ -36,6 +48,7 @@ function App() {
         
       </Stack.Navigator>
     </NavigationContainer>
+    </PaperProvider>
   );
 }
 

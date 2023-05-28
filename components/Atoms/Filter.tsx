@@ -1,12 +1,18 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import * as React from 'react';
+import { Searchbar } from 'react-native-paper';
 
-export default function Filter() {
+const MyComponent = () => {
+  const [searchQuery, setSearchQuery] = React.useState('');
+
+  const onChangeSearch = query => setSearchQuery(query);
+
   return (
-	<View>
-	  
-	</View>
-  )
-}
+    <Searchbar
+      placeholder="Search"
+      onChangeText={onChangeSearch}
+      value={searchQuery}
+    />
+  );
+};
 
-const styles = StyleSheet.create({})
+export default MyComponent;

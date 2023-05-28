@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FlatList, SectionList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Filter from '../Atoms/Filter';
 
 const values = [
   {
@@ -165,6 +166,7 @@ export default function Menulist() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Filter />
       <SectionList
         sections={sections}
         renderItem={renderItem}
@@ -178,7 +180,7 @@ export default function Menulist() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F4CE14',
+    backgroundColor: '',
   },
   itemcontainer: {
     flexDirection: 'row',
