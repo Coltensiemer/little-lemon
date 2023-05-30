@@ -5,6 +5,7 @@ import OnboardButton from '../Atoms/OnboardButton';
 import ReservationPage from './ReservationPage';
 import { fetchUserData } from '../../assets/Database.js/reservationData';
 import { useIsFocused } from '@react-navigation/native';
+import { Button } from 'react-native-paper';
 
 export default function HomeScreen() {
 
@@ -81,6 +82,17 @@ const reservationAmount =(data) => {
         styleContainer={null}
         ScreenName={'FirstName'}
       />
+      <OnboardButton
+        styleText={null}
+        label={'Profile'}
+        style={{
+          backgroundColor: 'none',
+        }}
+        styleContainer={null}
+        ScreenName={'Profile'}
+
+      />
+      
 
       <Text>Current Reservations: {reservationAmount(showData)} </Text>
     

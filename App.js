@@ -8,6 +8,7 @@ import SignUpFirstName from './components/Organisms/SignUpFirstName';
 import SignUpEmail from './components/Organisms/SignUpEmail';
 import Menulist from './components/Organisms/Menulist';
 import ReservationPage from './components/Organisms/ReservationPage';
+import Profile from './components/Organisms/Profile';
 
 const Stack = createNativeStackNavigator( );
 
@@ -44,7 +45,7 @@ function App() {
         <Stack.Screen name='FirstName' component={SignUpFirstName} /> 
         <Stack.Screen name='Menulist' component={Menulist} /> 
         <Stack.Screen name='ReservationPage' component={ReservationPage} /> 
-        
+        <Stack.Screen name='Profile' component={Profile} /> 
         
       </Stack.Navigator>
     </NavigationContainer>
