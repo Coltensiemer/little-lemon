@@ -1,8 +1,7 @@
 import { ScrollView, StyleSheet, Text, View, } from 'react-native';
 import React from 'react';
 import { Button, Avatar, TextInput, Switch, Divider } from 'react-native-paper';
-import FullName from '../Atoms/FullName';
-import LastName from '../Atoms/LastName';
+
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Profile() {
