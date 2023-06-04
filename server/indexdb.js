@@ -21,18 +21,15 @@ app.post('/reservations', async(req, res) => {
 		res.json(newReservation)
 
 	} catch (error) {
-		console.log(`You have an error message ${error.message}`)
+		console.log(`You have an error message: ${error.message}!`)
 		
 	}
 })
 
 
-
-
-
 //add Reservations to reservations
 
-
+``
 app.listen(port, () => { 
 	console.log(`port ${port} works!`)
 

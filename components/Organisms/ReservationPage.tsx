@@ -30,6 +30,13 @@ export default function ReservationPage() {
   // console.log('first!');
   // console.log(customer);
 
+
+
+
+
+
+
+  
   return (
     <View>
       <FullName
