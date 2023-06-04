@@ -11,24 +11,24 @@ export default function ReservationPage() {
   const [isTextInput, setTextInput] = useState('');
   const [customer, setCustomer] = useState([]);
 
-  useEffect(() => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR NOT NULL)'
-      );
-	  console.log('table was created')
-    });
-    db.transaction((tx) => {
-      tx.executeSql('SELECT * FROM users', [], (_, { rows }) => {
-        const result = rows._array.map((e) => e.name);
-        setCustomer(result);
-      });
-	  console.log('items were stored')
-    });
-  }, []);
+  // useEffect(() => {
+  //   db.transaction((tx) => {
+  //     tx.executeSql(
+  //       'CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR NOT NULL)'
+  //     );
+	//   console.log('table was created')
+  //   });
+  //   db.transaction((tx) => {
+  //     tx.executeSql('SELECT * FROM users', [], (_, { rows }) => {
+  //       const result = rows._array.map((e) => e.name);
+  //       setCustomer(result);
+  //     });
+	//   console.log('items were stored')
+  //   });
+  // }, []);
 
-  console.log('first!');
-  console.log(customer);
+  // console.log('first!');
+  // console.log(customer);
 
   return (
     <View>
