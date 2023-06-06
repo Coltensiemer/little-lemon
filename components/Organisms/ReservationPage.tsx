@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Platform} from 'react-native';
 import { useEffect, useState } from 'react';
-import FullName from '../Atoms/FullName';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import * as SQLite from 'expo-sqlite';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-import Saveinput from '../Atoms/Saveinput';
+import { TextInput, Button } from 'react-native-paper';
+
 
 const db = SQLite.openDatabase('mydatabase.db');
 
@@ -11,53 +11,77 @@ export default function ReservationPage() {
   const [isTextInput, setTextInput] = useState('');
   const [customer, setCustomer] = useState([]);
 
-  // useEffect(() => {
-  //   db.transaction((tx) => {
-  //     tx.executeSql(
-  //       'CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR NOT NULL)'
-  //     );
-	//   console.log('table was created')
-  //   });
-  //   db.transaction((tx) => {
-  //     tx.executeSql('SELECT * FROM users', [], (_, { rows }) => {
-  //       const result = rows._array.map((e) => e.name);
-  //       setCustomer(result);
-  //     });
-	//   console.log('items were stored')
-  //   });
-  // }, []);
-
-  // console.log('first!');
-  // console.log(customer);
-
-
-
-
-
-
-
+  const [date, setDate] = useState(new Date());
+	const [mode, setMode] = useState('date');
+	const [show, setShow] = useState(false);
+  const [text, setText] = useState('Empty')
   
+	const onChange = (event, selectedDate) => {
+	  const currentDate = selectedDate || date;
+	  setShow(Platform.OS === 'ios');
+	  setDate(currentDate);
+
+    let tempDate = new Date(currentDate)
+    let fdate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear()
+    let fTime = 'Hours ' + tempDate.getHours() + ' | minutes' +  tempDate.getMinutes(); 
+    setText(fdate + '\n' + fTime)
+
+    console.log(fdate + fTime)
+	};
+  
+	const showMode = (currentMode) => { 
+		setShow(true);
+		// for iOS, add a button that closes the picker
+	  setMode(currentMode);
+	};
+  
+	const showDatepicker = () => {
+	  showMode('date');
+    console.log("showDate")
+	};
+  
+	const showTimepicker = () => {
+	  showMode('time');
+    console.log("showTime")
+	};
+
   return (
     <View>
-      <FullName
+      <TextInput
+        label='First and Last Name'
         value={isTextInput}
-        onchange={(data: string) => setTextInput(data)}
-        style={null}
-        placeholder={'Enter Full Name'}
+        onChangeText={(text) => setTextInput(text)}
       />
-      <Saveinput
-        onClick={() => {
-          setCustomer([...customer, isTextInput]);
-          db.transaction((tx) => {
-            tx.executeSql('INSERT INTO users (name) values (?)', [isTextInput]);
-          });
+      <TextInput
+        label='Email'
+        value={isTextInput}
+        onChangeText={(text) => setTextInput(text)}
+      />
 
-          setTextInput('');
-        }}
-        label={'Save Name'}
-        style={null}
-        styleText={null}
-      />
+
+<Button onPress={showDatepicker} mode='outlined'>Show Date Picker</Button>
+
+<Button onPress={showTimepicker} mode='outlined'> Show Time Picker</Button> 
+		<Text>{text}</Text>
+		{show && (
+		  <DateTimePicker
+			testID="dateTimePicker"
+			value={date}
+      //@ts-ignore
+      mode={mode}
+			is24Hour={true}
+      display='default'
+			onChange={onChange}
+		  />
+		)}
+
+
+      <Button
+        mode='contained'
+        onPress={() => console.log('Confirm Reservation')}
+      >
+        Confirm Reservation'
+      </Button>
       {customer.map((customer) => (
         <Text>{customer}</Text>
       ))}

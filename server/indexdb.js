@@ -1,38 +1,43 @@
-const express = require('express')
-const app = express()
-const cors = require("cors")
-const pool = require("./db")
-const port = 3100
+const express = require('express');
+const app = express();
+const cors = require('cors');
+const pool = require('./db');
+const port = 3100;
 
-//middleware 
-app.use(cors())
+//middleware
+app.use(cors());
 app.use(express.json());
 
+//Routes
 
-//Routes 
-
-app.post('/reservations', async(req, res) => { 
+// Added a reservation
+app.post('/reservations', async (req, res) => {
 	try {
-		
-		const { reservations } = req.body; 
-		const newReservation = await pool.query("INSERT INTO reservations (reservations) VALUES($1)", [reservations] );
-		
-		 
-		res.json(newReservation)
+		const { description } = req.body;
+		const newReservation = await pool.query(
+		  'INSERT INTO  todo (description) VALUES($1) RETURNING *',
+		  [description]
+		);
 
-	} catch (error) {
-		console.log(`You have an error message: ${error.message}!`)
-		
-	}
-})
+    console.log(res.body);
+    res.json(newReservation);
+  } catch (error) {
+    console.log(`You have an error message: ${error.message}!`);
+  }
+});
 
+// Get all Reservations
 
-//add Reservations to reservations
+app.get('/reservations', async (req, res) => {
+  try {
+    const getReservations = await pool.query('SELECT * FROM todo');
 
-``
-app.listen(port, () => { 
-	console.log(`port ${port} works!`)
+    res.json(getReservations.rows);
+  } catch (error) {
+    console.log(error.message);
+  }
+});
 
-})
-
-console.log('hello')
+app.listen(port, () => {
+  console.log(`port ${port} works!`);
+});
