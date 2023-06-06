@@ -8,6 +8,14 @@ import { TextInput, Button } from 'react-native-paper';
 const db = SQLite.openDatabase('mydatabase.db');
 
 export default function ReservationPage() {
+
+  // Fill out form 
+  //Adds First/last name to a database
+  //adds email and data 
+
+  // 1. use Database - reservationsll
+  //2. create tale - name, email, date 
+  // 3. submit reservations to into data base table 
   const [isTextInput, setTextInput] = useState('');
   const [customer, setCustomer] = useState([]);
 
@@ -15,6 +23,29 @@ export default function ReservationPage() {
 	const [mode, setMode] = useState('date');
 	const [show, setShow] = useState(false);
   const [text, setText] = useState('Empty')
+
+
+  // get ALL
+
+  const getAllReservations = async () => { 
+try { 
+  const response = await fetch("http://localhost:3100/reservations")
+  const json = await response.json(); 
+
+  setCustomer(json)
+}
+catch (err) { 
+  console.log(err)
+}
+  }
+
+
+  // useEffect(() => { 
+  //   getAllReservations()
+  // })
+
+
+  // Data and time Picker 
   
 	const onChange = (event, selectedDate) => {
 	  const currentDate = selectedDate || date;

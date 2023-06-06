@@ -13,10 +13,10 @@ app.use(express.json());
 // Added a reservation
 app.post('/reservations', async (req, res) => {
 	try {
-		const { description } = req.body;
+		const { full_name, email, date, time } = req.body;
 		const newReservation = await pool.query(
-		  'INSERT INTO  todo (description) VALUES($1) RETURNING *',
-		  [description]
+		  'INSERT INTO  reservations (full_name, email, date, time) VALUES($1, $2, $3, $4) RETURNING *',
+		  [full_name, email, date, time]
 		);
 
     console.log(res.body);
