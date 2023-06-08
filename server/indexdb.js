@@ -30,7 +30,7 @@ app.post('/reservations', async (req, res) => {
 
 app.get('/reservations', async (req, res) => {
   try {
-    const getReservations = await pool.query('SELECT * FROM todo');
+    const getReservations = await pool.query('SELECT * FROM reservations');
 
     res.json(getReservations.rows);
   } catch (error) {

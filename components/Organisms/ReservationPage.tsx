@@ -1,80 +1,104 @@
-import { StyleSheet, Text, View, Platform} from 'react-native';
+import { StyleSheet, Text, View, Platform } from 'react-native';
 import { useEffect, useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as SQLite from 'expo-sqlite';
 import { TextInput, Button } from 'react-native-paper';
 
-
 const db = SQLite.openDatabase('mydatabase.db');
 
 export default function ReservationPage() {
-
-  // Fill out form 
+  // Fill out form
   //Adds First/last name to a database
-  //adds email and data 
+  //adds email and data
 
   // 1. use Database - reservationsll
-  //2. create tale - name, email, date 
-  // 3. submit reservations to into data base table 
+  //2. create tale - name, email, date
+  // 3. submit reservations to into data base table
   const [isTextInput, setTextInput] = useState('');
+  const [email, setEmail] = useState('');
+  const [datePicker, setDatePicker] = useState('');
+  const [timePicker, setTimePicker] = useState('');
   const [customer, setCustomer] = useState([]);
 
   const [date, setDate] = useState(new Date());
-	const [mode, setMode] = useState('date');
-	const [show, setShow] = useState(false);
-  const [text, setText] = useState('Empty')
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+  const [text, setText] = useState('Empty');
 
+  // submit reservation to database
 
-  // get ALL
+  const postReservation = async () => {
+    try {
+      const body = {
+        full_name: isTextInput,
+        email: email,
+        
+      };
+      const options = {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body)
+      };
+      
+      fetch('http://localhost:3100/reservations', options)
+        .then(response => response.json())
+        .then(response => console.log(response))
+       
+    } catch (err) {
+      console.log(err);
+    }
+    console.log('button was pressed');
+  };
 
-  const getAllReservations = async () => { 
-try { 
-  const response = await fetch("http://localhost:3100/reservations")
-  const json = await response.json(); 
+  // get ALL Reservations
+  const getAllReservations = async () => {
+    try {
+      const response = await fetch('http://localhost:3100/reservations');
+      const jsonData = await response.json();
+      console.log(jsonData);
+      setCustomer(jsonData);
+    } catch (err) {
+      console.log(`There was an error: ${err}`);
+    }
+  };
 
-  setCustomer(json)
-}
-catch (err) { 
-  console.log(err)
-}
-  }
+  useEffect(() => {
+    getAllReservations();
+  }, [postReservation]);
 
+  // Data and time Picker
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
 
-  // useEffect(() => { 
-  //   getAllReservations()
-  // })
+    let tempDate = new Date(currentDate);
+    let fdate =
+      tempDate.getDate() +
+      '/' +
+      (tempDate.getMonth() + 1) +
+      '/' +
+      tempDate.getFullYear();
+    let fTime =
+      'Hours ' + tempDate.getHours() + ' | minutes' + tempDate.getMinutes();
+    setText(fdate + '\n' + fTime);
+  };
 
+  const showMode = (currentMode) => {
+    setShow(true);
+    // for iOS, add a button that closes the picker
+    setMode(currentMode);
+  };
 
-  // Data and time Picker 
-  
-	const onChange = (event, selectedDate) => {
-	  const currentDate = selectedDate || date;
-	  setShow(Platform.OS === 'ios');
-	  setDate(currentDate);
+  const showDatepicker = () => {
+    showMode('date');
+    console.log('showDate');
+  };
 
-    let tempDate = new Date(currentDate)
-    let fdate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear()
-    let fTime = 'Hours ' + tempDate.getHours() + ' | minutes' +  tempDate.getMinutes(); 
-    setText(fdate + '\n' + fTime)
-
-    console.log(fdate + fTime)
-	};
-  
-	const showMode = (currentMode) => { 
-		setShow(true);
-		// for iOS, add a button that closes the picker
-	  setMode(currentMode);
-	};
-  
-	const showDatepicker = () => {
-	  showMode('date');
-    console.log("showDate")
-	};
-  
-	const showTimepicker = () => {
-	  showMode('time');
-    console.log("showTime")
-	};
+  const showTimepicker = () => {
+    showMode('time');
+    console.log('showTime');
+  };
 
   return (
     <View>
@@ -85,36 +109,39 @@ catch (err) {
       />
       <TextInput
         label='Email'
-        value={isTextInput}
-        onChangeText={(text) => setTextInput(text)}
+        value={email}
+        onChangeText={(text) => setEmail(text)}
       />
 
+      <Button onPress={showDatepicker} mode='outlined'>
+        Show Date Picker
+      </Button>
 
-<Button onPress={showDatepicker} mode='outlined'>Show Date Picker</Button>
+      <Button onPress={showTimepicker} mode='outlined'>
+        {' '}
+        Show Time Picker
+      </Button>
+      <Text>{text}</Text>
+      {show && (
+        <DateTimePicker
+          testID='dateTimePicker'
+          value={date}
+          //@ts-ignore
+          mode={mode}
+          is24Hour={true}
+          display='default'
+          onChange={onChange}
+        />
+      )}
 
-<Button onPress={showTimepicker} mode='outlined'> Show Time Picker</Button> 
-		<Text>{text}</Text>
-		{show && (
-		  <DateTimePicker
-			testID="dateTimePicker"
-			value={date}
-      //@ts-ignore
-      mode={mode}
-			is24Hour={true}
-      display='default'
-			onChange={onChange}
-		  />
-		)}
-
-
-      <Button
-        mode='contained'
-        onPress={() => console.log('Confirm Reservation')}
-      >
+      <Button mode='contained' onPress={postReservation}>
         Confirm Reservation'
       </Button>
       {customer.map((customer) => (
-        <Text>{customer}</Text>
+        <View key={customer.reservation_id}>
+          <Text>{customer.full_name}</Text>
+          <Text>{customer.time}</Text>
+        </View>
       ))}
     </View>
   );
