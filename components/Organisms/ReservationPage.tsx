@@ -22,7 +22,7 @@ export default function ReservationPage() {
 
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
   const [text, setText] = useState('Empty');
 
   // submit reservation to database
@@ -32,18 +32,19 @@ export default function ReservationPage() {
       const body = {
         full_name: isTextInput,
         email: email,
-        
+        date: datePicker,
+        time: timePicker
       };
+
       const options = {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(body)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
       };
-      
+
       fetch('http://localhost:3100/reservations', options)
-        .then(response => response.json())
-        .then(response => console.log(response))
-       
+        .then((response) => response.json())
+        .then((response) => console.log(response));
     } catch (err) {
       console.log(err);
     }
@@ -55,12 +56,17 @@ export default function ReservationPage() {
     try {
       const response = await fetch('http://localhost:3100/reservations');
       const jsonData = await response.json();
-      console.log(jsonData);
+      // console.log(jsonData);
       setCustomer(jsonData);
     } catch (err) {
       console.log(`There was an error: ${err}`);
     }
   };
+
+  useEffect(() => {
+    console.log(`Date is: ${datePicker}`);
+    console.log(`Time is: ${timePicker}`);
+  }, []);
 
   useEffect(() => {
     getAllReservations();
@@ -74,14 +80,22 @@ export default function ReservationPage() {
 
     let tempDate = new Date(currentDate);
     let fdate =
-      tempDate.getDate() +
-      '/' +
+      tempDate.getFullYear() +
+      '-' +
       (tempDate.getMonth() + 1) +
-      '/' +
-      tempDate.getFullYear();
+      '-' +
+      tempDate.getDate();
+
     let fTime =
-      'Hours ' + tempDate.getHours() + ' | minutes' + tempDate.getMinutes();
-    setText(fdate + '\n' + fTime);
+      tempDate.getHours() +
+      ':' +
+      tempDate.getMinutes() +
+      ':' +
+      tempDate.getSeconds();
+    // setText(fdate + '\n' + fTime);
+
+    setTimePicker(fTime);
+    setDatePicker(fdate);
   };
 
   const showMode = (currentMode) => {
@@ -101,7 +115,7 @@ export default function ReservationPage() {
   };
 
   return (
-    <View>
+    <View style={styles.mainContainer}>
       <TextInput
         label='First and Last Name'
         value={isTextInput}
@@ -113,38 +127,59 @@ export default function ReservationPage() {
         onChangeText={(text) => setEmail(text)}
       />
 
-      <Button onPress={showDatepicker} mode='outlined'>
+    <Button onPress={null} mode='outlined'>
         Show Date Picker
-      </Button>
+      </Button> 
 
       <Button onPress={showTimepicker} mode='outlined'>
         {' '}
         Show Time Picker
       </Button>
-      <Text>{text}</Text>
+<View >
       {show && (
         <DateTimePicker
           testID='dateTimePicker'
           value={date}
-          //@ts-ignore
+          mode="date"
+          is24Hour={true}
+          display='default'
+          onChange={onChange}
+     
+        />
+      )}
+         {show && (
+        <DateTimePicker
+          testID='dateTimePicker'
           mode={mode}
+          value={date}
           is24Hour={true}
           display='default'
           onChange={onChange}
         />
       )}
-
+</View>
       <Button mode='contained' onPress={postReservation}>
         Confirm Reservation'
       </Button>
       {customer.map((customer) => (
-        <View key={customer.reservation_id}>
+        <View style={{flexDirection: "row", justifyContent: "space-evenly"}} key={customer.reservation_id}>
           <Text>{customer.full_name}</Text>
+          <View>
+          <Text>{customer.date}</Text>
           <Text>{customer.time}</Text>
+          </View>
         </View>
       ))}
     </View>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+
+  mainContainer: { 
+    flex: 1,
+    justifyContent: "space-evenly",
+    marginTop: 10
+  }
+
+});
