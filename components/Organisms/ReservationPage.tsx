@@ -1,14 +1,24 @@
-import { StyleSheet, Text, View, Platform } from 'react-native';
-import { useEffect, useState } from 'react';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Platform,
+  ScrollView,
+  FlatList,
+} from 'react-native';
+import { useEffect, useState, useCallback } from 'react';
+// import DateTimePicker from '@react-native-community/datetimepicker';
+import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates';
+import { en, registerTranslation } from 'react-native-paper-dates';
+registerTranslation('en', en);
 import * as SQLite from 'expo-sqlite';
-import { TextInput, Button } from 'react-native-paper';
+import { TextInput, Button, Divider } from 'react-native-paper';
 
 const db = SQLite.openDatabase('mydatabase.db');
 
 export default function ReservationPage() {
   // Fill out form
-  //Adds First/last name to a database
+  //Adds First/last name to a databasei
   //adds email and data
 
   // 1. use Database - reservationsll
@@ -16,24 +26,48 @@ export default function ReservationPage() {
   // 3. submit reservations to into data base table
   const [isTextInput, setTextInput] = useState('');
   const [email, setEmail] = useState('');
-  const [datePicker, setDatePicker] = useState('');
-  const [timePicker, setTimePicker] = useState('');
   const [customer, setCustomer] = useState([]);
 
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(true);
-  const [text, setText] = useState('Empty');
+  const [visible, setVisible] = useState(false);
+
+  const [time, setTime] = useState(undefined);
+  const [date, setDate] = useState(undefined);
+  const [open, setOpen] = useState(false);
+
+  const onDismissSingle = useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
+  const onDismiss = useCallback(() => {
+    setVisible(false);
+  }, [setVisible]);
+
+  // Confirm single DATE PICKER
+  const onConfirmSingle = useCallback(
+    (params) => {
+      setOpen(false);
+      setDate(params.date);
+    },
+    [setOpen, setDate]
+  );
+
+  // Confirm TIME
+  const onConfirm = useCallback(
+    ({ hours, minutes }) => {
+      setVisible(false);
+      setTime(`${hours}:${minutes}:00`);
+      console.log({ hours, minutes });
+    },
+    [setVisible]
+  );
 
   // submit reservation to database
-
   const postReservation = async () => {
     try {
       const body = {
         full_name: isTextInput,
         email: email,
-        date: datePicker,
-        time: timePicker,
+        date: date,
+        time: time,
       };
 
       const options = {
@@ -42,9 +76,10 @@ export default function ReservationPage() {
         body: JSON.stringify(body),
       };
 
-      fetch('http://localhost:3100/reservations', options)
-        .then((response) => response.json())
-        .then((response) => console.log(response));
+      fetch('http://localhost:3100/reservations', options).then((response) =>
+        response.json()
+      );
+      // .then((response) => console.log(response));
     } catch (err) {
       console.log(err);
     }
@@ -63,59 +98,22 @@ export default function ReservationPage() {
     }
   };
 
-  useEffect(() => {
-    console.log(`Date is: ${datePicker}`);
-    console.log(`Time is: ${timePicker}`);
-  }, []);
+  // Formates the date that is rendered
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { month: 'long', day: 'numeric', year: 'numeric' };
+    const formattedDate = date.toLocaleDateString('en-US', options);
+    return formattedDate;
+  }
 
+  // UPdates RESERVATIONS after each submit
   useEffect(() => {
     getAllReservations();
   }, [postReservation]);
 
-  // Data and time Picker
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
-    setDate(currentDate);
-
-    let tempDate = new Date(currentDate);
-    let fdate =
-      tempDate.getFullYear() +
-      '-' +
-      (tempDate.getMonth() + 1) +
-      '-' +
-      tempDate.getDate();
-
-    let fTime =
-      tempDate.getHours() +
-      ':' +
-      tempDate.getMinutes() +
-      ':' +
-      tempDate.getSeconds();
-    // setText(fdate + '\n' + fTime);
-
-    setTimePicker(fTime);
-    setDatePicker(fdate);
-  };
-
-  const showMode = (currentMode) => {
-    setShow(true);
-    // for iOS, add a button that closes the picker
-    setMode(currentMode);
-  };
-
-  const showDatepicker = () => {
-    showMode('date');
-    console.log('showDate');
-  };
-
-  const showTimepicker = () => {
-    showMode('time');
-    console.log('showTime');
-  };
-
   return (
     <View style={styles.mainContainer}>
+      <View style={{ height: 250, padding: 10, justifyContent: 'space-evenly'}}>
       <TextInput
         label='First and Last Name'
         value={isTextInput}
@@ -126,52 +124,62 @@ export default function ReservationPage() {
         value={email}
         onChangeText={(text) => setEmail(text)}
       />
-
-      <Button onPress={null} mode='outlined'>
-        Show Date Picker
-      </Button>
-
-      <Button onPress={showTimepicker} mode='outlined'>
-        {' '}
-        Show Time Picker
-      </Button>
-      <View>
-        {show && (
-          <DateTimePicker
-            testID='dateTimePicker'
-            value={date}
-            mode='date'
-            is24Hour={true}
-            display='default'
-            onChange={onChange}
-          />
-        )}
-        {show && (
-          <DateTimePicker
-            testID='dateTimePicker'
-            mode={mode}
-            value={date}
-            is24Hour={true}
-            display='default'
-            onChange={onChange}
-          />
-        )}
       </View>
+      <View style={{  height: 100, justifyContent: 'space-between' }}>
+      <View style={{ justifyContent: 'center', alignItems: 'center'}}>
+        <Button onPress={() => setOpen(true)} uppercase={false} mode='outlined' style={{width: 250}}>
+          Pick single date
+        </Button>
+        <DatePickerModal
+          locale='en'
+          mode='single'
+          visible={open}
+          onDismiss={onDismissSingle}
+          date={date}
+          onConfirm={onConfirmSingle}
+        />
+      </View>
+      <View style={{ justifyContent: 'center', alignItems: 'center'}}>
+        <Button
+          onPress={() => setVisible(true)}
+          uppercase={false}
+          mode='outlined'
+          style={{width: 250}}
+        >
+          Pick time
+        </Button>
+        <TimePickerModal
+          visible={visible}
+          onDismiss={onDismiss}
+          onConfirm={onConfirm}
+          hours={12}
+          minutes={14}
+        />
+      </View>
+      </View>
+      <View style={{flex: 1, justifyContent: 'center', padding: 10}}>
       <Button mode='contained' onPress={postReservation}>
         Confirm Reservation'
       </Button>
-      {customer.map((customer) => (
-        <View
-          style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}
-          key={customer.reservation_id}
-        >
-          <Text>{customer.full_name}</Text>
-          <View>
-            <Text>{customer.date}</Text>
-            <Text>{customer.time}</Text>
+      </View>
+      {/* <View style={{ justifyContent: 'space-evenly', flexDirection: 'row' }}>
+        <Text>Customer</Text>
+        <Text>Date and Time</Text>
+      </View> */}
+      {/* <FlatList
+        data={customer}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View
+            style={{ flexDirection: 'row', }}
+          >
+            <Text style={styles.dataTexts}>{item.full_name}</Text>
+            <Divider bold={true} horizontalInset={true}/>
+            <Text style={styles.dataTexts}>{formatDate(item.date)}</Text>
+            <Text style={styles.dataTexts}>{item.time}</Text>
           </View>
-        </View>
-      ))}
+        )}
+      /> */}
     </View>
   );
 }
@@ -179,9 +187,13 @@ export default function ReservationPage() {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    justifyContent: 'space-evenly',
     marginTop: 10,
   },
+  dataTexts:  {
+    flex: 1,
+    padding: 5,
+    alignSelf: 'flex-start'
+  }
 });
 
 // set time picker
