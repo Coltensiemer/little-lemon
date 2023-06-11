@@ -33,7 +33,7 @@ export default function ReservationPage() {
         full_name: isTextInput,
         email: email,
         date: datePicker,
-        time: timePicker
+        time: timePicker,
       };
 
       const options = {
@@ -127,46 +127,48 @@ export default function ReservationPage() {
         onChangeText={(text) => setEmail(text)}
       />
 
-    <Button onPress={null} mode='outlined'>
+      <Button onPress={null} mode='outlined'>
         Show Date Picker
-      </Button> 
+      </Button>
 
       <Button onPress={showTimepicker} mode='outlined'>
         {' '}
         Show Time Picker
       </Button>
-<View >
-      {show && (
-        <DateTimePicker
-          testID='dateTimePicker'
-          value={date}
-          mode="date"
-          is24Hour={true}
-          display='default'
-          onChange={onChange}
-     
-        />
-      )}
-         {show && (
-        <DateTimePicker
-          testID='dateTimePicker'
-          mode={mode}
-          value={date}
-          is24Hour={true}
-          display='default'
-          onChange={onChange}
-        />
-      )}
-</View>
+      <View>
+        {show && (
+          <DateTimePicker
+            testID='dateTimePicker'
+            value={date}
+            mode='date'
+            is24Hour={true}
+            display='default'
+            onChange={onChange}
+          />
+        )}
+        {show && (
+          <DateTimePicker
+            testID='dateTimePicker'
+            mode={mode}
+            value={date}
+            is24Hour={true}
+            display='default'
+            onChange={onChange}
+          />
+        )}
+      </View>
       <Button mode='contained' onPress={postReservation}>
         Confirm Reservation'
       </Button>
       {customer.map((customer) => (
-        <View style={{flexDirection: "row", justifyContent: "space-evenly"}} key={customer.reservation_id}>
+        <View
+          style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}
+          key={customer.reservation_id}
+        >
           <Text>{customer.full_name}</Text>
           <View>
-          <Text>{customer.date}</Text>
-          <Text>{customer.time}</Text>
+            <Text>{customer.date}</Text>
+            <Text>{customer.time}</Text>
           </View>
         </View>
       ))}
@@ -175,11 +177,11 @@ export default function ReservationPage() {
 }
 
 const styles = StyleSheet.create({
-
-  mainContainer: { 
+  mainContainer: {
     flex: 1,
-    justifyContent: "space-evenly",
-    marginTop: 10
-  }
-
+    justifyContent: 'space-evenly',
+    marginTop: 10,
+  },
 });
+
+// set time picker
