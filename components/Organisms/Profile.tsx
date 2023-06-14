@@ -1,10 +1,31 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Avatar, TextInput, Switch, Divider } from 'react-native-paper';
-
+import * as ImagePicker from 'expo-image-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Profile() {
+
+  const [imageUri, setImageUri] = useState<null>(null);
+
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
+    }
+  };
+
+
   return (
     <ScrollView
       style={styles.container}
@@ -18,7 +39,7 @@ export default function Profile() {
             width: 128,
             height: 128,
           }}
-          source={null}
+          source={{ uri: imageUri }}
         />
         <Button
           style={{
@@ -30,7 +51,7 @@ export default function Profile() {
           }}
           icon='camera'
           mode='contained'
-          onPress={() => console.log('Pressed')}
+          onPress={pickImage}
         >
           Change Picture
         </Button>
