@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View, } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { Button, Avatar, TextInput, Switch, Divider } from 'react-native-paper';
 
@@ -6,12 +6,28 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Profile() {
   return (
-    <ScrollView style={styles.container}
-    contentContainerStyle={styles.containContainer}>
-      <View style={[styles.imageContainer, {  }]}>
-        <Avatar.Image style={{alignSelf:'center', justifyContent: 'center', width: 128, height: 128}} source={null} />
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.containContainer}
+    >
+      <View style={[styles.imageContainer, {}]}>
+        <Avatar.Image
+          style={{
+            alignSelf: 'center',
+            justifyContent: 'center',
+            width: 128,
+            height: 128,
+          }}
+          source={null}
+        />
         <Button
-          style={{ width: 200, height: 50, justifyContent:'center', alignSelf:'center', marginTop: 20}}
+          style={{
+            width: 200,
+            height: 50,
+            justifyContent: 'center',
+            alignSelf: 'center',
+            marginTop: 20,
+          }}
           icon='camera'
           mode='contained'
           onPress={() => console.log('Pressed')}
@@ -19,10 +35,10 @@ export default function Profile() {
           Change Picture
         </Button>
       </View>
-      <View >
-        <TextInput label='First Name' value={null} onChangeText={null} />
-        <TextInput label='Last Name' value={null} onChangeText={null} />
-        <TextInput label='Email' value={null} onChangeText={null} />
+      <View>
+        <TextInput style={{margin: 5, height: 40}} label='First Name' value={null} onChangeText={null} />
+        <TextInput style={{margin: 5, height: 40}} label='Last Name' value={null} onChangeText={null} />
+        <TextInput style={{margin: 5, height: 40}} label='Email' value={null} onChangeText={null} />
       </View>
       <View style={styles.notificationContainer}>
         <Text> Notifications </Text>
@@ -60,18 +76,25 @@ export default function Profile() {
           </Text>
         </View>
       </View>
-      <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-      <Button  mode="elevated" onPress={() => console.log('Pressed')}>
-    Discard Changes
-    </Button>
-    <Button  mode='contained-tonal' onPress={() => console.log('Pressed')}>
-    Save Changes
-    </Button>
-        </View>
-        
-        <Divider /> 
+      <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+        <Button mode='elevated' onPress={() => console.log('Pressed')}>
+          Discard Changes
+        </Button>
+        <Button mode='contained-tonal' onPress={() => console.log('Pressed')}>
+          Save Changes
+        </Button>
+      </View>
+
+      <Divider />
       <Button
-        style={{ margin: 50, width: 200, height: 50, alignSelf: 'center', justifyContent: 'center' }}
+        style={{
+          flex: 1,
+          margin: 10,
+          width: 200,
+          height: 50,
+          alignSelf: 'center',
+          justifyContent: 'center',
+        }}
         mode='contained'
         onPress={() => console.log('Pressed')}
       >
@@ -86,11 +109,10 @@ const styles = StyleSheet.create({
     flex: 1,
     height: '20%',
     width: '80%',
-  alignSelf: 'center'    
+    alignSelf: 'center',
   },
-  containContainer: { 
-justifyContent: 'center',
-
+  containContainer: {
+    justifyContent: 'center',
   },
 
   imageContainer: {
@@ -99,15 +121,12 @@ justifyContent: 'center',
     margin: 20,
   },
   notificationContainer: {
-   
     justifyContent: 'space-evenly',
     alignItems: 'center',
     margin: 48,
   },
   switchContainer: {
-
-   // Adjust the space for Notifications 
-    
+    // Adjust the space for Notifications
   },
   switchText: {
     paddingRight: 50,
