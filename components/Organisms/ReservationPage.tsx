@@ -7,7 +7,6 @@ import {
   FlatList,
 } from 'react-native';
 import { useEffect, useState, useCallback } from 'react';
-// import DateTimePicker from '@react-native-community/datetimepicker';
 import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates';
 import { en, registerTranslation } from 'react-native-paper-dates';
 registerTranslation('en', en);
@@ -17,13 +16,6 @@ import { TextInput, Button, Divider } from 'react-native-paper';
 const db = SQLite.openDatabase('mydatabase.db');
 
 export default function ReservationPage() {
-  // Fill out form
-  //Adds First/last name to a databasei
-  //adds email and data
-
-  // 1. use Database - reservationsll
-  //2. create tale - name, email, date
-  // 3. submit reservations to into data base table
   const [isTextInput, setTextInput] = useState('');
   const [email, setEmail] = useState('');
   const [customer, setCustomer] = useState([]);
@@ -99,12 +91,12 @@ export default function ReservationPage() {
   };
 
   // Formates the date that is rendered
-  function formatDate(dateString) {
-    const date = new Date(dateString);
-    const options = { month: 'long', day: 'numeric', year: 'numeric' };
-    const formattedDate = date.toLocaleDateString('en-US', options);
-    return formattedDate;
-  }
+  // function formatDate(dateString) {
+  //   const date = new Date(dateString);
+  //   const options = { month: 'long', day: 'numeric', year: 'numeric' };
+  //   const formattedDate = date.toLocaleDateString('en-US', options);
+  //   return formattedDate;
+  // }
 
   // UPdates RESERVATIONS after each submit
   useEffect(() => {
@@ -113,54 +105,61 @@ export default function ReservationPage() {
 
   return (
     <View style={styles.mainContainer}>
-      <View style={{ height: 250, padding: 10, justifyContent: 'space-evenly'}}>
-      <TextInput
-        label='First and Last Name'
-        value={isTextInput}
-        onChangeText={(text) => setTextInput(text)}
-      />
-      <TextInput
-        label='Email'
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-      />
-      </View>
-      <View style={{  height: 100, justifyContent: 'space-between' }}>
-      <View style={{ justifyContent: 'center', alignItems: 'center'}}>
-        <Button onPress={() => setOpen(true)} uppercase={false} mode='outlined' style={{width: 250}}>
-          Pick single date
-        </Button>
-        <DatePickerModal
-          locale='en'
-          mode='single'
-          visible={open}
-          onDismiss={onDismissSingle}
-          date={date}
-          onConfirm={onConfirmSingle}
+      <View
+        style={{ height: 250, padding: 10, justifyContent: 'space-evenly' }}
+      >
+        <TextInput
+          label='First and Last Name'
+          value={isTextInput}
+          onChangeText={(text) => setTextInput(text)}
+        />
+        <TextInput
+          label='Email'
+          value={email}
+          onChangeText={(text) => setEmail(text)}
         />
       </View>
-      <View style={{ justifyContent: 'center', alignItems: 'center'}}>
-        <Button
-          onPress={() => setVisible(true)}
-          uppercase={false}
-          mode='outlined'
-          style={{width: 250}}
-        >
-          Pick time
+      <View style={{ height: 100, justifyContent: 'space-between' }}>
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <Button
+            onPress={() => setOpen(true)}
+            uppercase={false}
+            mode='outlined'
+            style={{ width: 250 }}
+          >
+            Pick single date
+          </Button>
+          <DatePickerModal
+            locale='en'
+            mode='single'
+            visible={open}
+            onDismiss={onDismissSingle}
+            date={date}
+            onConfirm={onConfirmSingle}
+          />
+        </View>
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <Button
+            onPress={() => setVisible(true)}
+            uppercase={false}
+            mode='outlined'
+            style={{ width: 250 }}
+          >
+            Pick time
+          </Button>
+          <TimePickerModal
+            visible={visible}
+            onDismiss={onDismiss}
+            onConfirm={onConfirm}
+            hours={12}
+            minutes={14}
+          />
+        </View>
+      </View>
+      <View style={{ flex: 1, justifyContent: 'center', padding: 10 }}>
+        <Button mode='contained' onPress={postReservation}>
+          Confirm Reservation'
         </Button>
-        <TimePickerModal
-          visible={visible}
-          onDismiss={onDismiss}
-          onConfirm={onConfirm}
-          hours={12}
-          minutes={14}
-        />
-      </View>
-      </View>
-      <View style={{flex: 1, justifyContent: 'center', padding: 10}}>
-      <Button mode='contained' onPress={postReservation}>
-        Confirm Reservation'
-      </Button>
       </View>
       {/* <View style={{ justifyContent: 'space-evenly', flexDirection: 'row' }}>
         <Text>Customer</Text>
@@ -189,11 +188,11 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 10,
   },
-  dataTexts:  {
+  dataTexts: {
     flex: 1,
     padding: 5,
-    alignSelf: 'flex-start'
-  }
+    alignSelf: 'flex-start',
+  },
 });
 
 // set time picker

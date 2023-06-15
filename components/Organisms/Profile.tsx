@@ -1,12 +1,15 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
 import { Button, Avatar, TextInput, Switch, Divider } from 'react-native-paper';
+// import {ReactComponent as defaultAvater } from '../../assets/account.svg'
 import * as ImagePicker from 'expo-image-picker';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
+
 
 export default function Profile() {
 
-  const [imageUri, setImageUri] = useState<null>(null);
+  const [imageUri, setImageUri] = useState<any>(null);
+  const [imageboolean, setImageBoolean] = useState<boolean>(true)
 
 
   const pickImage = async () => {
@@ -20,8 +23,12 @@ export default function Profile() {
 
     console.log(result);
 
-    if (!result.canceled) {
-      setImageUri(result.assets[0].uri);
+    if (result.cancelled) { 
+      console.log('Image picker was cancelled')
+    } else {
+      setImageUri(result[0].uri);
+      console.log('Image was set')
+      setImageBoolean(true)
     }
   };
 
@@ -36,10 +43,12 @@ export default function Profile() {
           style={{
             alignSelf: 'center',
             justifyContent: 'center',
+            alignItems: 'center',
             width: 128,
             height: 128,
+            
           }}
-          source={{ uri: imageUri }}
+          source={require('../../assets/account.png')}
         />
         <Button
           style={{
