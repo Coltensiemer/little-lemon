@@ -16,8 +16,6 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "NSPhotoLibraryUsageDescription": " `little Lemon` would like to access your photos.",
-      "NSCameraUsageDescription":  " `little Lemon` would like to access your photos."
     },
     "android": {
       "adaptiveIcon": {

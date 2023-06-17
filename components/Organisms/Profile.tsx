@@ -1,5 +1,5 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import React, { useState } from 'react';
+import { ScrollView, StyleSheet, Text, View, Platform, Image} from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { Button, Avatar, TextInput, Switch, Divider } from 'react-native-paper';
 // import {ReactComponent as defaultAvater } from '../../assets/account.svg'
 import * as ImagePicker from 'expo-image-picker';
@@ -9,8 +9,19 @@ import * as ImagePicker from 'expo-image-picker';
 export default function Profile() {
 
   const [imageUri, setImageUri] = useState<any>(null);
-  const [imageboolean, setImageBoolean] = useState<boolean>(true)
+  const [imageBoolean, setImageBoolean] = useState<boolean>(false)
 
+  useEffect(() => { 
+    const requestMediaLibraryPermissionsAsync = async () => {
+    if (Platform.OS !== 'web'){ 
+      const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync(); 
+        if (status !== 'granted') { 
+          alert('Permission Denied')
+        }
+    }
+  }
+  requestMediaLibraryPermissionsAsync()
+  },[])
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -20,17 +31,17 @@ export default function Profile() {
       aspect: [4, 3],
       quality: 1,
     });
-
     console.log(result);
-
-    if (result.cancelled) { 
-      console.log('Image picker was cancelled')
-    } else {
-      setImageUri(result[0].uri);
-      console.log('Image was set')
+    if (!result.cancelled) {
+      //@ts-expect-error
+      setImageUri(result.uri);
       setImageBoolean(true)
+    } else {
+      alert('You did not select any image.');
     }
   };
+
+  
 
 
   return (
@@ -39,7 +50,7 @@ export default function Profile() {
       contentContainerStyle={styles.containContainer}
     >
       <View style={[styles.imageContainer, {}]}>
-        <Avatar.Image
+        {/* <Avatar.Image
           style={{
             alignSelf: 'center',
             justifyContent: 'center',
@@ -48,8 +59,9 @@ export default function Profile() {
             height: 128,
             
           }}
-          source={require('../../assets/account.png')}
-        />
+          source={imageBoolean ? imageUri : require('../../assets/account.png')}
+        /> */}
+        <Image source={imageBoolean ? {uri: imageUri} : require('../../assets/account.png')} style={{width: 120, height:120, alignSelf: 'center'}}/>
         <Button
           style={{
             width: 200,
