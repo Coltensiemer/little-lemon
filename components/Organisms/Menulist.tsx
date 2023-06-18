@@ -2,150 +2,57 @@ import { useEffect, useState } from 'react';
 import { FlatList, SectionList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Filter from '../Atoms/Filter';
+import { json } from 'express';
 
-const values = [
-  {
-    id: 1,
-    title: 'Spinach Artichoke Dip',
-    price: '10',
-    category: {
-      title: 'Appetizers',
-    },
-  },
-  {
-    id: 2,
-    title: 'Hummus',
-    price: '10',
-    category: {
-      title: 'Appetizers',
-    },
-  },
-  {
-    id: 3,
-    title: 'Fried Calamari Rings',
-    price: '5',
-    category: {
-      title: 'Appetizers',
-    },
-  },
-  {
-    id: 4,
-    title: 'Fried Mushroom',
-    price: '12',
-    category: {
-      title: 'Appetizers',
-    },
-  },
-  {
-    id: 5,
-    title: 'Greek',
-    price: '7',
-    category: {
-      title: 'Salads',
-    },
-  },
-  {
-    id: 6,
-    title: 'Caesar',
-    price: '7',
-    category: {
-      title: 'Salads',
-    },
-  },
-  {
-    id: 7,
-    title: 'Tuna Salad',
-    price: '10',
-    category: {
-      title: 'Salads',
-    },
-  },
-  {
-    id: 8,
-    title: 'Grilled Chicken Salad',
-    price: '12',
-    category: {
-      title: 'Salads',
-    },
-  },
-  {
-    id: 9,
-    title: 'Water',
-    price: '3',
-    category: {
-      title: 'Beverages',
-    },
-  },
-  {
-    id: 10,
-    title: 'Coke',
-    price: '3',
-    category: {
-      title: 'Beverages',
-    },
-  },
-  {
-    id: 11,
-    title: 'Beer',
-    price: '7',
-    category: {
-      title: 'Beverages',
-    },
-  },
-  {
-    id: 12,
-    title: 'Iced Tea',
-    price: '3',
-    category: {
-      title: 'Beverages',
-    },
-  },
-];
 
+
+function editData(data) { 
+  const theData = data.reduce((acc, item) => { 
+    const { menu_title, item_title, price, id} = item; 
+    const existingSection = acc.find((sections) => sections.title === menu_title); 
+
+    if (existingSection) { 
+      existingSection.data.push({id, item_title, price})
+    }
+    else { 
+      acc.push({title: menu_title, data: [{id, item_title, price}]})
+    }
+    return acc
+  }, [])
+  return theData
+}; 
 
 export default function Menulist() {
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState([]);
+  const [menu, setMenu] = useState<any>([]); 
 
-  // const getMenu = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/menu-items-by-category.json'
-  //     );
-  //     const json = await response.json();
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-
-  //rendering Data
-  useEffect(() => {
-    setData(values);
-  }, []);
-
-  //Grouping the Data by Category.title
-  const groupData = values.reduce((acc, value) => {
-    const category = value.category.title;
-
-    // if not apart of category.title, make not category
-    if (!acc[category]) {
-      acc[category] = [];
+  const getMenu = async () => { 
+    try { 
+      const response = await fetch('http://localhost:3100/menu_items');
+      const jsonData = await response.json()
+      console.log('fetched', jsonData)
+      setMenu(editData(jsonData))
+      setLoading(true)
     }
+    catch (error) { 
+      console.log(`Error Message: ${error.Message}`)
+    }
+  }
 
-    //if apart of category.title, push items into category
-    acc[category].push(value);
+    //rendering Data
+    useEffect(() => {
+      getMenu()
+      console.log(menu)
+    }, []);
 
-    return acc;
-  }, {});
 
-  // converting GroupData to sections
-  const sections = Object.keys(groupData).map((category) => ({
-    title: category,
-    data: groupData[category],
-  }));
+    useEffect(() => { 
+      console.log(`Menu:`, menu)
+      console.log("Start of sections")
+      // console.log(sections)
+    },[menu])
+
 
   const renderHeader = ({ section }) => {
     return (
@@ -158,7 +65,7 @@ export default function Menulist() {
   const renderItem = ({ item }) => {
     return (
       <View style={styles.itemcontainer}>
-        <Text>{item.title}</Text>
+        <Text>{item.item_title}</Text>
         <Text>${item.price}</Text>
       </View>
     );
@@ -167,12 +74,16 @@ export default function Menulist() {
   return (
     <SafeAreaView style={styles.container}>
       <Filter />
+      {isLoading ? (
       <SectionList
-        sections={sections}
+        sections={menu}
         renderItem={renderItem}
-        keyExtractor={({ id }) => id}
+        keyExtractor={({ id }) => id.toString()}
         renderSectionHeader={renderHeader}
       />
+    ) : (
+      <Text>Loading...</Text>
+    )}
     </SafeAreaView>
   );
 }
