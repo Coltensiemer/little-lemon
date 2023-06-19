@@ -2,62 +2,58 @@ import { useEffect, useState } from 'react';
 import { FlatList, SectionList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Filter from '../Atoms/Filter';
-import { json } from 'express';
+import checkOutCart from '../../assets/cart-outline.svg'
 
+function editData(data) {
+  const theData = data.reduce((acc, item) => {
+    const { menu_title, item_title, price, id } = item;
+    const existingSection = acc.find(
+      (sections) => sections.title === menu_title
+    );
 
-
-function editData(data) { 
-  const theData = data.reduce((acc, item) => { 
-    const { menu_title, item_title, price, id} = item; 
-    const existingSection = acc.find((sections) => sections.title === menu_title); 
-
-    if (existingSection) { 
-      existingSection.data.push({id, item_title, price})
+    if (existingSection) {
+      existingSection.data.push({ id, item_title, price });
+    } else {
+      acc.push({ title: menu_title, data: [{ id, item_title, price }] });
     }
-    else { 
-      acc.push({title: menu_title, data: [{id, item_title, price}]})
-    }
-    return acc
-  }, [])
-  return theData
-}; 
+    return acc;
+  }, []);
+  return theData;
+}
 
 export default function Menulist() {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState([]);
-  const [menu, setMenu] = useState<any>([]); 
+  const [menu, setMenu] = useState<any>([]);
 
-  const getMenu = async () => { 
-    try { 
+  const getMenu = async () => {
+    try {
       const response = await fetch('http://localhost:3100/menu_items');
-      const jsonData = await response.json()
-      console.log('fetched', jsonData)
-      setMenu(editData(jsonData))
-      setLoading(true)
+      const jsonData = await response.json();
+      console.log('fetched', jsonData);
+      setMenu(editData(jsonData));
+      setLoading(true);
+    } catch (error) {
+      console.log(`Error Message: ${error.Message}`);
     }
-    catch (error) { 
-      console.log(`Error Message: ${error.Message}`)
-    }
-  }
+  };
 
-    //rendering Data
-    useEffect(() => {
-      getMenu()
-      console.log(menu)
-    }, []);
+  //rendering Data
+  useEffect(() => {
+    getMenu();
+    console.log(menu);
+  }, []);
 
-
-    useEffect(() => { 
-      console.log(`Menu:`, menu)
-      console.log("Start of sections")
-      // console.log(sections)
-    },[menu])
-
+  useEffect(() => {
+    console.log(`Menu:`, menu);
+    console.log('Start of sections');
+    // console.log(sections)
+  }, [menu]);
 
   const renderHeader = ({ section }) => {
     return (
-      <View>
-        <Text>{section.title}</Text>
+      <View style={{margin: 10, padding: 5, borderBottomWidth: 1, borderBottomColor: 'grey'}}>
+        <Text style={{fontWeight: 'bold'}}>{section.title}</Text>
       </View>
     );
   };
@@ -66,7 +62,7 @@ export default function Menulist() {
     return (
       <View style={styles.itemcontainer}>
         <Text>{item.item_title}</Text>
-        <Text>${item.price}</Text>
+        <Text style={{fontStyle: 'italic'}}>${item.price}</Text>
       </View>
     );
   };
@@ -75,15 +71,15 @@ export default function Menulist() {
     <SafeAreaView style={styles.container}>
       <Filter />
       {isLoading ? (
-      <SectionList
-        sections={menu}
-        renderItem={renderItem}
-        keyExtractor={({ id }) => id.toString()}
-        renderSectionHeader={renderHeader}
-      />
-    ) : (
-      <Text>Loading...</Text>
-    )}
+        <SectionList
+          sections={menu}
+          renderItem={renderItem}
+          keyExtractor={({ id }) => id.toString()}
+          renderSectionHeader={renderHeader}
+        />
+      ) : (
+        <Text>Loading...</Text>
+      )}
     </SafeAreaView>
   );
 }
@@ -94,7 +90,7 @@ const styles = StyleSheet.create({
     backgroundColor: '',
   },
   itemcontainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     paddingVertical: 10,
     paddingHorizontal: 20,
