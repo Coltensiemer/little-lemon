@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import { FlatList, SectionList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Filter from '../Atoms/Filter';
-import checkOutCart from '../../assets/cart-outline.svg'
+import { CartIcon } from '../Atoms/CartIcon';
+import { json } from 'express';
+
+
 
 function editData(data) {
   const theData = data.reduce((acc, item) => {
@@ -25,12 +28,13 @@ export default function Menulist() {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState([]);
   const [menu, setMenu] = useState<any>([]);
+  const  [isHeaders, setHeaders] = useState<any>()
+
 
   const getMenu = async () => {
     try {
       const response = await fetch('http://localhost:3100/menu_items');
       const jsonData = await response.json();
-      console.log('fetched', jsonData);
       setMenu(editData(jsonData));
       setLoading(true);
     } catch (error) {
@@ -38,22 +42,36 @@ export default function Menulist() {
     }
   };
 
+  const MenuHeaders = async () => {
+      try {
+        const response = await fetch('http://localhost:3100/menu'); 
+        const jsonData = response.json()
+        console.log(jsonData)
+        setHeaders(jsonData)
+  
+      } catch (error) {
+        console.log('You have an error when getting the menu header', { error });
+      }
+  } 
+
   //rendering Data
   useEffect(() => {
     getMenu();
-    console.log(menu);
+    MenuHeaders();
+   
   }, []);
-
-  useEffect(() => {
-    console.log(`Menu:`, menu);
-    console.log('Start of sections');
-    // console.log(sections)
-  }, [menu]);
 
   const renderHeader = ({ section }) => {
     return (
-      <View style={{margin: 10, padding: 5, borderBottomWidth: 1, borderBottomColor: 'grey'}}>
-        <Text style={{fontWeight: 'bold'}}>{section.title}</Text>
+      <View
+        style={{
+          margin: 10,
+          padding: 5,
+          borderBottomWidth: 1,
+          borderBottomColor: 'grey',
+        }}
+      >
+        <Text style={{ fontWeight: 'bold' }}>{section.title}</Text>
       </View>
     );
   };
@@ -61,8 +79,14 @@ export default function Menulist() {
   const renderItem = ({ item }) => {
     return (
       <View style={styles.itemcontainer}>
-        <Text>{item.item_title}</Text>
-        <Text style={{fontStyle: 'italic'}}>${item.price}</Text>
+        <View>
+          <Text>{item.item_title}</Text>
+          <Text style={{ fontStyle: 'italic' }}>${item.price}</Text>
+        </View>
+        <View style={{ alignItems: 'center' }}>
+          <CartIcon />
+          <Text style={{ fontSize: 10 }}>Add to Cart</Text>
+        </View>
       </View>
     );
   };
@@ -90,7 +114,7 @@ const styles = StyleSheet.create({
     backgroundColor: '',
   },
   itemcontainer: {
-    flexDirection: 'column',
+    flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: 10,
     paddingHorizontal: 20,
