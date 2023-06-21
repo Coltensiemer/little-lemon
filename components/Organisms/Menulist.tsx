@@ -4,6 +4,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Filter from '../Atoms/Filter';
 import { CartIcon } from '../Atoms/CartIcon';
 import { json } from 'express';
+import { G } from 'react-native-svg';
+import MenuHeaders from '../Atoms/MenuHeaders';
+
 
 
 
@@ -28,7 +31,7 @@ export default function Menulist() {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState([]);
   const [menu, setMenu] = useState<any>([]);
-  const  [isHeaders, setHeaders] = useState<any>()
+  
 
 
   const getMenu = async () => {
@@ -42,22 +45,11 @@ export default function Menulist() {
     }
   };
 
-  const MenuHeaders = async () => {
-      try {
-        const response = await fetch('http://localhost:3100/menu'); 
-        const jsonData = response.json()
-        console.log(jsonData)
-        setHeaders(jsonData)
-  
-      } catch (error) {
-        console.log('You have an error when getting the menu header', { error });
-      }
-  } 
+ 
 
   //rendering Data
   useEffect(() => {
     getMenu();
-    MenuHeaders();
    
   }, []);
 
@@ -94,6 +86,7 @@ export default function Menulist() {
   return (
     <SafeAreaView style={styles.container}>
       <Filter />
+      <MenuHeaders />
       {isLoading ? (
         <SectionList
           sections={menu}
