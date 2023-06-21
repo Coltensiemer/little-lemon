@@ -22,7 +22,7 @@ type styles = {
 
 const styles = StyleSheet.create({
 	container: { 
-		backgroundColor: 'white'
+		backgroundColor: null
 	},
 	logo: { 
 		margin:50,

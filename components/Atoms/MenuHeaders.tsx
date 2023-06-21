@@ -3,6 +3,7 @@ import { FlatList, SectionList, StyleSheet, Text, View } from 'react-native';
 
 export default function MenuHeaders() {
   const [isHeaders, setHeaders] = useState<any>();
+  const [isLoading, setLoading] = useState<boolean>(false)
 
   const transformInfoToArray = (info) => {
 	const transformedArray = info.map((item) => {
@@ -20,6 +21,7 @@ export default function MenuHeaders() {
       const jsonData = await response.json();
 	  const transform = transformInfoToArray(jsonData)
       setHeaders(transform);
+      setLoading(true)
       console.log('menu headers', isHeaders);
     } catch (error) {
       console.log('You have an error when getting the menu header', { error });
@@ -32,12 +34,16 @@ export default function MenuHeaders() {
   }, []);
 
   return (
-    <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-      {isHeaders.map((header) => (
+    <View style={{justifyContent: 'space-evenly', flexDirection: 'row'}}>
+    {isLoading === true ? (
+      isHeaders.map((header) => (
         <View key={header.id}>
-          <Text>{header.title}</Text>
+          <Text style={{padding: 10}}>{header.title}</Text>
         </View>
-      ))}
-    </View>
+      ))
+    ) : (
+      <Text>Loading...</Text>
+    )}
+  </View>
   );
 }

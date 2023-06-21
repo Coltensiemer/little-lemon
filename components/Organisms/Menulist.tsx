@@ -6,6 +6,8 @@ import { CartIcon } from '../Atoms/CartIcon';
 import { json } from 'express';
 import { G } from 'react-native-svg';
 import MenuHeaders from '../Atoms/MenuHeaders';
+import Header from '../Atoms/Header';
+
 
 
 
@@ -85,6 +87,7 @@ export default function Menulist() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Header /> 
       <Filter />
       <MenuHeaders />
       {isLoading ? (
