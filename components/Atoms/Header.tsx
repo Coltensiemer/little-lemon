@@ -2,13 +2,13 @@ import { StyleSheet, Text, View,Image, ViewStyle } from 'react-native'
 import React from 'react'
 
 
-export default function Header() {
+export default function Header( ) {
   return (
 	<View style={styles.container}>
 	  <Image 
 	  source={require("../../assets/littlelemonIcon/Logo.png")}
 	  //@ts-ignore
-	  style={styles.logo} /> 
+	  style={[styles.logo]} /> 
 	</View>
   )
 }
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
 		backgroundColor: null
 	},
 	logo: { 
-		margin:50,
+		// margin:50,
 	}
 
 })
