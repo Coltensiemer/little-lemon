@@ -9,8 +9,7 @@ import SignUpEmail from './components/Organisms/SignUpEmail';
 import Menulist from './components/Organisms/Menulist';
 import ReservationPage from './components/Organisms/ReservationPage';
 import Profile from './components/Organisms/Profile';
-import { en, registerTranslation } from 'react-native-paper-dates'
-registerTranslation('en', en)
+
 
 const Stack = createNativeStackNavigator( );
 
