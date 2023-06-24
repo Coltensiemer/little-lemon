@@ -19,6 +19,7 @@ function editData(data) {
       (sections) => sections.title === menu_title
     );
 
+
     if (existingSection) {
       existingSection.data.push({ id, item_title, price });
     } else {
@@ -34,6 +35,7 @@ export default function Menulist() {
   const [data, setData] = useState([]);
   const [menu, setMenu] = useState<any>([]);
   
+
 
 
   const getMenu = async () => {

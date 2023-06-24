@@ -6,32 +6,23 @@ import {
   Text,
   View,
   Platform,
+  TouchableOpacity
 } from 'react-native';
 import * as SQLite from 'expo-sqlite';
 
 
 
+
 export default function MenuHeaders() {
   const [isHeaders, setHeaders] = useState<any>();
-  const [isHeadersStoreage, setHeadersStorage] = useState<any>();
+  const [isSelectedId, setSelectedId] = useState<number>(null)
   const [isLoading, setLoading] = useState<boolean>(false);
 
-
-  function openDatabase() {
-    if (Platform.OS === 'web') {
-      return {
-        transaction: () => {
-          return {
-            executeSql: () => {},
-          };
-        },
-      };
-    }
   
-    const db = SQLite.openDatabase('db.db');
-    return db;
-  }
-  const db = openDatabase();
+  const handlePress = (id: number ) => {
+    setSelectedId(id);
+  };
+
 
   // Using for transforming PostSQL data into an array to store as state
   const transformInfoToArray = (info) => {
@@ -58,33 +49,11 @@ export default function MenuHeaders() {
     }
   };
 
-  const createTable = (para: any) => {
-      if (para.length <= 0) {
-        db.transaction((tx) => {
-          tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS menuheader (id INTEGER PRIMARY KEY NOT NULL, title TEXT);'
-          );
-  
-          tx.executeSql('DELETE FROM menuheader;'); // Deletes all records from the table
-  
-          // isHeaders.forEach((header) => {
-          //   tx.executeSql('INSERT INTO menuheader (id, title) VALUES (?, ?)', [
-          //     header.id,
-          //     header.title,
-          //   ]);
-          // });
-        });
-      }
-      else { 
-        return null
-      }
 
-    // return null; // Default return statement outside the useEffect hook
-  };
 
   useEffect(() => {
     MenuHeaderGet();
-    // createTable(isHeaders)
+   
   }, []);
 
 
@@ -94,8 +63,10 @@ export default function MenuHeaders() {
     <View style={{ justifyContent: 'space-evenly', flexDirection: 'row' }}>
       {isLoading === true ? (
         isHeaders.map((header) => (
-          <View key={header.id}>
-            <Text style={{ padding: 10 }}>{header.title}</Text>
+          <View key={header.id} style={{backgroundColor: isSelectedId === header.id ? 'gray' : null }}>
+            <TouchableOpacity onPress={() => handlePress(header.id)}> 
+            <Text style={{ padding: 10, color: isSelectedId === header.id ? 'yellow': 'black'}}>{header.title}</Text>
+            </TouchableOpacity>
           </View>
         ))
       ) : (

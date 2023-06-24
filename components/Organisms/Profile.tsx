@@ -6,6 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 
 
 
+
 export default function Profile() {
 
   const [imageUri, setImageUri] = useState<any>(null);
@@ -50,17 +51,6 @@ export default function Profile() {
       contentContainerStyle={styles.containContainer}
     >
       <View style={[styles.imageContainer, {}]}>
-        {/* <Avatar.Image
-          style={{
-            alignSelf: 'center',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: 128,
-            height: 128,
-            
-          }}
-          source={imageBoolean ? imageUri : require('../../assets/account.png')}
-        /> */}
         <Image source={imageBoolean ? {uri: imageUri} : require('../../assets/account.png')} style={{width: 120, height:120, alignSelf: 'center'}}/>
         <Button
           style={{
