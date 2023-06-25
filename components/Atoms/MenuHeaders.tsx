@@ -8,20 +8,23 @@ import {
   Platform,
   TouchableOpacity
 } from 'react-native';
-import * as SQLite from 'expo-sqlite';
 
 
 
 
-export default function MenuHeaders() {
+
+export default function MenuHeaders({onSelectHeader}) {
   const [isHeaders, setHeaders] = useState<any>();
   const [isSelectedId, setSelectedId] = useState<number>(null)
   const [isLoading, setLoading] = useState<boolean>(false);
 
-  
-  const handlePress = (id: number ) => {
+
+  const handlePress = (id) => {
     setSelectedId(id);
+    const selectedHeader = isHeaders.find((header) => header.id === id);
+    onSelectHeader(selectedHeader);
   };
+
 
 
   // Using for transforming PostSQL data into an array to store as state

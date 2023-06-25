@@ -1,5 +1,12 @@
-import { useEffect, useState } from 'react';
-import { FlatList, SectionList, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useState, useRef } from 'react';
+import {
+  FlatList,
+  SectionList,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Filter from '../Atoms/Filter';
 import { CartIcon } from '../Atoms/CartIcon';
@@ -8,35 +15,43 @@ import { G } from 'react-native-svg';
 import MenuHeaders from '../Atoms/MenuHeaders';
 import Header from '../Atoms/Header';
 
-
-
+// function to edit data into array for State to be reneder in FlatList
 
 
 function editData(data) {
-  const theData = data.reduce((acc, item) => {
-    const { menu_title, item_title, price, id } = item;
-    const existingSection = acc.find(
-      (sections) => sections.title === menu_title
-    );
 
+  const theData = data.reduce((acc, item) => {
+    const { menu_id, menu_title, item_title, price, id } = item;
+    const existingSection = acc.find((section) => section.title === menu_title);
 
     if (existingSection) {
-      existingSection.data.push({ id, item_title, price });
+      existingSection.data.push({ id, menu_id, item_title, price });
     } else {
-      acc.push({ title: menu_title, data: [{ id, item_title, price }] });
+      acc.push({
+        id: menu_id,
+        title: menu_title,
+        data: [{ id, menu_id, item_title, price }],
+      });
     }
+
     return acc;
   }, []);
+
   return theData;
 }
 
+
 export default function Menulist() {
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [data, setData] = useState([]);
+  const [isOpen, setIsOpen] = useState({});
+//Store selected header ID from MENUHEADERS
+  const [selectedHeader, setSelectedHeader] = useState(null);
+//Where API Fetch of menu is stored 
   const [menu, setMenu] = useState<any>([]);
-  
 
-
+  const handleHeaderSelection = (header: number) => {
+    setSelectedHeader(header);
+  };
 
   const getMenu = async () => {
     try {
@@ -49,32 +64,40 @@ export default function Menulist() {
     }
   };
 
- 
-
-  //rendering Data
+//rendering Data
   useEffect(() => {
     getMenu();
-   
+    console.log('menu!', menu)
   }, []);
 
   const renderHeader = ({ section }) => {
+
+
+    const isSelectedId = section.id === selectedHeader?.id; 
+  
+
     return (
-      <View
-        style={{
-          margin: 10,
-          padding: 5,
-          borderBottomWidth: 1,
-          borderBottomColor: 'grey',
-        }}
-      >
-        <Text style={{ fontWeight: 'bold' }}>{section.title}</Text>
-      </View>
+      <TouchableOpacity>
+        <View
+          style={[{
+            margin: 10,
+            padding: 5,
+            borderBottomWidth: 1,
+            borderBottomColor: 'grey',
+          },isSelectedId ? {backgroundColor: 'grey' } : null ]}
+        >
+          <Text style={{ fontWeight: 'bold' }}>{section.title}</Text>
+        </View>
+      </TouchableOpacity>
     );
   };
 
   const renderItem = ({ item }) => {
-    return (
-      <View style={styles.itemcontainer}>
+
+    const isSelectedId = item.menu_id === selectedHeader?.id 
+
+    return isOpen ? (
+      <View style={[styles.itemcontainer, isSelectedId ? {backgroundColor: 'grey'} : null ]}>
         <View>
           <Text>{item.item_title}</Text>
           <Text style={{ fontStyle: 'italic' }}>${item.price}</Text>
@@ -84,20 +107,22 @@ export default function Menulist() {
           <Text style={{ fontSize: 10 }}>Add to Cart</Text>
         </View>
       </View>
-    );
+    ) : null;
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header /> 
+      <Header />
       <Filter />
-      <MenuHeaders />
+      <Text>Selected Child id: {selectedHeader?.id} </Text>
+      <MenuHeaders onSelectHeader={handleHeaderSelection} />
       {isLoading ? (
         <SectionList
           sections={menu}
           renderItem={renderItem}
           keyExtractor={({ id }) => id.toString()}
           renderSectionHeader={renderHeader}
+          extraData={isOpen}
         />
       ) : (
         <Text>Loading...</Text>
