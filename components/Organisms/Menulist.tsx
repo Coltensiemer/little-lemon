@@ -10,8 +10,6 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Filter from '../Atoms/Filter';
 import { CartIcon } from '../Atoms/CartIcon';
-import { json } from 'express';
-import { G } from 'react-native-svg';
 import MenuHeaders from '../Atoms/MenuHeaders';
 import Header from '../Atoms/Header';
 
@@ -45,13 +43,20 @@ export default function Menulist() {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState({});
 //Store selected header ID from MENUHEADERS
-  const [selectedHeader, setSelectedHeader] = useState(null);
+  const [selectedHeader, setSelectedHeader] = useState<number>();
 //Where API Fetch of menu is stored 
   const [menu, setMenu] = useState<any>([]);
 
   const handleHeaderSelection = (header: number) => {
-    setSelectedHeader(header);
+    if (header === selectedHeader){ 
+      setSelectedHeader(null)
+    }else {
+    setSelectedHeader(header)
+    }
+    
   };
+
+
 
   const getMenu = async () => {
     try {
@@ -67,7 +72,6 @@ export default function Menulist() {
 //rendering Data
   useEffect(() => {
     getMenu();
-    console.log('menu!', menu)
   }, []);
 
   const renderHeader = ({ section }) => {
@@ -84,7 +88,7 @@ export default function Menulist() {
             padding: 5,
             borderBottomWidth: 1,
             borderBottomColor: 'grey',
-          },isSelectedId ? {backgroundColor: 'grey' } : null ]}
+          },isSelectedId ? {backgroundColor: '#D3D3D3' } : null ]}
         >
           <Text style={{ fontWeight: 'bold' }}>{section.title}</Text>
         </View>
@@ -95,9 +99,10 @@ export default function Menulist() {
   const renderItem = ({ item }) => {
 
     const isSelectedId = item.menu_id === selectedHeader?.id 
+    const isSelectedItem = isSelectedId && isOpen;
 
-    return isOpen ? (
-      <View style={[styles.itemcontainer, isSelectedId ? {backgroundColor: 'grey'} : null ]}>
+    return isSelectedItem ? (
+      <View style={[styles.itemcontainer, isSelectedId ? {backgroundColor: '#D3D3D3'} : null ]}>
         <View>
           <Text>{item.item_title}</Text>
           <Text style={{ fontStyle: 'italic' }}>${item.price}</Text>

@@ -19,10 +19,15 @@ export default function MenuHeaders({onSelectHeader}) {
   const [isLoading, setLoading] = useState<boolean>(false);
 
 
-  const handlePress = (id) => {
-    setSelectedId(id);
-    const selectedHeader = isHeaders.find((header) => header.id === id);
-    onSelectHeader(selectedHeader);
+  const handlePress = (id: number) => {
+    if (id === isSelectedId) {
+      setSelectedId(null)
+    } else { 
+      const selectedHeader = isHeaders.find((header) => header.id === id);
+      onSelectHeader(selectedHeader);
+      setSelectedId(id);
+      
+    }
   };
 
 
