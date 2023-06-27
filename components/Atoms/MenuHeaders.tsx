@@ -15,22 +15,31 @@ import {
 
 export default function MenuHeaders({onSelectHeader}) {
   const [isHeaders, setHeaders] = useState<any>();
-  const [isSelectedId, setSelectedId] = useState<number>(null)
+  const [isSelectedId, setSelectedId] = useState<number[]>([])
   const [isLoading, setLoading] = useState<boolean>(false);
 
 
-  const handlePress = (id: number) => {
-    if (id === isSelectedId) {
-      setSelectedId(null)
-    } else { 
+  const handlePress = (id: any) => {
+   
+    if (isSelectedId.includes(id)) {
+      setSelectedId((prev) =>  prev.filter((selectedId) => selectedId != id)) 
+     
       const selectedHeader = isHeaders.find((header) => header.id === id);
-      onSelectHeader(selectedHeader);
-      setSelectedId(id);
-      
+
+      onSelectHeader(selectedHeader)
+    } else { 
+       const selectedHeader = isHeaders.find((header) => header.id === id);
+ 
+      setSelectedId((prev) => [...prev, id])
+      onSelectHeader(selectedHeader)
     }
+
+    
   };
 
-
+// useEffect(() =>  {
+//   console.log(isSelectedId)
+// },[handlePress])
 
   // Using for transforming PostSQL data into an array to store as state
   const transformInfoToArray = (info) => {
@@ -51,7 +60,7 @@ export default function MenuHeaders({onSelectHeader}) {
       const transform = transformInfoToArray(jsonData);
       setHeaders(transform);
       setLoading(true);
-      console.log('state:', isHeaders);
+      // console.log('state:', isHeaders);
     } catch (error) {
       console.log('You have an error when getting the menu header', { error });
     }
@@ -71,9 +80,9 @@ export default function MenuHeaders({onSelectHeader}) {
     <View style={{ justifyContent: 'space-evenly', flexDirection: 'row' }}>
       {isLoading === true ? (
         isHeaders.map((header) => (
-          <View key={header.id} style={{backgroundColor: isSelectedId === header.id ? 'gray' : null }}>
+          <View key={header.id} style={{backgroundColor: isSelectedId.includes(header.id) ? 'gray' : null }}>
             <TouchableOpacity onPress={() => handlePress(header.id)}> 
-            <Text style={{ padding: 10, color: isSelectedId === header.id ? 'yellow': 'black'}}>{header.title}</Text>
+            <Text style={{ padding: 10, color: isSelectedId.includes(header.id) ? 'yellow': 'black'}}>{header.title}</Text>
             </TouchableOpacity>
           </View>
         ))

@@ -15,9 +15,7 @@ import Header from '../Atoms/Header';
 
 // function to edit data into array for State to be reneder in FlatList
 
-
 function editData(data) {
-
   const theData = data.reduce((acc, item) => {
     const { menu_id, menu_title, item_title, price, id } = item;
     const existingSection = acc.find((section) => section.title === menu_title);
@@ -38,25 +36,30 @@ function editData(data) {
   return theData;
 }
 
-
 export default function Menulist() {
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState({});
-//Store selected header ID from MENUHEADERS
-  const [selectedHeader, setSelectedHeader] = useState<number>();
-//Where API Fetch of menu is stored 
+  const [isOpen, setIsOpen] = useState(true);
+  //Store selected header ID from MENUHEADERS
+  const [selectedHeader, setSelectedHeader] = useState([]);
+  //Where API Fetch of menu is stored
   const [menu, setMenu] = useState<any>([]);
 
-  const handleHeaderSelection = (header: number) => {
-    if (header === selectedHeader){ 
-      setSelectedHeader(null)
-    }else {
-    setSelectedHeader(header)
-    }
+  const handleHeaderSelection = (header: any) => {
+    setIsOpen(false)
+    if (selectedHeader.includes(header)) {
+     
+      setSelectedHeader((prev) => prev.filter((head) => head != header));
     
+    } else {
+
+      setSelectedHeader((prev) => [...prev, header]);
+    }
   };
 
-
+  // useEffect(() => {
+  //   console.log('next item');
+  //   console.log('header', selectedHeader);
+  // }, [selectedHeader]);
 
   const getMenu = async () => {
     try {
@@ -69,40 +72,50 @@ export default function Menulist() {
     }
   };
 
-//rendering Data
+  //rendering Data
   useEffect(() => {
     getMenu();
   }, []);
 
+  // useEffect(() => { 
+  //   setIsOpen(false)
+  // }, [selectedHeader])
+
   const renderHeader = ({ section }) => {
+    const theHeader = selectedHeader.find((header) => header.id === section.id) || isOpen === true;
+    const isSelectedId = theHeader;
 
-
-    const isSelectedId = section.id === selectedHeader?.id; 
-  
-
-    return (
+    return isSelectedId ? (
       <TouchableOpacity>
         <View
-          style={[{
-            margin: 10,
-            padding: 5,
-            borderBottomWidth: 1,
-            borderBottomColor: 'grey',
-          },isSelectedId ? {backgroundColor: '#D3D3D3' } : null ]}
+          style={[
+            {
+              margin: 10,
+              padding: 5,
+              borderBottomWidth: 1,
+              borderBottomColor: 'grey',
+            },
+            isSelectedId
+              ? { backgroundColor: '#D3D3D3' }
+              : { backgroundColor: null },
+          ]}
         >
           <Text style={{ fontWeight: 'bold' }}>{section.title}</Text>
         </View>
       </TouchableOpacity>
-    );
+    ) : null 
   };
 
   const renderItem = ({ item }) => {
+    const theItem = selectedHeader.find((items) => items.id === item.menu_id) || isOpen === true;
 
-    const isSelectedId = item.menu_id === selectedHeader?.id 
-    const isSelectedItem = isSelectedId && isOpen;
-
-    return isSelectedItem ? (
-      <View style={[styles.itemcontainer, isSelectedId ? {backgroundColor: '#D3D3D3'} : null ]}>
+    return theItem ? (
+      <View
+        style={[
+          styles.itemcontainer,
+          theItem ? { backgroundColor: '#D3D3D3' } : null,
+        ]}
+      >
         <View>
           <Text>{item.item_title}</Text>
           <Text style={{ fontStyle: 'italic' }}>${item.price}</Text>
@@ -119,7 +132,10 @@ export default function Menulist() {
     <SafeAreaView style={styles.container}>
       <Header />
       <Filter />
-      <Text>Selected Child id: {selectedHeader?.id} </Text>
+      <Text>
+        Selected Child IDs:{' '}
+        {selectedHeader.map((header) => header.id).join(', ')}
+      </Text>
       <MenuHeaders onSelectHeader={handleHeaderSelection} />
       {isLoading ? (
         <SectionList
