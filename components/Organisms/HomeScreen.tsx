@@ -5,46 +5,45 @@ import OnboardButton from '../Atoms/OnboardButton';
 import ReservationPage from './ReservationPage';
 import { fetchUserData } from '../../assets/Database.js/reservationData';
 import { useIsFocused } from '@react-navigation/native';
-import { Button,useTheme } from 'react-native-paper';
+import { Button, useTheme } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 
 export default function HomeScreen() {
-  const theme = useTheme()
+  const theme = useTheme();
+  const navigation = useNavigation();
 
-const isFocused = useIsFocused()
+  const isFocused = useIsFocused();
 
-const [showData, setData] = useState([])
+  const [showData, setData] = useState([]);
 
+  useEffect(() => {
+    if (isFocused) {
+      fetchUserData((data) => {
+        setData(data);
+      });
+    }
+  }, [isFocused]);
 
-useEffect(() => { 
-  if (isFocused) {
-  fetchUserData((data)=> { 
-    setData(data)
-  })
-} 
-}, [isFocused])
-
-
-
-const reservationAmount =(data) => { 
-  const length = data.length
-  return length
-}
-
+  const reservationAmount = (data) => {
+    const length = data.length;
+    return length;
+  };
 
   return (
-    <View style={{backgroundColor: theme.colors.background}}>
+    <View style={{ backgroundColor: theme.colors.background, flex: 1 }}>
       <Header />
-
-      <OnboardButton
-        styleText={null}
-        label={'Make a Reservation'}
-        ScreenName={ReservationPage} // Going to Menu once setup
+      <View style={{flex:2, justifyContent: 'center'}}>
+      <Button
+        mode={'contained'}
+        compact={true}
         //@ts-ignore
-        styleContainer={null}
-        style={{
-          backgroundColor: 'yellow',
-        }}
-      />
+        onPress={() => navigation.navigate('ReservationPage')}
+        style={{width: 250, alignSelf: 'center'}}
+        
+        
+      >
+        Make A reservation Reservations
+      </Button>
 
       <Text
         style={{
@@ -54,28 +53,25 @@ const reservationAmount =(data) => {
       >
         Just Browsing?
       </Text>
-      <OnboardButton
-        styleText={{
-          color: 'yellow',
-        }}
-        label={'See the Menu'}
-        style={{
-          backgroundColor: 'black',
-          color: 'yellow',
-        }}
-        styleContainer={{
-          marginTop: 10,
-        }}
-        ScreenName={'Menulist'}
-      />
-      <OnboardButton
+      <Button
+        mode={'contained-tonal'}
+        compact={true}
+        style={{width: 250, alignSelf: 'center'}}
+        //@ts-ignore
+        onPress={() => navigation.navigate('Menulist')}
+      >
+        View Menu
+      </Button>
+      </View>
+
+      {/* <OnboardButton
         styleText={null}
         label={'Check Reservations'}
         style={null}
         styleContainer={null}
         ScreenName={'WaitList'}
-      />
-
+      /> */}
+<View style={{flex:1}}>
       <OnboardButton
         styleText={null}
         label={'Sign Up'}
@@ -93,12 +89,10 @@ const reservationAmount =(data) => {
         }}
         styleContainer={null}
         ScreenName={'Profile'}
-
       />
-      
 
       <Text>Current Reservations: {reservationAmount(showData)} </Text>
-    
+      </View>
     </View>
   );
 }

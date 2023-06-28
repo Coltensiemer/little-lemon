@@ -66,22 +66,10 @@ export default function Menulist() {
   const [dataSource, setDataSource] = useState(menu);
 
   // Filter the list with search
-  const handleFilterChange = (query) => {
-    setSearchQuery(query);
-  };
+  // const handleFilterChange = (query) => {
+  //   setSearchQuery(query);
+  // };
 
-  // useEffect(() => {
-  //   console.log('first');
-  //   const filterredItem = menu.filter((items) =>
-  //     items.title.toLowerCase().includes(isSearchQuery)
-  //   );
-
-  //   setFilteredData(filterredItem);
-
-  //   console.log(isFilteredData);
-  // }, [isSearchQuery]);
-
-  // filter the header items by click
   const handleHeaderSelection = (header: any) => {
     setIsOpen(false);
     if (selectedHeader.includes(header)) {
@@ -165,7 +153,7 @@ export default function Menulist() {
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
       <Header />
-      <Filter onChangeSearch={handleFilterChange} />
+      {/* <Filter onChangeSearch={handleFilterChange} /> */}
       <Text></Text>
       <MenuHeaders onSelectHeader={handleHeaderSelection} />
       {isLoading ? (
