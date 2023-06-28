@@ -16,7 +16,20 @@ import { ThemeProvider, useTheme } from 'react-native-paper';
 
 // function to edit data into array for State to be reneder in FlatList
 
-export function editData(data) {
+interface editData { 
+  id: number,
+			title: string,
+			data: [ 
+				{ 
+					id: number, 
+					menu_id: number, 
+					item_title: string,
+					price: number, 
+				}
+      ]
+}
+
+export function editData(data): editData {
   const theData = data.reduce((acc, item) => {
     const { menu_id, menu_title, item_title, price, id } = item;
     const existingSection = acc.find((section) => section.title === menu_title);
