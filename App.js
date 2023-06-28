@@ -6,7 +6,7 @@ import { MD3LightTheme as DefaultTheme, PaperProvider } from 'react-native-paper
 import HomeScreen from './components/Organisms/HomeScreen';
 import SignUpFirstName from './components/Organisms/SignUpFirstName';
 import SignUpEmail from './components/Organisms/SignUpEmail';
-import Menulist from './components/Organisms/Menulist';
+import Menulist from './components/Organisms/Menulist/Menulist';
 import ReservationPage from './components/Organisms/ReservationPage';
 import Profile from './components/Organisms/Profile';
 

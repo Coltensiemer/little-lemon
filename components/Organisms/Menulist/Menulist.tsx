@@ -8,15 +8,15 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Filter from '../Atoms/Filter';
-import { CartIcon } from '../Atoms/CartIcon';
-import MenuHeaders from '../Atoms/MenuHeaders';
-import Header from '../Atoms/Header';
+import Filter from '../../Atoms/Filter';
+import { CartIcon } from '../../Atoms/CartIcon';
+import MenuHeaders from '../../Atoms/MenuHeaders';
+import Header from '../../Atoms/Header';
 import { ThemeProvider, useTheme } from 'react-native-paper';
 
 // function to edit data into array for State to be reneder in FlatList
 
-function editData(data) {
+export function editData(data) {
   const theData = data.reduce((acc, item) => {
     const { menu_id, menu_title, item_title, price, id } = item;
     const existingSection = acc.find((section) => section.title === menu_title);
@@ -99,8 +99,8 @@ export default function Menulist() {
     getMenu();
   }, []);
 
-  useEffect(() => { 
-
+  //Render Menu is sections are closed
+  useEffect(() => {
  selectedHeader.length  <= 0 ?setIsOpen(true) : setIsOpen(false)
   }, [selectedHeader])
 
