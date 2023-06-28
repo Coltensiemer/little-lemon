@@ -11,11 +11,13 @@ import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates';
 import { en, registerTranslation } from 'react-native-paper-dates';
 registerTranslation('en', en);
 import * as SQLite from 'expo-sqlite';
-import { TextInput, Button, Divider } from 'react-native-paper';
+import { TextInput, Button, Divider, useTheme } from 'react-native-paper';
 
 const db = SQLite.openDatabase('mydatabase.db');
 
 export default function ReservationPage() {
+
+  const theme = useTheme()
 
   const [isTextInput, setTextInput] = useState('');
   const [email, setEmail] = useState('');
@@ -106,20 +108,22 @@ export default function ReservationPage() {
   }, [postReservation]);
 
   return (
-    <View style={styles.mainContainer}>
+    <View style={[styles.mainContainer, ]}>
       <View style={{ height: 250, padding: 10, justifyContent: 'space-evenly'}}>
       <TextInput
+      // style={{backgroundColor: theme.colors.tertiary}}
         label='First and Last Name'
         value={isTextInput}
         onChangeText={(text) => setTextInput(text)}
       />
       <TextInput
+        // style={{backgroundColor: theme.colors.tertiary}}
         label='Email'
         value={email}
         onChangeText={(text) => setEmail(text)}
       />
       </View>
-      <View style={{  height: 100, justifyContent: 'space-between' }}>
+      <View style={{  height: 100, justifyContent: 'space-between',}}>
       <View style={{ justifyContent: 'center', alignItems: 'center'}}>
         <Button onPress={() => setOpen(true)} uppercase={false} mode='outlined' style={{width: 250}}>
           Pick single date
@@ -138,7 +142,7 @@ export default function ReservationPage() {
           onPress={() => setVisible(true)}
           uppercase={false}
           mode='outlined'
-          style={{width: 250}}
+          style={{width: 250,}}
         >
           Pick time
         </Button>

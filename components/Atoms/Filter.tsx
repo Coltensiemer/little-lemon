@@ -1,16 +1,15 @@
 import * as React from 'react';
-import { Searchbar } from 'react-native-paper';
+import { Searchbar, useTheme } from 'react-native-paper';
 
-const MyComponent = () => {
-  const [searchQuery, setSearchQuery] = React.useState('');
-
-  const onChangeSearch = query => setSearchQuery(query);
+const MyComponent = ({ onChangeSearch } ) => {
+  const theme = useTheme()
 
   return (
     <Searchbar
       placeholder="Search"
       onChangeText={onChangeSearch}
-      value={searchQuery}
+       value={onChangeSearch}
+      //  style={{backgroundColor: theme.colors.tertiary}}
     />
   );
 };

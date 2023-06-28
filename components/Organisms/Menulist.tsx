@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useDebugValue } from 'react';
 import {
   FlatList,
   SectionList,
@@ -12,6 +12,7 @@ import Filter from '../Atoms/Filter';
 import { CartIcon } from '../Atoms/CartIcon';
 import MenuHeaders from '../Atoms/MenuHeaders';
 import Header from '../Atoms/Header';
+import { ThemeProvider, useTheme } from 'react-native-paper';
 
 // function to edit data into array for State to be reneder in FlatList
 
@@ -37,6 +38,8 @@ function editData(data) {
 }
 
 export default function Menulist() {
+  const theme = useTheme();
+
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState(true);
   //Store selected header ID from MENUHEADERS
@@ -44,22 +47,41 @@ export default function Menulist() {
   //Where API Fetch of menu is stored
   const [menu, setMenu] = useState<any>([]);
 
-  const handleHeaderSelection = (header: any) => {
-    setIsOpen(false)
-    if (selectedHeader.includes(header)) {
-     
-      setSelectedHeader((prev) => prev.filter((head) => head != header));
-    
-    } else {
+  const [isFilteredData, setFilteredData] = useState([]);
+  const [isSearchQuery, setSearchQuery] = useState('');
 
-      setSelectedHeader((prev) => [...prev, header]);
-    }
+  const [dataSource, setDataSource] = useState(menu);
+
+  // Filter the list with search
+  const handleFilterChange = (query) => {
+    setSearchQuery(query);
   };
 
   // useEffect(() => {
-  //   console.log('next item');
-  //   console.log('header', selectedHeader);
-  // }, [selectedHeader]);
+  //   console.log('first');
+  //   const filterredItem = menu.filter((items) =>
+  //     items.title.toLowerCase().includes(isSearchQuery)
+  //   );
+
+  //   setFilteredData(filterredItem);
+
+  //   console.log(isFilteredData);
+  // }, [isSearchQuery]);
+
+  // filter the header items by click
+  const handleHeaderSelection = (header: any) => {
+    setIsOpen(false);
+    if (selectedHeader.includes(header)) {
+      setSelectedHeader((prev) => prev.filter((head) => head != header));
+    } else  {
+      setSelectedHeader((prev) => [...prev, header]);
+     
+    } 
+
+ 
+  };
+
+ 
 
   const getMenu = async () => {
     try {
@@ -77,12 +99,15 @@ export default function Menulist() {
     getMenu();
   }, []);
 
-  // useEffect(() => { 
-  //   setIsOpen(false)
-  // }, [selectedHeader])
+  useEffect(() => { 
+
+ selectedHeader.length  <= 0 ?setIsOpen(true) : setIsOpen(false)
+  }, [selectedHeader])
 
   const renderHeader = ({ section }) => {
-    const theHeader = selectedHeader.find((header) => header.id === section.id) || isOpen === true;
+    const theHeader =
+      selectedHeader.find((header) => header.id === section.id) ||
+      isOpen === true;
     const isSelectedId = theHeader;
 
     return isSelectedId ? (
@@ -95,27 +120,21 @@ export default function Menulist() {
               borderBottomWidth: 1,
               borderBottomColor: 'grey',
             },
-            isSelectedId
-              ? { backgroundColor: '#D3D3D3' }
-              : { backgroundColor: null },
           ]}
         >
           <Text style={{ fontWeight: 'bold' }}>{section.title}</Text>
         </View>
       </TouchableOpacity>
-    ) : null 
+    ) : null;
   };
 
   const renderItem = ({ item }) => {
-    const theItem = selectedHeader.find((items) => items.id === item.menu_id) || isOpen === true;
+    const theItem =
+      selectedHeader.find((items) => items.id === item.menu_id) ||
+      isOpen === true;
 
     return theItem ? (
-      <View
-        style={[
-          styles.itemcontainer,
-          theItem ? { backgroundColor: '#D3D3D3' } : null,
-        ]}
-      >
+      <View style={[styles.itemcontainer]}>
         <View>
           <Text>{item.item_title}</Text>
           <Text style={{ fontStyle: 'italic' }}>${item.price}</Text>
@@ -129,21 +148,20 @@ export default function Menulist() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
       <Header />
-      <Filter />
-      <Text>
-        Selected Child IDs:{' '}
-        {selectedHeader.map((header) => header.id).join(', ')}
-      </Text>
+      <Filter onChangeSearch={handleFilterChange} />
+      <Text></Text>
       <MenuHeaders onSelectHeader={handleHeaderSelection} />
       {isLoading ? (
         <SectionList
           sections={menu}
+          // sections={menu}
           renderItem={renderItem}
           keyExtractor={({ id }) => id.toString()}
           renderSectionHeader={renderHeader}
-          extraData={isOpen}
         />
       ) : (
         <Text>Loading...</Text>
@@ -155,7 +173,6 @@ export default function Menulist() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '',
   },
   itemcontainer: {
     flexDirection: 'row',

@@ -5,9 +5,10 @@ import OnboardButton from '../Atoms/OnboardButton';
 import ReservationPage from './ReservationPage';
 import { fetchUserData } from '../../assets/Database.js/reservationData';
 import { useIsFocused } from '@react-navigation/native';
-import { Button } from 'react-native-paper';
+import { Button,useTheme } from 'react-native-paper';
 
 export default function HomeScreen() {
+  const theme = useTheme()
 
 const isFocused = useIsFocused()
 
@@ -31,7 +32,7 @@ const reservationAmount =(data) => {
 
 
   return (
-    <View>
+    <View style={{backgroundColor: theme.colors.background}}>
       <Header />
 
       <OnboardButton
