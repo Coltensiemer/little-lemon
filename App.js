@@ -21,10 +21,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 function HomeStackScreen() {
   const HomeStack = createNativeStackNavigator();
   return (
+
     <HomeStack.Navigator>
       <HomeStack.Screen name='HomeScreen' component={HomeScreen} />
       <HomeStack.Screen name='Reservations' component={ReservationPage} />
     </HomeStack.Navigator>
+
   );
 }
 
@@ -81,15 +83,17 @@ export default function App() {
   const Tab = createBottomTabNavigator();
 
   return (
-    // <PaperProvider theme={theme}>
+
     <NavigationContainer>
+          <PaperProvider theme={theme}>
       <Tab.Navigator screenOptions={{ headerShown: true }}>
         <Tab.Screen name='Home' component={HomeStackScreen} />
         <Tab.Screen name='Menu' component={Menulist} /> 
         <Tab.Screen name='Profile' component={Profile} />
       </Tab.Navigator>
+      </PaperProvider>
     </NavigationContainer>
-    // </PaperProvider>
+
   );
 }
 

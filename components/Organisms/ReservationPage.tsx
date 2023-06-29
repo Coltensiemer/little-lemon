@@ -177,7 +177,7 @@ export default function ReservationPage() {
       </View>
       <FlatList
         data={customer}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <View
             style={{ flexDirection: 'row', }}
