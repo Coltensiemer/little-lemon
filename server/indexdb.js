@@ -4,6 +4,8 @@ const cors = require('cors');
 const pool = require('./db');
 const port = 3100;
 
+
+
 //middleware
 app.use(cors());
 app.use(express.json());
@@ -53,7 +55,9 @@ app.get('/menu', async (req, res) => {
 
 app.get('/menu_items', async (req, res) => {
   try {
-    const getMenu = await pool.query('SELECT m.title AS menu_title, menu_id,  mi.title AS item_title, mi.price, mi.id FROM menu m INNER JOIN menu_items mi ON m.id = mi.menu_id');
+    let queryString = 'SELECT m.title AS menu_title, menu_id,  mi.title AS item_title, mi.price, mi.id FROM menu m INNER JOIN menu_items mi ON m.id = mi.menu_id';
+ 
+    const getMenu = await pool.query(queryString);
     res.json(getMenu.rows);
   } catch (error) {
     console.log(`You have an error: ${error.message}`);
@@ -61,3 +65,18 @@ app.get('/menu_items', async (req, res) => {
 });
 
 
+
+
+
+app.get('/menu_query', async (req, res) => { 
+  try { 
+    // let queryString = 'SELECT * FROM menu_items WHERE title LIKE '%B%' ';
+    
+    const getMenu = await pool.query("SELECT * FROM menu_items WHERE title LIKE '%h%'");
+    res.json(getMenu.rows); 
+  }
+  catch (error) {
+    console.log('Error in Query:', {error}) 
+
+  }
+})

@@ -12,8 +12,13 @@ import { en, registerTranslation } from 'react-native-paper-dates';
 registerTranslation('en', en);
 import * as SQLite from 'expo-sqlite';
 import { TextInput, Button, Divider, useTheme } from 'react-native-paper';
+import Header from '../Atoms/Header';
 
 const db = SQLite.openDatabase('mydatabase.db');
+
+
+
+
 
 export default function ReservationPage() {
 
@@ -28,6 +33,7 @@ export default function ReservationPage() {
   const [time, setTime] = useState(undefined);
   const [date, setDate] = useState(undefined);
   const [open, setOpen] = useState(false);
+  
 
   const onDismissSingle = useCallback(() => {
     setOpen(false);
@@ -41,6 +47,7 @@ export default function ReservationPage() {
     (params) => {
       setOpen(false);
       setDate(params.date);
+      console.log(params.date)
     },
     [setOpen, setDate]
   );
@@ -109,15 +116,16 @@ export default function ReservationPage() {
 
   return (
     <View style={[styles.mainContainer, ]}>
+      <Header /> 
       <View style={{ height: 250, padding: 10, justifyContent: 'space-evenly'}}>
       <TextInput
-      // style={{backgroundColor: theme.colors.tertiary}}
+  
         label='First and Last Name'
         value={isTextInput}
         onChangeText={(text) => setTextInput(text)}
       />
       <TextInput
-        // style={{backgroundColor: theme.colors.tertiary}}
+
         label='Email'
         value={email}
         onChangeText={(text) => setEmail(text)}
@@ -136,6 +144,7 @@ export default function ReservationPage() {
           date={date}
           onConfirm={onConfirmSingle}
         />
+          <Text>{date ? formatDate(date) : null}</Text>
       </View>
       <View style={{ justifyContent: 'center', alignItems: 'center'}}>
         <Button
@@ -146,6 +155,7 @@ export default function ReservationPage() {
         >
           Pick time
         </Button>
+      
         <TimePickerModal
           visible={visible}
           onDismiss={onDismiss}
@@ -153,11 +163,12 @@ export default function ReservationPage() {
           hours={12}
           minutes={14}
         />
+          <Text> {time}</Text>
       </View>
       </View>
       <View style={{flex: 1, justifyContent: 'center', padding: 10}}>
       <Button mode='contained' onPress={postReservation}>
-        Confirm Reservation'
+        Confirm Reservation
       </Button>
       </View>
       <View style={{ justifyContent: 'space-evenly', flexDirection: 'row' }}>

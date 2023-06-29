@@ -13,20 +13,22 @@ import { CartIcon } from '../../Atoms/CartIcon';
 import MenuHeaders from '../../Atoms/MenuHeaders';
 import Header from '../../Atoms/Header';
 import { ThemeProvider, useTheme } from 'react-native-paper';
+import debounce from 'lodash.debounce';
+import { json } from 'express';
 
 // function to edit data into array for State to be reneder in FlatList
 
-interface editData { 
-  id: number,
-			title: string,
-			data: [ 
-				{ 
-					id: number, 
-					menu_id: number, 
-					item_title: string,
-					price: number, 
-				}
-      ]
+interface editData {
+  id: number;
+  title: string;
+  data: [
+    {
+      id: number;
+      menu_id: number;
+      item_title: string;
+      price: number;
+    }
+  ];
 }
 
 export function editData(data): editData {
@@ -59,36 +61,56 @@ export default function Menulist() {
   const [selectedHeader, setSelectedHeader] = useState([]);
   //Where API Fetch of menu is stored
   const [menu, setMenu] = useState<any>([]);
+  const [unEditMenu, setunEditMenu] = useState<any>([]);
 
   const [isFilteredData, setFilteredData] = useState([]);
-  const [isSearchQuery, setSearchQuery] = useState('');
+  const [isSearchQuery, setSearchQuery] = useState();
+  const debouncedSearchQuery = useRef(
+    debounce((query) => setSearchQuery(query), 500)
+  ).current;
 
-  const [dataSource, setDataSource] = useState(menu);
+
 
   // Filter the list with search
   // const handleFilterChange = (query) => {
   //   setSearchQuery(query);
+  //   const filterData = menu.filter((eventData) => { 
+  //     if (isSearchQuery === "") 
+  //   })
+
   // };
+
+
+
+  // useEffect(() => { 
+  //   if (isSearchQuery === '') {
+  //   } else { 
+  //     setFilteredData(menu)
+  //     console.log('unfiltered', menu[3])
+  
+  //   }
+
+  // }, [isSearchQuery, menu])
+
+
+
 
   const handleHeaderSelection = (header: any) => {
     setIsOpen(false);
     if (selectedHeader.includes(header)) {
       setSelectedHeader((prev) => prev.filter((head) => head != header));
-    } else  {
+    } else {
       setSelectedHeader((prev) => [...prev, header]);
-     
-    } 
-
- 
+    }
   };
-
- 
 
   const getMenu = async () => {
     try {
+      // orginal -- don't delele
       const response = await fetch('http://localhost:3100/menu_items');
       const jsonData = await response.json();
-      setMenu(editData(jsonData));
+      // setunEditMenu(jsonData)
+      setMenu(editData(jsonData))
       setLoading(true);
     } catch (error) {
       console.log(`Error Message: ${error.Message}`);
@@ -100,10 +122,11 @@ export default function Menulist() {
     getMenu();
   }, []);
 
+
   //Render Menu is sections are closed
   useEffect(() => {
- selectedHeader.length  <= 0 ?setIsOpen(true) : setIsOpen(false)
-  }, [selectedHeader])
+    selectedHeader.length <= 0 ? setIsOpen(true) : setIsOpen(false);
+  }, [selectedHeader]);
 
   const renderHeader = ({ section }) => {
     const theHeader =
@@ -158,8 +181,8 @@ export default function Menulist() {
       <MenuHeaders onSelectHeader={handleHeaderSelection} />
       {isLoading ? (
         <SectionList
+          // sections={isFilteredData}
           sections={menu}
-          // sections={menu}
           renderItem={renderItem}
           keyExtractor={({ id }) => id.toString()}
           renderSectionHeader={renderHeader}

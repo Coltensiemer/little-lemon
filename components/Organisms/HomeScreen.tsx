@@ -6,9 +6,12 @@ import ReservationPage from './ReservationPage';
 import { fetchUserData } from '../../assets/Database.js/reservationData';
 import { useIsFocused } from '@react-navigation/native';
 import { Button, useTheme } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 export default function HomeScreen() {
+
+  const Tab = createBottomTabNavigator()
   const theme = useTheme();
   const navigation = useNavigation();
 
