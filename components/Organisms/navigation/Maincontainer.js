@@ -14,14 +14,14 @@ const SettingName = 'Settings'
 const Tab = createBottomTabNavigator; 
 
 export default function Maincontainer() { 
-	return [
-		<NavigationContainer>
-			<Tab.Navigator>
-				<Tab.Screen name="Home" component={HomeScreen} /> 
-				<Tab.Screen name="Settings" component={Profile} /> 
+	// return [
+	// 	<NavigationContainer>
+	// 		<Tab.Navigator>
+	// 			<Tab.Screen name="Home" component={HomeScreen} /> 
+	// 			<Tab.Screen name="Settings" component={Profile} /> 
 			
 
-			</Tab.Navigator>
-		</NavigationContainer>
-	]
+	// 		</Tab.Navigator>
+	// 	</NavigationContainer>
+	// ]
 }

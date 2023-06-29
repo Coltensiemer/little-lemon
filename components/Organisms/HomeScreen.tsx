@@ -8,16 +8,20 @@ import { useIsFocused } from '@react-navigation/native';
 import { Button, useTheme } from 'react-native-paper';
 import { useNavigation, NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Menulist from './Menulist/Menulist';
 
-export default function HomeScreen() {
 
-  const Tab = createBottomTabNavigator()
+
+
+
+
+export default function HomeScreen({navigation}) {
   const theme = useTheme();
-  const navigation = useNavigation();
-
   const isFocused = useIsFocused();
-
   const [showData, setData] = useState([]);
+
+
 
   useEffect(() => {
     if (isFocused) {
@@ -35,36 +39,34 @@ export default function HomeScreen() {
   return (
     <View style={{ backgroundColor: theme.colors.background, flex: 1 }}>
       <Header />
-      <View style={{flex:2, justifyContent: 'center'}}>
-      <Button
-        mode={'contained'}
-        compact={true}
-        //@ts-ignore
-        onPress={() => navigation.navigate('ReservationPage')}
-        style={{width: 250, alignSelf: 'center'}}
-        
-        
-      >
-        Make A reservation Reservations
-      </Button>
+      <View style={{ flex: 2, justifyContent: 'center' }}>
+        <Button
+          mode={'contained'}
+          compact={true}
+          //@ts-ignore
+          onPress={() => navigation.navigate('Reservations')}
+          style={{ width: 250, alignSelf: 'center' }}
+        >
+          Make A reservation Reservations
+        </Button>
 
-      <Text
-        style={{
-          alignSelf: 'center',
-          marginTop: 50,
-        }}
-      >
-        Just Browsing?
-      </Text>
-      <Button
-        mode={'contained-tonal'}
-        compact={true}
-        style={{width: 250, alignSelf: 'center'}}
-        //@ts-ignore
-        onPress={() => navigation.navigate('Menulist')}
-      >
-        View Menu
-      </Button>
+        <Text
+          style={{
+            alignSelf: 'center',
+            marginTop: 50,
+          }}
+        >
+          Just Browsing?
+        </Text>
+        <Button
+          mode={'contained-tonal'}
+          compact={true}
+          style={{ width: 250, alignSelf: 'center' }}
+          //@ts-ignore
+          onPress={() => navigation.navigate('Menulist')}
+        >
+          View Menu
+        </Button>
       </View>
 
       {/* <OnboardButton
@@ -74,27 +76,27 @@ export default function HomeScreen() {
         styleContainer={null}
         ScreenName={'WaitList'}
       /> */}
-<View style={{flex:1}}>
-      <OnboardButton
-        styleText={null}
-        label={'Sign Up'}
-        style={{
-          backgroundColor: 'none',
-        }}
-        styleContainer={null}
-        ScreenName={'FirstName'}
-      />
-      <OnboardButton
-        styleText={null}
-        label={'Profile'}
-        style={{
-          backgroundColor: 'none',
-        }}
-        styleContainer={null}
-        ScreenName={'Profile'}
-      />
+      <View style={{ flex: 1 }}>
+        <OnboardButton
+          styleText={null}
+          label={'Sign Up'}
+          style={{
+            backgroundColor: 'none',
+          }}
+          styleContainer={null}
+          ScreenName={'FirstName'}
+        />
+        <OnboardButton
+          styleText={null}
+          label={'Profile'}
+          style={{
+            backgroundColor: 'none',
+          }}
+          styleContainer={null}
+          ScreenName={'Profile'}
+        />
 
-      <Text>Current Reservations: {reservationAmount(showData)} </Text>
+        <Text>Current Reservations: {reservationAmount(showData)} </Text>
       </View>
     </View>
   );
