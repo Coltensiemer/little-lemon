@@ -85,7 +85,7 @@ export default function App() {
   return (
 
     <NavigationContainer>
-          <PaperProvider theme={theme}>
+     <PaperProvider theme={theme}>
       <Tab.Navigator screenOptions={{ headerShown: true }}>
         <Tab.Screen name='Home' component={HomeStackScreen} />
         <Tab.Screen name='Menu' component={Menulist} /> 

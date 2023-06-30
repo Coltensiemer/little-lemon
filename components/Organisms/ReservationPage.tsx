@@ -26,7 +26,8 @@ export default function ReservationPage() {
 
   const [isTextInput, setTextInput] = useState('');
   const [email, setEmail] = useState('');
-  const [customer, setCustomer] = useState([]);
+  const [customer, setCustomer] = useState<any>()
+  const [isPartyNumber, setPartyNumber] = useState<any>()
 
   const [visible, setVisible] = useState(false);
 
@@ -70,6 +71,7 @@ export default function ReservationPage() {
         email: email,
         date: date,
         time: time,
+        group_total: isPartyNumber,
       };
 
       const options = {
@@ -115,24 +117,36 @@ export default function ReservationPage() {
   }, [postReservation]);
 
   return (
+    <ScrollView style={{flex: 1}}>
     <View style={[styles.mainContainer, ]}>
       <Header /> 
       <View style={{ height: 250, padding: 10, justifyContent: 'space-evenly'}}>
       <TextInput
-  
+        mode='outlined'
         label='First and Last Name'
         value={isTextInput}
         onChangeText={(text) => setTextInput(text)}
       />
       <TextInput
-
+        mode='outlined'
         label='Email'
         value={email}
         onChangeText={(text) => setEmail(text)}
       />
       </View>
-      <View style={{  height: 100, justifyContent: 'space-between',}}>
-      <View style={{ justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{flex: 1, justifyContent: 'space-around',flexDirection: 'row', alignItems: 'center', marginBottom: 20}}>
+        <Text> Enter Party Amount</Text>
+            <TextInput 
+            onChangeText={(number: any) => setPartyNumber(number)}
+            mode="outlined"
+            textAlign='center'
+            keyboardType='number-pad'
+            maxLength={2}
+            style={{width:50, alignSelf:'center',}}
+            /> 
+      </View>
+      <View style={{ flex: 1, height: 100, justifyContent: 'space-between',}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <Button onPress={() => setOpen(true)} uppercase={false} mode='outlined' style={{width: 250}}>
           Pick single date
         </Button>
@@ -146,7 +160,7 @@ export default function ReservationPage() {
         />
           <Text>{date ? formatDate(date) : null}</Text>
       </View>
-      <View style={{ justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <Button
           onPress={() => setVisible(true)}
           uppercase={false}
@@ -166,16 +180,17 @@ export default function ReservationPage() {
           <Text> {time}</Text>
       </View>
       </View>
+  
       <View style={{flex: 1, justifyContent: 'center', padding: 10}}>
       <Button mode='contained' onPress={postReservation}>
         Confirm Reservation
       </Button>
       </View>
-      <View style={{ justifyContent: 'space-evenly', flexDirection: 'row' }}>
+      {/* <View style={{ justifyContent: 'space-evenly', flexDirection: 'row' }}>
         <Text>Customer</Text>
         <Text>Date and Time</Text>
-      </View>
-      <FlatList
+      </View> */}
+      {/* <FlatList
         data={customer}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
@@ -188,8 +203,9 @@ export default function ReservationPage() {
             <Text style={styles.dataTexts}>{item.time}</Text>
           </View>
         )}
-      />
+      /> */}
     </View>
+    </ScrollView>
   );
 }
 

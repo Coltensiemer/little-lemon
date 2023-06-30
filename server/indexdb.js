@@ -6,6 +6,11 @@ const port = 3100;
 
 
 
+// To Get server to connect locally and running 
+//cd in Terminal to ./server
+//nodemon indexdb  --- to watch for every change 
+
+
 //middleware
 app.use(cors());
 app.use(express.json());
@@ -15,10 +20,10 @@ app.use(express.json());
 // Added a reservation
 app.post('/reservations', async (req, res) => {
   try {
-    const { full_name, email, date, time } = req.body;
+    const { full_name, email, date, time, group_total } = req.body;
     const newReservation = await pool.query(
-      'INSERT INTO  reservations (full_name, email, date, time) VALUES($1, $2, $3, $4) RETURNING *',
-      [full_name, email, date, time]
+      'INSERT INTO  reservations (full_name, email, date, time, group_total) VALUES($1, $2, $3, $4, $5) RETURNING *',
+      [full_name, email, date, time, group_total]
     );
 
     console.log(res.body);
