@@ -13,6 +13,7 @@ registerTranslation('en', en);
 import * as SQLite from 'expo-sqlite';
 import { TextInput, Button, Divider, useTheme } from 'react-native-paper';
 import Header from '../Atoms/Header';
+import {useForm, Controller } from 'react-hook-form'
 
 const db = SQLite.openDatabase('mydatabase.db');
 
@@ -24,16 +25,21 @@ export default function ReservationPage() {
 
   const theme = useTheme()
 
-  const [isTextInput, setTextInput] = useState('');
-  const [email, setEmail] = useState('');
-  const [customer, setCustomer] = useState<any>()
+  // input data that is store in state
+  const [isTextInput, setTextInput] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [isPartyNumber, setPartyNumber] = useState<any>()
 
-  const [visible, setVisible] = useState(false);
+ // Date and time date that is stored in state 
+  const [time, setTime] = useState<any>(undefined);
+  const [date, setDate] = useState<any>(undefined);
 
-  const [time, setTime] = useState(undefined);
-  const [date, setDate] = useState(undefined);
-  const [open, setOpen] = useState(false);
+  // conditional rendering booleans 
+  const [open, setOpen] = useState<boolean>(false);
+  const [visible, setVisible] = useState<boolean>(false);
+
+  // State to retreve and store customers reservations made 
+  const [customer, setCustomer] = useState<any>()
   
 
   const onDismissSingle = useCallback(() => {
@@ -112,9 +118,9 @@ export default function ReservationPage() {
   }
 
   // UPdates RESERVATIONS after each submit
-  useEffect(() => {
-    getAllReservations();
-  }, [postReservation]);
+  // useEffect(() => {
+  //   getAllReservations();
+  // }, [postReservation]);
 
   return (
     <ScrollView style={{flex: 1}}>
