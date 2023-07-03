@@ -1,4 +1,5 @@
 import {
+  Animated,
   StyleSheet,
   Text,
   View,
@@ -17,8 +18,18 @@ import { useForm, Controller, useFormState } from 'react-hook-form';
 
 const db = SQLite.openDatabase('mydatabase.db');
 
+
+type FormValues = { 
+  full_name: string,
+  email: string 
+  date: string
+  time:string 
+  group_total: string
+}
+
 export default function ReservationPage() {
   const theme = useTheme();
+
 
   // input data that is store in state
   const [isName, setName] = useState<string>('');
@@ -104,7 +115,7 @@ export default function ReservationPage() {
 
   // Fake onsubmit
 
-  const onSubmitform = (d: any) => {
+  const onSubmitform = (d: FormValues) => {
     try {
       console.log({ isEmail, isName, d });
       
@@ -170,7 +181,7 @@ export default function ReservationPage() {
               />
             )}
           />
-          {errors.firstName && <Text>This is required.</Text>}
+    <Text style={ errors.firstName? {color: 'black'} : {color: 'transparent'}}>This is required.</Text>
 
           <Controller
             control={control}
@@ -200,7 +211,7 @@ export default function ReservationPage() {
             )}
       
           />
-          {errors.isEmail && <Text>This is required.</Text>}
+          <Text style={ errors.isEmail ? {color: 'black'} : {color: 'transparent'}}>This is required.</Text>
         </View>
         <View
           style={{
@@ -236,28 +247,49 @@ export default function ReservationPage() {
             keyboardType='number-pad'
             maxLength={2}
             error={!!errors.isPartySize}
-            style={{ width: 50, alignSelf: 'center' }}
+            style={{ width: 50, alignSelf: 'center', marginBottom: 10 }}
             />
   )}
           />
 
-{errors.isPartySize && <Text>This is required.</Text>}
+<Text style={ errors.isPartySize ? {color: 'black'} : {color: 'transparent'}}>This is required.</Text>
 </View>
       
           
         </View>
-        <View style={{ flex: 1, height: 100, justifyContent: 'space-between' }}>
+       
+        <View style={{ flex: 2, height: 100, justifyContent: 'space-around',}}>
           <View
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+            style={{ flex: 1, justifyContent: 'space-around', alignItems: 'center',}}
           >
+            
+         <Controller 
+          name='date'
+          defaultValue=""
+          rules={{
+            required: { 
+              value: true, 
+              message: 'Date is required'
+            },
+            pattern: { 
+              value: /^[0-9]+$/,
+              message: 'Date is invalid'
+            }
+            
+          }}
+          control={control}
+          render={({ field: { onChange, onBlur, value } }) => (
             <Button
               onPress={() => setOpen(true)}
               uppercase={false}
               mode='outlined'
+              textColor={errors.date ? 'red' : null}
               style={{ width: 250 }}
             >
               Pick single date
             </Button>
+               )} 
+               /> 
             <DatePickerModal
               locale='en'
               mode='single'
@@ -265,20 +297,42 @@ export default function ReservationPage() {
               onDismiss={onDismissSingle}
               date={date}
               onConfirm={onConfirmSingle}
-            />
-            <Text>{date ? formatDate(date) : null}</Text>
+         
+          /> 
+            
           </View>
+
+
           <View
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}
           >
+                  <Controller 
+          name='time'
+          defaultValue=""
+          rules={{
+            required: { 
+              value: true, 
+              message: 'Date is required'
+            },
+            pattern: { 
+              value: /^[0-9]+$/,
+              message: 'Date is invalid'
+            }
+            
+          }}
+          control={control}
+          render={({ field: { onChange, onBlur, value } }) => (
             <Button
               onPress={() => setVisible(true)}
               uppercase={false}
               mode='outlined'
               style={{ width: 250 }}
+              textColor={errors.time ? 'red' : null}
             >
               Pick time
             </Button>
+          )} 
+            /> 
 
             <TimePickerModal
               visible={visible}
@@ -287,15 +341,27 @@ export default function ReservationPage() {
               hours={12}
               minutes={14}
             />
-            <Text> {time}</Text>
+           
           </View>
         </View>
 
+        <View style={{flexDirection: 'row', justifyContent:'space-evenly', flex: 1, margin: 10}}>
+        <Text>{date ? formatDate(date) : null}</Text>
+        <Text> {time}</Text>
+        
+        </View>
+
+
+        <Divider bold={true} /> 
+
+            {/* Submit BUTTON */}
         <View style={{ flex: 1, justifyContent: 'center', padding: 10 }}>
           <Button mode='contained' onPress={handleSubmit(onSubmitform)}>
             Confirm Reservation
           </Button>
         </View>
+
+
         {/* <View style={{ justifyContent: 'space-evenly', flexDirection: 'row' }}>
         <Text>Customer</Text>
         <Text>Date and Time</Text>
@@ -314,6 +380,8 @@ export default function ReservationPage() {
           </View>
         )}
       /> */}
+
+
       </View>
     </ScrollView>
   );
