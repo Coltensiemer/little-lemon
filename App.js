@@ -97,28 +97,3 @@ export default function App() {
   );
 }
 
-// <NavigationContainer>
-//       <Stack.Navigator >
-//       {/* <Stack.Screen name='Home' component={Maincontainer} /> */}
-//         {/* <Stack.Screen
-//           name='Home'
-//           component={HomeScreen}
-//           options={{
-//             title: 'My home',
-//             headerStyle: {
-//               backgroundColor: 'yellow',
-//             },
-//             headerTintColor: '#000000',
-//             headerTitleStyle: {
-//               fontWeight: 'bold',
-//             },
-//           }}
-//         /> */}
-//         <Stack.Screen name='Email' component={SignUpEmail} />
-//         <Stack.Screen name='FirstName' component={SignUpFirstName} />
-//         <Stack.Screen name='Menulist' component={Menulist} />
-//         <Stack.Screen name='ReservationPage' component={ReservationPage} />
-//         <Stack.Screen name='Profile' component={Profile} />
-
-//       </Stack.Navigator>
-//     </NavigationContainer>
