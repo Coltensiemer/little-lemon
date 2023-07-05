@@ -62,6 +62,7 @@ export default function ReservationPage() {
     control,
     handleSubmit,
     formState: { errors },
+    getValues,
   } = useForm();
 
   console.log('errors', errors)
@@ -117,7 +118,8 @@ export default function ReservationPage() {
 
   const onSubmitform = (d: FormValues) => {
     try {
-      console.log({ isEmail, isName, d });
+      console.log("get Values:", getValues )
+      // console.log({ isEmail, isName, d });
       
     } catch (error) {
 
@@ -230,18 +232,18 @@ export default function ReservationPage() {
           rules={{
             required: { 
               value: true, 
-              message: 'Email is required'
+              message: 'Party is required'
             },
             pattern: { 
-              value: /^[0-9]+$/,
-              message: 'Email is invalid'
+              value: /^\d{1,2}$/,
+              message: 'Party Number is invalid'
             }
             
           }}
           control={control}
           render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
-            onChangeText={(number: any) => setPartyNumber(number)}
+            onChangeText={(number: any) => onChange(number)}
             mode='outlined'
             textAlign='center'
             keyboardType='number-pad'
@@ -268,7 +270,7 @@ export default function ReservationPage() {
           defaultValue=""
           rules={{
             required: { 
-              value: true, 
+              value: false, 
               message: 'Date is required'
             },
             pattern: { 
@@ -311,7 +313,7 @@ export default function ReservationPage() {
           defaultValue=""
           rules={{
             required: { 
-              value: true, 
+              value: false, 
               message: 'Date is required'
             },
             pattern: { 
