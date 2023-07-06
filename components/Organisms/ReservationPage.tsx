@@ -18,18 +18,16 @@ import { useForm, Controller, useFormState } from 'react-hook-form';
 
 const db = SQLite.openDatabase('mydatabase.db');
 
-
-type FormValues = { 
-  full_name: string,
-  email: string 
-  date: string
-  time:string 
-  group_total: string
-}
+type FormValues = {
+  full_name: string;
+  email: string;
+  date: string;
+  time: string;
+  group_total: string;
+};
 
 export default function ReservationPage() {
   const theme = useTheme();
-
 
   // input data that is store in state
   const [isName, setName] = useState<string>('');
@@ -47,9 +45,6 @@ export default function ReservationPage() {
   // State to retreve and store customers reservations made
   const [customer, setCustomer] = useState<any>();
 
-  
-
-
   const onDismissSingle = useCallback(() => {
     setOpen(false);
   }, [setOpen]);
@@ -65,7 +60,7 @@ export default function ReservationPage() {
     getValues,
   } = useForm();
 
-  console.log('errors', errors)
+  // console.log('errors', errors)
 
   // Confirm single DATE PICKER
   const onConfirmSingle = useCallback(
@@ -87,45 +82,80 @@ export default function ReservationPage() {
     [setVisible]
   );
 
-  // submit reservation to database
-  const postReservation = async () => {
+  const submitForm = async (data: any) => {
     try {
-      const body = {
-        full_name: isName,
-        isEmail: isEmail,
-        date: date,
-        time: time,
-        group_total: isPartyNumber,
-      };
+      const formData = {
 
+        full_name: data.firstName,
+        isEmail: data.isEmail,
+        time: '20:20:00',
+        date: '2023-06-08',
+        group_total: data.isPartySize
+      };
+  
       const options = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
+        body: JSON.stringify(formData),
       };
-
-      fetch('http://localhost:3100/reservations', options).then((response) =>
-        response.json()
-      );
-      // .then((response) => console.log(response));
-    } catch (err) {
-      console.log(err);
+  
+      const response = await fetch('http://localhost:3100/reservations', options);
+      const responseData = await response.json();
+  
+      console.log('Response:', responseData);
+      console.log('POST request succeeded');
+    } catch (error) {
+      console.log('Error:', error);
     }
-    console.log('button was pressed');
   };
+  
+  // Use the submitForm function in the submit button's onPress event
+  <Button mode='contained' onPress={submitForm}>
+    Confirm Reservation
+  </Button>
+  
+
+  // submit reservation to database
+  // const postReservation = async (data: any) => {
+  //   try {
+  //     const body = {
+  
+  //       full_name: 'colten',
+  //       isEmail: 'colten50@hotmail.com',
+  //       time: '20:20:00',
+  //       date: '2023-06-08',
+  //       group_total: 50,
+  //     };
+
+  //     const options = {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify(body),
+  //     };
+
+  //     fetch('http://localhost:3100/reservations', options).then((response) =>
+  //       response.json()
+  //     );
+
+      
+  //     console.log(data)
+  //     console.log('body', body);
+  //     console.log('POST worked');
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  //   console.log('button was pressed');
+  // };
 
   // Fake onsubmit
 
   const onSubmitform = (d: FormValues) => {
     try {
-      console.log("get Values:", getValues )
+      console.log('get Values:', getValues());
       // console.log({ isEmail, isName, d });
-      
     } catch (error) {
-
-      console.log('error on form', error.message)
+      console.log('error on form', error.message);
     }
- 
   };
 
   // get ALL Reservations
@@ -163,42 +193,45 @@ export default function ReservationPage() {
         >
           <Controller
             control={control}
-            
             name='firstName'
-            defaultValue=""
+            defaultValue=''
             rules={{
-              required: { 
-                value: true, 
-                message: 'Name is required'
-              }, 
-              
+              required: {
+                value: true,
+                message: 'Name is required',
+              },
             }}
-             render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
                 mode='outlined'
                 label='First and Last Name'
                 error={!!errors.firstName}
-                onChangeText={(text) => (onChange(text))}
+                onChangeText={(text) => onChange(text)}
                 // onBlur={onBlur}
               />
             )}
           />
-    <Text style={ errors.firstName? {color: 'black'} : {color: 'transparent'}}>This is required.</Text>
+          <Text
+            style={
+              errors.firstName ? { color: 'black' } : { color: 'transparent' }
+            }
+          >
+            This is required.
+          </Text>
 
           <Controller
             control={control}
             name='isEmail'
-            defaultValue=""
+            defaultValue=''
             rules={{
-              required: { 
-                value: true, 
-                message: 'Email is required'
+              required: {
+                value: true,
+                message: 'Email is required',
               },
-              pattern: { 
+              pattern: {
                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: 'Email is invalid'
-              }
-              
+                message: 'Email is invalid',
+              },
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
@@ -211,9 +244,14 @@ export default function ReservationPage() {
                 // style={{null}}
               />
             )}
-      
           />
-          <Text style={ errors.isEmail ? {color: 'black'} : {color: 'transparent'}}>This is required.</Text>
+          <Text
+            style={
+              errors.isEmail ? { color: 'black' } : { color: 'transparent' }
+            }
+          >
+            This is required.
+          </Text>
         </View>
         <View
           style={{
@@ -226,72 +264,79 @@ export default function ReservationPage() {
         >
           <Text> Enter Party Amount</Text>
           <View>
-          <Controller 
-          name='isPartySize'
-          defaultValue=""
-          rules={{
-            required: { 
-              value: true, 
-              message: 'Party is required'
-            },
-            pattern: { 
-              value: /^\d{1,2}$/,
-              message: 'Party Number is invalid'
-            }
-            
-          }}
-          control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            onChangeText={(number: any) => onChange(number)}
-            mode='outlined'
-            textAlign='center'
-            keyboardType='number-pad'
-            maxLength={2}
-            error={!!errors.isPartySize}
-            style={{ width: 50, alignSelf: 'center', marginBottom: 10 }}
+            <Controller
+              name='isPartySize'
+              defaultValue=''
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Party is required',
+                },
+                pattern: {
+                  value: /^\d{1,2}$/,
+                  message: 'Party Number is invalid',
+                },
+              }}
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  onChangeText={(number: any) => onChange(number)}
+                  mode='outlined'
+                  textAlign='center'
+                  keyboardType='number-pad'
+                  maxLength={2}
+                  error={!!errors.isPartySize}
+                  style={{ width: 75, alignSelf: 'center', marginBottom: 10 }}
+                />
+              )}
             />
-  )}
-          />
 
-<Text style={ errors.isPartySize ? {color: 'black'} : {color: 'transparent'}}>This is required.</Text>
-</View>
-      
-          
-        </View>
-       
-        <View style={{ flex: 2, height: 100, justifyContent: 'space-around',}}>
-          <View
-            style={{ flex: 1, justifyContent: 'space-around', alignItems: 'center',}}
-          >
-            
-         <Controller 
-          name='date'
-          defaultValue=""
-          rules={{
-            required: { 
-              value: false, 
-              message: 'Date is required'
-            },
-            pattern: { 
-              value: /^[0-9]+$/,
-              message: 'Date is invalid'
-            }
-            
-          }}
-          control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <Button
-              onPress={() => setOpen(true)}
-              uppercase={false}
-              mode='outlined'
-              textColor={errors.date ? 'red' : null}
-              style={{ width: 250 }}
+            <Text
+              style={
+                errors.isPartySize
+                  ? { color: 'black' }
+                  : { color: 'transparent' }
+              }
             >
-              Pick single date
-            </Button>
-               )} 
-               /> 
+              This is required.
+            </Text>
+          </View>
+        </View>
+
+        <View style={{ flex: 2, height: 100, justifyContent: 'space-around' }}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'space-around',
+              alignItems: 'center',
+            }}
+          >
+            <Controller
+              name='date'
+              defaultValue=''
+              rules={{
+                required: {
+                  value: false,
+                  message: 'Date is required',
+                },
+                pattern: {
+                  value: /^[0-9]+$/,
+                  message: 'Date is invalid',
+                },
+              }}
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Button
+                  onPress={() => setOpen(true)}
+                  uppercase={false}
+                  mode='outlined'
+                  textColor={errors.date ? 'red' : null}
+                  style={{ width: 250 }}
+                >
+                  Pick single date
+                </Button>
+              )}
+            />
             <DatePickerModal
               locale='en'
               mode='single'
@@ -299,42 +344,38 @@ export default function ReservationPage() {
               onDismiss={onDismissSingle}
               date={date}
               onConfirm={onConfirmSingle}
-         
-          /> 
-            
+            />
           </View>
 
-
           <View
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
           >
-                  <Controller 
-          name='time'
-          defaultValue=""
-          rules={{
-            required: { 
-              value: false, 
-              message: 'Date is required'
-            },
-            pattern: { 
-              value: /^[0-9]+$/,
-              message: 'Date is invalid'
-            }
-            
-          }}
-          control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <Button
-              onPress={() => setVisible(true)}
-              uppercase={false}
-              mode='outlined'
-              style={{ width: 250 }}
-              textColor={errors.time ? 'red' : null}
-            >
-              Pick time
-            </Button>
-          )} 
-            /> 
+            <Controller
+              name='time'
+              defaultValue=''
+              rules={{
+                required: {
+                  value: false,
+                  message: 'Date is required',
+                },
+                pattern: {
+                  value: /^[0-9]+$/,
+                  message: 'Date is invalid',
+                },
+              }}
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Button
+                  onPress={() => setVisible(true)}
+                  uppercase={false}
+                  mode='outlined'
+                  style={{ width: 250 }}
+                  textColor={errors.time ? 'red' : null}
+                >
+                  Pick time
+                </Button>
+              )}
+            />
 
             <TimePickerModal
               visible={visible}
@@ -343,26 +384,29 @@ export default function ReservationPage() {
               hours={12}
               minutes={14}
             />
-           
           </View>
         </View>
 
-        <View style={{flexDirection: 'row', justifyContent:'space-evenly', flex: 1, margin: 10}}>
-        <Text>{date ? formatDate(date) : null}</Text>
-        <Text> {time}</Text>
-        
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            flex: 1,
+            margin: 10,
+          }}
+        >
+          <Text>{date ? formatDate(date) : null}</Text>
+          <Text> {time}</Text>
         </View>
 
+        <Divider bold={true} />
 
-        <Divider bold={true} /> 
-
-            {/* Submit BUTTON */}
+        {/* Submit BUTTON */}
         <View style={{ flex: 1, justifyContent: 'center', padding: 10 }}>
-          <Button mode='contained' onPress={handleSubmit(onSubmitform)}>
+          <Button mode='contained' onPress={handleSubmit(submitForm)}>
             Confirm Reservation
           </Button>
         </View>
-
 
         {/* <View style={{ justifyContent: 'space-evenly', flexDirection: 'row' }}>
         <Text>Customer</Text>
@@ -382,8 +426,6 @@ export default function ReservationPage() {
           </View>
         )}
       /> */}
-
-
       </View>
     </ScrollView>
   );
