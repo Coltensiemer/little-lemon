@@ -15,6 +15,7 @@ import * as SQLite from 'expo-sqlite';
 import { TextInput, Button, Divider, useTheme } from 'react-native-paper';
 import Header from '../Atoms/Header';
 import { useForm, Controller, useFormState } from 'react-hook-form';
+import EmailInput from '../Atoms/EmailInput';
 
 const db = SQLite.openDatabase('mydatabase.db');
 
@@ -83,11 +84,15 @@ export default function ReservationPage() {
   );
 
   const submitForm = async (data: any) => {
+
+    // const email  = getValues()
+
+    // console.log(email.isEmail)
     try {
       const formData = {
 
         full_name: data.firstName,
-        isEmail: data.isEmail,
+        email: data.isEmail,
         time: '20:20:00',
         date: '2023-06-08',
         group_total: data.isPartySize
@@ -110,42 +115,11 @@ export default function ReservationPage() {
   };
   
   // Use the submitForm function in the submit button's onPress event
-  <Button mode='contained' onPress={submitForm}>
-    Confirm Reservation
-  </Button>
+  // <Button mode='contained' onPress={submitForm}>
+  //   Confirm Reservation
+  // </Button>
   
 
-  // submit reservation to database
-  // const postReservation = async (data: any) => {
-  //   try {
-  //     const body = {
-  
-  //       full_name: 'colten',
-  //       isEmail: 'colten50@hotmail.com',
-  //       time: '20:20:00',
-  //       date: '2023-06-08',
-  //       group_total: 50,
-  //     };
-
-  //     const options = {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify(body),
-  //     };
-
-  //     fetch('http://localhost:3100/reservations', options).then((response) =>
-  //       response.json()
-  //     );
-
-      
-  //     console.log(data)
-  //     console.log('body', body);
-  //     console.log('POST worked');
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  //   console.log('button was pressed');
-  // };
 
   // Fake onsubmit
 
@@ -178,6 +152,8 @@ export default function ReservationPage() {
     const formattedDate = date.toLocaleDateString('en-US', options);
     return formattedDate;
   }
+
+ 
 
   // UPdates RESERVATIONS after each submit
   // useEffect(() => {
