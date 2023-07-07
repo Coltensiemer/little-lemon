@@ -14,7 +14,7 @@ registerTranslation('en', en);
 import * as SQLite from 'expo-sqlite';
 import { TextInput, Button, Divider, useTheme } from 'react-native-paper';
 import Header from '../Atoms/Header';
-import { useForm, Controller, useFormState } from 'react-hook-form';
+import { useForm, Controller, useFormState, set } from 'react-hook-form';
 import EmailInput from '../Atoms/EmailInput';
 
 const db = SQLite.openDatabase('mydatabase.db');
@@ -85,16 +85,16 @@ export default function ReservationPage() {
 
   const submitForm = async (data: any) => {
 
-    // const email  = getValues()
+    const datas  = getValues()
 
-    // console.log(email.isEmail)
+    console.log(datas)
     try {
       const formData = {
 
         full_name: data.firstName,
         email: data.isEmail,
-        time: '20:20:00',
-        date: '2023-06-08',
+        time: formatTime({ hours: data.time.hours, minutes: data.time.minutes }),
+        date: data.date.date, // Since using date Picker, date is set as an object inside of data.date
         group_total: data.isPartySize
       };
   
@@ -114,23 +114,11 @@ export default function ReservationPage() {
     }
   };
   
-  // Use the submitForm function in the submit button's onPress event
-  // <Button mode='contained' onPress={submitForm}>
-  //   Confirm Reservation
-  // </Button>
+
   
 
 
-  // Fake onsubmit
 
-  const onSubmitform = (d: FormValues) => {
-    try {
-      console.log('get Values:', getValues());
-      // console.log({ isEmail, isName, d });
-    } catch (error) {
-      console.log('error on form', error.message);
-    }
-  };
 
   // get ALL Reservations
   const getAllReservations = async () => {
@@ -151,6 +139,12 @@ export default function ReservationPage() {
     //@ts-ignore
     const formattedDate = date.toLocaleDateString('en-US', options);
     return formattedDate;
+  }
+
+  function formatTime({ hours, minutes }) {
+    const paddedHours = hours.toString().padStart(2, '0');
+    const paddedMinutes = minutes.toString().padStart(2, '0');
+    return `${paddedHours}:${paddedMinutes}:00`;
   }
 
  
@@ -279,7 +273,7 @@ export default function ReservationPage() {
           </View>
         </View>
 
-        <View style={{ flex: 2, height: 100, justifyContent: 'space-around' }}>
+        <View style={{ flex: 1, height: 300, justifyContent: 'space-around' }}>
           <View
             style={{
               flex: 1,
@@ -295,32 +289,39 @@ export default function ReservationPage() {
                   value: false,
                   message: 'Date is required',
                 },
-                pattern: {
-                  value: /^[0-9]+$/,
-                  message: 'Date is invalid',
-                },
+                // pattern: {
+                //   value: /^[0-9]+$/,
+                //   message: 'Date is invalid',
+                // },
               }}
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
-                <Button
-                  onPress={() => setOpen(true)}
-                  uppercase={false}
-                  mode='outlined'
-                  textColor={errors.date ? 'red' : null}
-                  style={{ width: 250 }}
-                >
-                  Pick single date
-                </Button>
+                <View>
+                  <Button
+                    onPress={() => setOpen(true)}
+                    uppercase={false}
+                    mode='outlined'
+                    textColor={errors.date ? 'red' : null}
+                    style={{ width: 250, height: 50 }}
+                  >
+                    Pick single date
+                  </Button>
+                  <DatePickerModal
+                    locale='en'
+                    mode='single'
+                    visible={open}
+                    onDismiss={onDismissSingle}
+                    date={date}
+                    onConfirm={data => {
+                      onChange(data);
+                      setOpen(false);
+                    }}
+                  />
+                </View>
               )}
+              
             />
-            <DatePickerModal
-              locale='en'
-              mode='single'
-              visible={open}
-              onDismiss={onDismissSingle}
-              date={date}
-              onConfirm={onConfirmSingle}
-            />
+           
           </View>
 
           <View
@@ -334,33 +335,36 @@ export default function ReservationPage() {
                   value: false,
                   message: 'Date is required',
                 },
-                pattern: {
-                  value: /^[0-9]+$/,
-                  message: 'Date is invalid',
-                },
+                // pattern: {
+                //   value: /^[0-9]+$/,
+                //   message: 'Date is invalid',
+                // },
               }}
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
+                <View >
                 <Button
                   onPress={() => setVisible(true)}
                   uppercase={false}
                   mode='outlined'
-                  style={{ width: 250 }}
+                  style={{ width: 250, height: 50 }}
                   textColor={errors.time ? 'red' : null}
                 >
                   Pick time
                 </Button>
-              )}
-            />
-
-            <TimePickerModal
+                <TimePickerModal
               visible={visible}
               onDismiss={onDismiss}
-              onConfirm={onConfirm}
+              onConfirm={data => { 
+                onChange(data)
+              setVisible(false)
+              }}
               hours={12}
               minutes={14}
             />
           </View>
+              )}  
+              /> 
         </View>
 
         <View
@@ -384,27 +388,11 @@ export default function ReservationPage() {
           </Button>
         </View>
 
-        {/* <View style={{ justifyContent: 'space-evenly', flexDirection: 'row' }}>
-        <Text>Customer</Text>
-        <Text>Date and Time</Text>
-      </View> */}
-        {/* <FlatList
-        data={customer}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <View
-            style={{ flexDirection: 'row', }}
-          >
-            <Text style={styles.dataTexts}>{item.full_name}</Text>
-            <Divider bold={true} horizontalInset={true}/>
-            <Text style={styles.dataTexts}>{formatDate(item.date)}</Text>
-            <Text style={styles.dataTexts}>{item.time}</Text>
-          </View>
-        )}
-      /> */}
+      
+      </View>
       </View>
     </ScrollView>
-  );
+)
 }
 
 const styles = StyleSheet.create({
