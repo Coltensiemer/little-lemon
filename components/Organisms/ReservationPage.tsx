@@ -34,7 +34,7 @@ type FormValues = {
   group_total: string;
 };
 
-export default function ReservationPage() {
+export default function ReservationPage({navigation}) {
   const theme = useTheme();
 
   // input data that is store in state
@@ -93,6 +93,7 @@ export default function ReservationPage() {
 
   const submitForm = async (data: any) => {
     try {
+      setVisibleModal(true)
       const formData = {
         full_name: data.firstName,
         email: data.isEmail,
@@ -116,6 +117,8 @@ export default function ReservationPage() {
       );
       const responseData = await response.json();
       console.log('POST request succeeded');
+     
+    
     } catch (error) {
       console.log('Error:', error);
     }
@@ -165,9 +168,9 @@ export default function ReservationPage() {
     );
   }
 
-  useEffect(() => {
-    renderFormData();
-  }, [submitForm]);
+  // useEffect(() => {
+  //   renderFormData();
+  // }, [submitForm]);
 
   // UPdates RESERVATIONS after each submit
   // useEffect(() => {
@@ -383,6 +386,8 @@ export default function ReservationPage() {
               margin: 10,
             }}
           ></View>
+
+          {/* RESERVATION CONFIRMATION MODAL */}
           <Portal>
             <Modal
               visible={visibleModal}
@@ -394,7 +399,7 @@ export default function ReservationPage() {
               <Divider bold={true} style={{margin: 10}}/> 
               {renderFormData()}
               <Divider bold={true} style={{margin: 10}}/> 
-              <Button>Back to Home Screen</Button>
+              <Button onPress={() => {navigation.navigate('HomeScreen')}}>Back to Home Screen</Button>
             </Modal>
         
           </Portal>
@@ -407,10 +412,8 @@ export default function ReservationPage() {
           <View style={{ flex: 1, justifyContent: 'center', padding: 10 }}>
             <Button
               mode='contained'
-              onPress={() => {
-                handleSubmit(submitForm);
-                setVisibleModal(true);
-              }}
+              onPress={
+                handleSubmit(submitForm)}
             >
               Confirm Reservation
             </Button>
