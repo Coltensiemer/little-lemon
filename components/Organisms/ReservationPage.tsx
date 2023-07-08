@@ -12,7 +12,14 @@ import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates';
 import { en, registerTranslation } from 'react-native-paper-dates';
 registerTranslation('en', en);
 import * as SQLite from 'expo-sqlite';
-import { TextInput, Button, Divider, useTheme } from 'react-native-paper';
+import {
+  TextInput,
+  Button,
+  Divider,
+  useTheme,
+  Portal,
+  Modal,
+} from 'react-native-paper';
 import Header from '../Atoms/Header';
 import { useForm, Controller, useFormState, set } from 'react-hook-form';
 import EmailInput from '../Atoms/EmailInput';
@@ -42,6 +49,7 @@ export default function ReservationPage() {
   // conditional rendering booleans
   const [open, setOpen] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
+  const [visibleModal, setVisibleModal] = useState(false);
 
   // State to retreve and store customers reservations made
   const [customer, setCustomer] = useState<any>();
@@ -84,41 +92,34 @@ export default function ReservationPage() {
   );
 
   const submitForm = async (data: any) => {
-
-    const datas  = getValues()
-
-    console.log(datas)
     try {
       const formData = {
-
         full_name: data.firstName,
         email: data.isEmail,
-        time: formatTime({ hours: data.time.hours, minutes: data.time.minutes }),
+        time: formatTime({
+          hours: data.time.hours,
+          minutes: data.time.minutes,
+        }), // Formats into a date and time
         date: data.date.date, // Since using date Picker, date is set as an object inside of data.date
-        group_total: data.isPartySize
+        group_total: data.isPartySize,
       };
-  
+
       const options = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       };
-  
-      const response = await fetch('http://localhost:3100/reservations', options);
+
+      const response = await fetch(
+        'http://localhost:3100/reservations',
+        options
+      );
       const responseData = await response.json();
-  
-      console.log('Response:', responseData);
       console.log('POST request succeeded');
     } catch (error) {
       console.log('Error:', error);
     }
   };
-  
-
-  
-
-
-
 
   // get ALL Reservations
   const getAllReservations = async () => {
@@ -147,7 +148,26 @@ export default function ReservationPage() {
     return `${paddedHours}:${paddedMinutes}:00`;
   }
 
- 
+  function renderFormData() {
+    const data = getValues();
+
+    console.log('data', data);
+
+    return (
+      <View>
+        <Text>Full Name: {data.firstName}</Text>
+        <Text>Email: {data.isEmail}</Text>
+        <Text>
+          Time: {data.time?.hours}:{data.time?.minutes}
+        </Text>
+        <Text>Party Size: {data.isPartySize}</Text>
+      </View>
+    );
+  }
+
+  useEffect(() => {
+    renderFormData();
+  }, [submitForm]);
 
   // UPdates RESERVATIONS after each submit
   // useEffect(() => {
@@ -276,7 +296,7 @@ export default function ReservationPage() {
         <View style={{ flex: 1, height: 300, justifyContent: 'space-around' }}>
           <View
             style={{
-              flex: 1,
+              paddingBottom: 10,
               justifyContent: 'space-around',
               alignItems: 'center',
             }}
@@ -286,13 +306,9 @@ export default function ReservationPage() {
               defaultValue=''
               rules={{
                 required: {
-                  value: false,
+                  value: true,
                   message: 'Date is required',
                 },
-                // pattern: {
-                //   value: /^[0-9]+$/,
-                //   message: 'Date is invalid',
-                // },
               }}
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
@@ -312,87 +328,97 @@ export default function ReservationPage() {
                     visible={open}
                     onDismiss={onDismissSingle}
                     date={date}
-                    onConfirm={data => {
+                    onConfirm={(data) => {
                       onChange(data);
                       setOpen(false);
                     }}
                   />
                 </View>
               )}
-              
             />
-           
           </View>
 
-          <View
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-          >
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
             <Controller
               name='time'
               defaultValue=''
               rules={{
                 required: {
-                  value: false,
+                  value: true,
                   message: 'Date is required',
                 },
-                // pattern: {
-                //   value: /^[0-9]+$/,
-                //   message: 'Date is invalid',
-                // },
               }}
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
-                <View >
-                <Button
-                  onPress={() => setVisible(true)}
-                  uppercase={false}
-                  mode='outlined'
-                  style={{ width: 250, height: 50 }}
-                  textColor={errors.time ? 'red' : null}
-                >
-                  Pick time
-                </Button>
-                <TimePickerModal
-              visible={visible}
-              onDismiss={onDismiss}
-              onConfirm={data => { 
-                onChange(data)
-              setVisible(false)
-              }}
-              hours={12}
-              minutes={14}
+                <View>
+                  <Button
+                    onPress={() => setVisible(true)}
+                    uppercase={false}
+                    mode='outlined'
+                    style={{ width: 250, height: 50 }}
+                    textColor={errors.time ? 'red' : null}
+                  >
+                    Pick time
+                  </Button>
+                  <TimePickerModal
+                    visible={visible}
+                    onDismiss={onDismiss}
+                    onConfirm={(data) => {
+                      onChange(data);
+                      setVisible(false);
+                    }}
+                    hours={12}
+                    minutes={14}
+                  />
+                </View>
+              )}
             />
           </View>
-              )}  
-              /> 
+
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+              flex: 1,
+              margin: 10,
+            }}
+          ></View>
+          <Portal>
+            <Modal
+              visible={visibleModal}
+              onDismiss={() => setVisibleModal(false)}
+              
+              contentContainerStyle={{ backgroundColor: 'white', padding: 20, margin: 10 }}
+            >
+              <Text style={{fontSize: 24,fontWeight: 'bold'}}>RESERVATION CONFIRMED</Text>
+              <Divider bold={true} style={{margin: 10}}/> 
+              {renderFormData()}
+              <Divider bold={true} style={{margin: 10}}/> 
+              <Button>Back to Home Screen</Button>
+            </Modal>
+        
+          </Portal>
+
+        
+
+          <Divider bold={true} />
+
+          {/* Submit BUTTON */}
+          <View style={{ flex: 1, justifyContent: 'center', padding: 10 }}>
+            <Button
+              mode='contained'
+              onPress={() => {
+                handleSubmit(submitForm);
+                setVisibleModal(true);
+              }}
+            >
+              Confirm Reservation
+            </Button>
+          </View>
         </View>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-evenly',
-            flex: 1,
-            margin: 10,
-          }}
-        >
-          <Text>{date ? formatDate(date) : null}</Text>
-          <Text> {time}</Text>
-        </View>
-
-        <Divider bold={true} />
-
-        {/* Submit BUTTON */}
-        <View style={{ flex: 1, justifyContent: 'center', padding: 10 }}>
-          <Button mode='contained' onPress={handleSubmit(submitForm)}>
-            Confirm Reservation
-          </Button>
-        </View>
-
-      
-      </View>
       </View>
     </ScrollView>
-)
+  );
 }
 
 const styles = StyleSheet.create({
