@@ -6,6 +6,7 @@ import {
   Platform,
   ScrollView,
   FlatList,
+  
 } from 'react-native';
 import { useEffect, useState, useCallback } from 'react';
 import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates';
@@ -19,10 +20,13 @@ import {
   useTheme,
   Portal,
   Modal,
+  Surface,
+  ProgressBar
 } from 'react-native-paper';
 import Header from '../Atoms/Header';
 import { useForm, Controller, useFormState, set } from 'react-hook-form';
 import EmailInput from '../Atoms/EmailInput';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const db = SQLite.openDatabase('mydatabase.db');
 
@@ -41,6 +45,8 @@ export default function ReservationPage({navigation}) {
   const [isName, setName] = useState<string>('');
   const [isEmail, setisEmail] = useState<string>('');
   const [isPartyNumber, setPartyNumber] = useState<any>();
+  const [isProgress, setProgress] = useState<number>()
+  const [isProgressColor, setProgressColor] = useState<string>('red')
 
   // Date and time date that is stored in state
   const [time, setTime] = useState<any>(undefined);
@@ -125,25 +131,25 @@ export default function ReservationPage({navigation}) {
   };
 
   // get ALL Reservations
-  const getAllReservations = async () => {
-    try {
-      const response = await fetch('http://localhost:3100/reservations');
-      const jsonData = await response.json();
-      // console.log(jsonData);
-      setCustomer(jsonData);
-    } catch (err) {
-      console.log(`There was an error: ${err}`);
-    }
-  };
+  // const getAllReservations = async () => {
+  //   try {
+  //     const response = await fetch('http://localhost:3100/reservations');
+  //     const jsonData = await response.json();
+  //     // console.log(jsonData);
+  //     setCustomer(jsonData);
+  //   } catch (err) {
+  //     console.log(`There was an error: ${err}`);
+  //   }
+  // };
 
-  // Formates the date that is rendered
-  function formatDate(dateString) {
-    const date = new Date(dateString);
-    const options = { month: 'long', day: 'numeric', year: 'numeric' };
-    //@ts-ignore
-    const formattedDate = date.toLocaleDateString('en-US', options);
-    return formattedDate;
-  }
+  // // Formates the date that is rendered
+  // function formatDate(dateString) {
+  //   const date = new Date(dateString);
+  //   const options = { month: 'long', day: 'numeric', year: 'numeric' };
+  //   //@ts-ignore
+  //   const formattedDate = date.toLocaleDateString('en-US', options);
+  //   return formattedDate;
+  // }
 
   function formatTime({ hours, minutes }) {
     const paddedHours = hours.toString().padStart(2, '0');
@@ -154,7 +160,7 @@ export default function ReservationPage({navigation}) {
   function renderFormData() {
     const data = getValues();
 
-    console.log('data', data);
+    // console.log('data', data);
 
     return (
       <View>
@@ -168,19 +174,51 @@ export default function ReservationPage({navigation}) {
     );
   }
 
-  // useEffect(() => {
-  //   renderFormData();
-  // }, [submitForm]);
+  const progressBar = () => { 
 
+    const inputValues = getValues(['firstName', 'isEmail', 'isPartySize'])
+    const timeValues = getValues('time')
+    const dateValues = getValues('date')
+
+    const dateProgress = Object.values(dateValues).filter((values) => values).length
+    const timeProgress = Object.values(timeValues).filter((values) => values).length / 2
+    const inputProgress = Object.values(inputValues).filter((values) => values?.trim() != '').length
+
+    const progressResults = (timeProgress + inputProgress + dateProgress) / 5;
+
+    setProgress(progressResults)
+
+    if (isProgress === 1) { 
+      setProgressColor('green')
+    }
+
+// console.log('values', inputValues)
+// console.log('time test', timeValues)
+// console.log('date', dateProgress)
+// console.log('time', timeProgress)
+
+
+  }
+
+const data = getValues()
+  useEffect(() => {
+    progressBar()
+    // console.log(data)
+  }, [submitForm]);
+
+
+ 
   // UPdates RESERVATIONS after each submit
   // useEffect(() => {
   //   getAllReservations();
   // }, [postReservation]);
 
   return (
+   
     <ScrollView style={{ flex: 1 }}>
       <View style={[styles.mainContainer]}>
         <Header />
+        <ProgressBar color={isProgressColor} progress={isProgress} style={{margin: 10}}/>
         <View
           style={{ height: 250, padding: 10, justifyContent: 'space-evenly' }}
         >
@@ -249,13 +287,13 @@ export default function ReservationPage({navigation}) {
         <View
           style={{
             flex: 1,
-            justifyContent: 'space-around',
+            justifyContent: 'center',
             flexDirection: 'row',
             alignItems: 'center',
-            marginBottom: 20,
+            marginBottom: 10,
           }}
         >
-          <Text> Enter Party Amount</Text>
+          <Text style={{fontWeight: '300'}}> Enter Party Amount</Text>
           <View>
             <Controller
               name='isPartySize'
@@ -296,10 +334,10 @@ export default function ReservationPage({navigation}) {
           </View>
         </View>
 
-        <View style={{ flex: 1, height: 300, justifyContent: 'space-around' }}>
+        <View style={{ flex: 1, height: 250, justifyContent: 'space-around' }}>
           <View
             style={{
-              paddingBottom: 10,
+              paddingBottom: 20,
               justifyContent: 'space-around',
               alignItems: 'center',
             }}
@@ -316,19 +354,22 @@ export default function ReservationPage({navigation}) {
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
                 <View>
+             
                   <Button
                     onPress={() => setOpen(true)}
                     uppercase={false}
                     mode='outlined'
                     textColor={errors.date ? 'red' : null}
-                    style={{ width: 250, height: 50 }}
+                    style={{ width: 250, height: 40 }}
                   >
                     Pick single date
                   </Button>
+               
                   <DatePickerModal
                     locale='en'
                     mode='single'
                     visible={open}
+    
                     onDismiss={onDismissSingle}
                     date={date}
                     onConfirm={(data) => {
@@ -358,7 +399,7 @@ export default function ReservationPage({navigation}) {
                     onPress={() => setVisible(true)}
                     uppercase={false}
                     mode='outlined'
-                    style={{ width: 250, height: 50 }}
+                    style={{ width: 250, height: 40 }}
                     textColor={errors.time ? 'red' : null}
                   >
                     Pick time
@@ -366,6 +407,8 @@ export default function ReservationPage({navigation}) {
                   <TimePickerModal
                     visible={visible}
                     onDismiss={onDismiss}
+                    label='Select a Date'
+                    use24HourClock={false}
                     onConfirm={(data) => {
                       onChange(data);
                       setVisible(false);
@@ -409,7 +452,7 @@ export default function ReservationPage({navigation}) {
           <Divider bold={true} />
 
           {/* Submit BUTTON */}
-          <View style={{ flex: 1, justifyContent: 'center', padding: 10 }}>
+          <View style={{ flex: 2, justifyContent: 'center', padding: 10 }}>
             <Button
               mode='contained'
               onPress={
@@ -420,7 +463,9 @@ export default function ReservationPage({navigation}) {
           </View>
         </View>
       </View>
+      
     </ScrollView>
+  
   );
 }
 
