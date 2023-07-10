@@ -8,7 +8,7 @@ import {
   FlatList,
   
 } from 'react-native';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates';
 import { en, registerTranslation } from 'react-native-paper-dates';
 registerTranslation('en', en);
@@ -24,7 +24,7 @@ import {
   ProgressBar
 } from 'react-native-paper';
 import Header from '../Atoms/Header';
-import { useForm, Controller, useFormState, set } from 'react-hook-form';
+import { useForm, Controller, useFormState, } from 'react-hook-form';
 import EmailInput from '../Atoms/EmailInput';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -42,9 +42,7 @@ export default function ReservationPage({navigation}) {
   const theme = useTheme();
 
   // input data that is store in state
-  const [isName, setName] = useState<string>('');
-  const [isEmail, setisEmail] = useState<string>('');
-  const [isPartyNumber, setPartyNumber] = useState<any>();
+
   const [isProgress, setProgress] = useState<number>()
   const [isProgressColor, setProgressColor] = useState<string>('red')
 
@@ -57,8 +55,8 @@ export default function ReservationPage({navigation}) {
   const [visible, setVisible] = useState<boolean>(false);
   const [visibleModal, setVisibleModal] = useState(false);
 
-  // State to retreve and store customers reservations made
-  const [customer, setCustomer] = useState<any>();
+  
+
 
   const onDismissSingle = useCallback(() => {
     setOpen(false);
@@ -73,7 +71,11 @@ export default function ReservationPage({navigation}) {
     handleSubmit,
     formState: { errors },
     getValues,
+    watch
   } = useForm();
+
+  
+  const watchAllFields = watch()
 
   // console.log('errors', errors)
 
@@ -174,12 +176,17 @@ export default function ReservationPage({navigation}) {
     );
   }
 
+  
+
+  
   const progressBar = () => { 
 
+    // Collects Values from React Form
     const inputValues = getValues(['firstName', 'isEmail', 'isPartySize'])
     const timeValues = getValues('time')
     const dateValues = getValues('date')
 
+    // Filter for lengths 
     const dateProgress = Object.values(dateValues).filter((values) => values).length
     const timeProgress = Object.values(timeValues).filter((values) => values).length / 2
     const inputProgress = Object.values(inputValues).filter((values) => values?.trim() != '').length
@@ -191,20 +198,15 @@ export default function ReservationPage({navigation}) {
     if (isProgress === 1) { 
       setProgressColor('green')
     }
-
-// console.log('values', inputValues)
-// console.log('time test', timeValues)
-// console.log('date', dateProgress)
-// console.log('time', timeProgress)
-
-
   }
 
-const data = getValues()
+  
+
   useEffect(() => {
+   
     progressBar()
     // console.log(data)
-  }, [submitForm]);
+  }, [watchAllFields]);
 
 
  
@@ -239,6 +241,7 @@ const data = getValues()
                 error={!!errors.firstName}
                 onChangeText={(text) => onChange(text)}
                 // onBlur={onBlur}
+              
               />
             )}
           />
