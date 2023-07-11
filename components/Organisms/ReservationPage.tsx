@@ -21,12 +21,15 @@ import {
   Portal,
   Modal,
   Surface,
-  ProgressBar
+  ProgressBar,
+  Chip
 } from 'react-native-paper';
 import Header from '../Atoms/Header';
 import { useForm, Controller, useFormState, } from 'react-hook-form';
 import EmailInput from '../Atoms/EmailInput';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { Motion } from "@legendapp/motion"
 
 const db = SQLite.openDatabase('mydatabase.db');
 
@@ -54,6 +57,9 @@ export default function ReservationPage({navigation}) {
   const [open, setOpen] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
   const [visibleModal, setVisibleModal] = useState(false);
+
+  const [visibleTime, setVisibleTime] = useState(false)
+  const [visibleDate, setVisibleDate] = useState(false)
 
   
 
@@ -159,6 +165,8 @@ export default function ReservationPage({navigation}) {
     return `${paddedHours}:${paddedMinutes}:00`;
   }
 
+
+  // MODAL FUNCTION for render 
   function renderFormData() {
     const data = getValues();
 
@@ -177,8 +185,17 @@ export default function ReservationPage({navigation}) {
   }
 
   
+  function renderTimeData() { 
+    const data = getValues()
+    return ( 
+      <View>
+        <Text>Time:{data.time?.hours}:{data.time?.minutes}</Text>
+      </View>
 
-  
+    )
+  }
+
+  // PROGRESS BAR 
   const progressBar = () => { 
 
     // Collects Values from React Form
@@ -203,10 +220,17 @@ export default function ReservationPage({navigation}) {
   
 
   useEffect(() => {
-   
     progressBar()
+
+    const getTime = getValues('time')
+
+    if (Object.keys(getTime).length  > 1) { 
+      setVisibleTime(true)
+    }
+
     // console.log(data)
   }, [watchAllFields]);
+
 
 
  
@@ -241,7 +265,6 @@ export default function ReservationPage({navigation}) {
                 error={!!errors.firstName}
                 onChangeText={(text) => onChange(text)}
                 // onBlur={onBlur}
-              
               />
             )}
           />
@@ -385,7 +408,7 @@ export default function ReservationPage({navigation}) {
             />
           </View>
 
-          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
             <Controller
               name='time'
               defaultValue=''
@@ -396,21 +419,25 @@ export default function ReservationPage({navigation}) {
                 },
               }}
               control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <View>
+              render={({ field: { onChange } }) => (
+                <Motion.View
+                
+                animate={{ x: visibleTime? -75 : 0 }}
+               
+             >
                   <Button
                     onPress={() => setVisible(true)}
                     uppercase={false}
                     mode='outlined'
-                    style={{ width: 250, height: 40 }}
+                    style={[{height: 50}, visibleTime ? {width:1} : {width: 250}]}
                     textColor={errors.time ? 'red' : null}
                   >
-                    Pick time
+                    {visibleTime ? null : 'Pick a Time'}
                   </Button>
                   <TimePickerModal
                     visible={visible}
                     onDismiss={onDismiss}
-                    label='Select a Date'
+                    label= 'Select a Time'
                     use24HourClock={false}
                     onConfirm={(data) => {
                       onChange(data);
@@ -419,9 +446,13 @@ export default function ReservationPage({navigation}) {
                     hours={12}
                     minutes={14}
                   />
-                </View>
+                </Motion.View>
               )}
             />
+            <Motion.View 
+             animate={{ x: visibleTime? 0 : 100 }}>
+          <Chip mode='outlined' elevated={true} style={[{height: 50, alignItems: 'center', }, visibleTime ? {width:200} : {width: 10}]}>{renderTimeData()}</Chip> 
+          </Motion.View>
           </View>
 
           <View
@@ -466,6 +497,12 @@ export default function ReservationPage({navigation}) {
           </View>
         </View>
       </View>
+
+      <Motion.View 
+       initial={{ x: 0 }}
+       animate={{ x: 300 }}>
+        <Text>Hello</Text>
+      </Motion.View>
       
     </ScrollView>
   
