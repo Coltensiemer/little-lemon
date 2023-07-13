@@ -6,7 +6,6 @@ import {
   Platform,
   ScrollView,
   FlatList,
-  
 } from 'react-native';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates';
@@ -22,14 +21,14 @@ import {
   Modal,
   Surface,
   ProgressBar,
-  Chip
+  Chip,
 } from 'react-native-paper';
 import Header from '../Atoms/Header';
-import { useForm, Controller, useFormState, } from 'react-hook-form';
+import { useForm, Controller, useFormState } from 'react-hook-form';
 import EmailInput from '../Atoms/EmailInput';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Motion } from "@legendapp/motion"
+import { Motion } from '@legendapp/motion';
 
 const db = SQLite.openDatabase('mydatabase.db');
 
@@ -41,13 +40,13 @@ type FormValues = {
   group_total: string;
 };
 
-export default function ReservationPage({navigation}) {
+export default function ReservationPage({ navigation }) {
   const theme = useTheme();
 
   // input data that is store in state
 
-  const [isProgress, setProgress] = useState<number>()
-  const [isProgressColor, setProgressColor] = useState<string>('red')
+  const [isProgress, setProgress] = useState<number>();
+  const [isProgressColor, setProgressColor] = useState<string>('red');
 
   // Date and time date that is stored in state
   const [time, setTime] = useState<any>(undefined);
@@ -58,11 +57,8 @@ export default function ReservationPage({navigation}) {
   const [visible, setVisible] = useState<boolean>(false);
   const [visibleModal, setVisibleModal] = useState(false);
 
-  const [visibleTime, setVisibleTime] = useState(false)
-  const [visibleDate, setVisibleDate] = useState(false)
-
-  
-
+  const [visibleTime, setVisibleTime] = useState(false);
+  const [visibleDate, setVisibleDate] = useState(false);
 
   const onDismissSingle = useCallback(() => {
     setOpen(false);
@@ -77,11 +73,10 @@ export default function ReservationPage({navigation}) {
     handleSubmit,
     formState: { errors },
     getValues,
-    watch
+    watch,
   } = useForm();
 
-  
-  const watchAllFields = watch()
+  const watchAllFields = watch();
 
   // console.log('errors', errors)
 
@@ -107,7 +102,7 @@ export default function ReservationPage({navigation}) {
 
   const submitForm = async (data: any) => {
     try {
-      setVisibleModal(true)
+      setVisibleModal(true);
       const formData = {
         full_name: data.firstName,
         email: data.isEmail,
@@ -131,8 +126,6 @@ export default function ReservationPage({navigation}) {
       );
       const responseData = await response.json();
       console.log('POST request succeeded');
-     
-    
     } catch (error) {
       console.log('Error:', error);
     }
@@ -165,8 +158,7 @@ export default function ReservationPage({navigation}) {
     return `${paddedHours}:${paddedMinutes}:00`;
   }
 
-
-  // MODAL FUNCTION for render 
+  // MODAL FUNCTION for render
   function renderFormData() {
     const data = getValues();
 
@@ -184,67 +176,85 @@ export default function ReservationPage({navigation}) {
     );
   }
 
-  
-  function renderTimeData() { 
-    const data = getValues()
-    return ( 
+  function renderTimeData() {
+    const data = getValues();
+    return (
       <View>
-        <Text>Time:{data.time?.hours}:{data.time?.minutes}</Text>
+        <Text>
+          Time:{data.time?.hours}:{data.time?.minutes}
+        </Text>
       </View>
-
-    )
+    );
   }
 
-  // PROGRESS BAR 
-  const progressBar = () => { 
+  function renderDateData() {
+    const data = getValues();
+    return (
+      <View>
+        <Text>
+         Date: {data.date}
+        </Text>
+      </View>
+    );
+  }
+  
 
+  // PROGRESS BAR
+  const progressBar = () => {
     // Collects Values from React Form
-    const inputValues = getValues(['firstName', 'isEmail', 'isPartySize'])
-    const timeValues = getValues('time')
-    const dateValues = getValues('date')
+    const inputValues = getValues(['firstName', 'isEmail', 'isPartySize']);
+    const timeValues = getValues('time');
+    const dateValues = getValues('date');
 
-    // Filter for lengths 
-    const dateProgress = Object.values(dateValues).filter((values) => values).length
-    const timeProgress = Object.values(timeValues).filter((values) => values).length / 2
-    const inputProgress = Object.values(inputValues).filter((values) => values?.trim() != '').length
+    // Filter for lengths
+    const dateProgress = Object.values(dateValues).filter(
+      (values) => values
+    ).length;
+    const timeProgress =
+      Object.values(timeValues).filter((values) => values).length / 2;
+    const inputProgress = Object.values(inputValues).filter(
+      (values) => values?.trim() != ''
+    ).length;
 
     const progressResults = (timeProgress + inputProgress + dateProgress) / 5;
 
-    setProgress(progressResults)
+    setProgress(progressResults);
 
-    if (isProgress === 1) { 
-      setProgressColor('green')
+    if (isProgress === 1) {
+      setProgressColor('green');
     }
-  }
-
-  
+  };
 
   useEffect(() => {
-    progressBar()
+    progressBar();
 
-    const getTime = getValues('time')
+    const getTime = getValues('time');
+    const getDate = getValues('date');
 
-    if (Object.keys(getTime).length  > 1) { 
-      setVisibleTime(true)
+    if (Object.keys(getTime).length > 1) {
+      setVisibleTime(true);
     }
 
+    if (Object.keys(getDate).length > 1) {
+      setVisibleDate(true);
+    }
     // console.log(data)
   }, [watchAllFields]);
 
-
-
- 
   // UPdates RESERVATIONS after each submit
   // useEffect(() => {
   //   getAllReservations();
   // }, [postReservation]);
 
   return (
-   
     <ScrollView style={{ flex: 1 }}>
       <View style={[styles.mainContainer]}>
         <Header />
-        <ProgressBar color={isProgressColor} progress={isProgress} style={{margin: 10}}/>
+        <ProgressBar
+          color={isProgressColor}
+          progress={isProgress}
+          style={{ margin: 10 }}
+        />
         <View
           style={{ height: 250, padding: 10, justifyContent: 'space-evenly' }}
         >
@@ -319,7 +329,7 @@ export default function ReservationPage({navigation}) {
             marginBottom: 10,
           }}
         >
-          <Text style={{fontWeight: '300'}}> Enter Party Amount</Text>
+          <Text style={{ fontWeight: '300' }}> Enter Party Amount</Text>
           <View>
             <Controller
               name='isPartySize'
@@ -360,12 +370,13 @@ export default function ReservationPage({navigation}) {
           </View>
         </View>
 
-        <View style={{ flex: 1, height: 250, justifyContent: 'space-around' }}>
+        <View style={{ flex: 1, height: 250, justifyContent: 'space-around', }}>
           <View
             style={{
               paddingBottom: 20,
               justifyContent: 'space-around',
               alignItems: 'center',
+              flexDirection: 'row'
             }}
           >
             <Controller
@@ -378,24 +389,25 @@ export default function ReservationPage({navigation}) {
                 },
               }}
               control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <View>
-             
+              render={({ field: { onChange } }) => (
+                <Motion.View animate={{ x: visibleDate ? -75 : 0 }}>
                   <Button
                     onPress={() => setOpen(true)}
                     uppercase={false}
                     mode='outlined'
                     textColor={errors.date ? 'red' : null}
-                    style={{ width: 250, height: 40 }}
+                    style={[
+                      { height: 50 },
+                      visibleDate ? { width: 1 } : { width: 250 },
+                    ]}
                   >
-                    Pick single date
+                     {visibleDate ? null : 'Pick a Date'}
                   </Button>
-               
+
                   <DatePickerModal
                     locale='en'
                     mode='single'
                     visible={open}
-    
                     onDismiss={onDismissSingle}
                     date={date}
                     onConfirm={(data) => {
@@ -403,12 +415,32 @@ export default function ReservationPage({navigation}) {
                       setOpen(false);
                     }}
                   />
-                </View>
+                </Motion.View>
               )}
+              
             />
+                <Motion.View animate={{ x: visibleDate ? 0 : 100 }}>
+              <Chip
+                mode='outlined'
+                elevated={true}
+                style={[
+                  { height: 50, alignItems: 'center' },
+                  visibleDate ? { width: 200 } : { width: 10 },
+                ]}
+              >
+                {renderDateData()}
+              </Chip>
+            </Motion.View>
+            
           </View>
 
-          <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'row',
+            }}
+          >
             <Controller
               name='time'
               defaultValue=''
@@ -420,16 +452,15 @@ export default function ReservationPage({navigation}) {
               }}
               control={control}
               render={({ field: { onChange } }) => (
-                <Motion.View
-                
-                animate={{ x: visibleTime? -75 : 0 }}
-               
-             >
+                <Motion.View animate={{ x: visibleTime ? -75 : 0 }}>
                   <Button
                     onPress={() => setVisible(true)}
                     uppercase={false}
                     mode='outlined'
-                    style={[{height: 50}, visibleTime ? {width:1} : {width: 250}]}
+                    style={[
+                      { height: 50 },
+                      visibleTime ? { width: 1 } : { width: 250 },
+                    ]}
                     textColor={errors.time ? 'red' : null}
                   >
                     {visibleTime ? null : 'Pick a Time'}
@@ -437,7 +468,7 @@ export default function ReservationPage({navigation}) {
                   <TimePickerModal
                     visible={visible}
                     onDismiss={onDismiss}
-                    label= 'Select a Time'
+                    label='Select a Time'
                     use24HourClock={false}
                     onConfirm={(data) => {
                       onChange(data);
@@ -449,10 +480,18 @@ export default function ReservationPage({navigation}) {
                 </Motion.View>
               )}
             />
-            <Motion.View 
-             animate={{ x: visibleTime? 0 : 100 }}>
-          <Chip mode='outlined' elevated={true} style={[{height: 50, alignItems: 'center', }, visibleTime ? {width:200} : {width: 10}]}>{renderTimeData()}</Chip> 
-          </Motion.View>
+            <Motion.View animate={{ x: visibleTime ? 0 : 100 }}>
+              <Chip
+                mode='outlined'
+                elevated={true}
+                style={[
+                  { height: 50, alignItems: 'center' },
+                  visibleTime ? { width: 200 } : { width: 10 },
+                ]}
+              >
+                {renderTimeData()}
+              </Chip>
+            </Motion.View>
           </View>
 
           <View
@@ -469,43 +508,39 @@ export default function ReservationPage({navigation}) {
             <Modal
               visible={visibleModal}
               onDismiss={() => setVisibleModal(false)}
-              
-              contentContainerStyle={{ backgroundColor: 'white', padding: 20, margin: 10 }}
+              contentContainerStyle={{
+                backgroundColor: 'white',
+                padding: 20,
+                margin: 10,
+              }}
             >
-              <Text style={{fontSize: 24,fontWeight: 'bold'}}>RESERVATION CONFIRMED</Text>
-              <Divider bold={true} style={{margin: 10}}/> 
+              <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+                RESERVATION CONFIRMED
+              </Text>
+              <Divider bold={true} style={{ margin: 10 }} />
               {renderFormData()}
-              <Divider bold={true} style={{margin: 10}}/> 
-              <Button onPress={() => {navigation.navigate('HomeScreen')}}>Back to Home Screen</Button>
+              <Divider bold={true} style={{ margin: 10 }} />
+              <Button
+                onPress={() => {
+                  navigation.navigate('HomeScreen');
+                }}
+              >
+                Back to Home Screen
+              </Button>
             </Modal>
-        
           </Portal>
-
-        
 
           <Divider bold={true} />
 
           {/* Submit BUTTON */}
           <View style={{ flex: 2, justifyContent: 'center', padding: 10 }}>
-            <Button
-              mode='contained'
-              onPress={
-                handleSubmit(submitForm)}
-            >
+            <Button mode='contained' onPress={handleSubmit(submitForm)}>
               Confirm Reservation
             </Button>
           </View>
         </View>
       </View>
-
-      <Motion.View 
-       initial={{ x: 0 }}
-       animate={{ x: 300 }}>
-        <Text>Hello</Text>
-      </Motion.View>
-      
     </ScrollView>
-  
   );
 }
 
