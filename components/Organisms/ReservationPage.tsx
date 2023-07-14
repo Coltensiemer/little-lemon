@@ -398,7 +398,7 @@ export default function ReservationPage({ navigation }) {
               }}
               control={control}
               render={({ field: { onChange } }) => (
-                <Motion.View animate={{ x: visibleDate ? -75 : 0 }}>
+                <Motion.View animate={{ x: visibleDate ? -25 : 30 }}>
                   <Button
                     onPress={() => setOpen(true)}
                     uppercase={false}
@@ -427,7 +427,7 @@ export default function ReservationPage({ navigation }) {
               )}
               
             />
-                <Motion.View animate={{ x: visibleDate ? 0 : 100 }}>
+                <Motion.View animate={{ x: visibleDate ? -45 : 100 }}>
               <Chip
                 mode='outlined'
                 elevated={true}
