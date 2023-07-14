@@ -143,14 +143,14 @@ export default function ReservationPage({ navigation }) {
   //   }
   // };
 
-  // // Formates the date that is rendered
-  // function formatDate(dateString) {
-  //   const date = new Date(dateString);
-  //   const options = { month: 'long', day: 'numeric', year: 'numeric' };
-  //   //@ts-ignore
-  //   const formattedDate = date.toLocaleDateString('en-US', options);
-  //   return formattedDate;
-  // }
+  // Formates the date that is rendered
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { month: 'long', day: 'numeric', year: 'numeric' };
+    //@ts-ignore
+    const formattedDate = date.toLocaleDateString('en-US', options);
+    return formattedDate;
+  }
 
   function formatTime({ hours, minutes }) {
     const paddedHours = hours.toString().padStart(2, '0');
@@ -161,8 +161,6 @@ export default function ReservationPage({ navigation }) {
   // MODAL FUNCTION for render
   function renderFormData() {
     const data = getValues();
-
-    // console.log('data', data);
 
     return (
       <View>
@@ -189,10 +187,20 @@ export default function ReservationPage({ navigation }) {
 
   function renderDateData() {
     const data = getValues();
+
+    const  date = formatDate(data.date?.date)
+
+    // console.log('data', date);
+    // const dateString = Object.keys(data.date)
+
+    // console.log('this date', data.date?.date)
+    // const dates = data.date?.Object.keys(date)
+
+    // console.log(dates)
     return (
       <View>
         <Text>
-         Date: {data.date}
+         Date: {date}
         </Text>
       </View>
     );
@@ -235,10 +243,10 @@ export default function ReservationPage({ navigation }) {
       setVisibleTime(true);
     }
 
-    if (Object.keys(getDate).length > 1) {
+    if (Object.keys(getDate).length > 0) {
       setVisibleDate(true);
     }
-    // console.log(data)
+    console.log(getDate)
   }, [watchAllFields]);
 
   // UPdates RESERVATIONS after each submit
