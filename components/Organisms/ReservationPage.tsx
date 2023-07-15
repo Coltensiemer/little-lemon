@@ -29,7 +29,7 @@ import EmailInput from '../Atoms/EmailInput';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Motion } from '@legendapp/motion';
-
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 const db = SQLite.openDatabase('mydatabase.db');
 
 type FormValues = {
@@ -161,11 +161,12 @@ export default function ReservationPage({ navigation }) {
   // MODAL FUNCTION for render
   function renderFormData() {
     const data = getValues();
-
+    const  date = formatDate(data.date?.date)
     return (
       <View>
         <Text>Full Name: {data.firstName}</Text>
         <Text>Email: {data.isEmail}</Text>
+        <Text>Date: {date}</Text>
         <Text>
           Time: {data.time?.hours}:{data.time?.minutes}
         </Text>
@@ -189,14 +190,6 @@ export default function ReservationPage({ navigation }) {
     const data = getValues();
 
     const  date = formatDate(data.date?.date)
-
-    // console.log('data', date);
-    // const dateString = Object.keys(data.date)
-
-    // console.log('this date', data.date?.date)
-    // const dates = data.date?.Object.keys(date)
-
-    // console.log(dates)
     return (
       <View>
         <Text>
@@ -257,14 +250,16 @@ export default function ReservationPage({ navigation }) {
   return (
     <ScrollView style={{ flex: 1 }}>
       <View style={[styles.mainContainer]}>
+        
         <Header />
         <ProgressBar
           color={isProgressColor}
           progress={isProgress}
-          style={{ margin: 10 }}
+          style={{ margin: 5} }
         />
+     
         <View
-          style={{ height: 250, padding: 10, justifyContent: 'space-evenly' }}
+          style={{ height: 200, paddingHorizontal: 10, justifyContent: 'space-evenly' }}
         >
           <Controller
             control={control}
@@ -334,7 +329,6 @@ export default function ReservationPage({ navigation }) {
             justifyContent: 'center',
             flexDirection: 'row',
             alignItems: 'center',
-            marginBottom: 10,
           }}
         >
           <Text style={{ fontWeight: '300' }}> Enter Party Amount</Text>
@@ -400,12 +394,13 @@ export default function ReservationPage({ navigation }) {
               render={({ field: { onChange } }) => (
                 <Motion.View animate={{ x: visibleDate ? -25 : 30 }}>
                   <Button
+                    icon='calendar-month'
                     onPress={() => setOpen(true)}
                     uppercase={false}
                     mode='outlined'
                     textColor={errors.date ? 'red' : null}
                     style={[
-                      { height: 50 },
+                      { height: 40 },
                       visibleDate ? { width: 1 } : { width: 250 },
                     ]}
                   >
@@ -462,11 +457,12 @@ export default function ReservationPage({ navigation }) {
               render={({ field: { onChange } }) => (
                 <Motion.View animate={{ x: visibleTime ? -75 : 0 }}>
                   <Button
+                    icon='clock'
                     onPress={() => setVisible(true)}
                     uppercase={false}
                     mode='outlined'
                     style={[
-                      { height: 50 },
+                      { height: 40 },
                       visibleTime ? { width: 1 } : { width: 250 },
                     ]}
                     textColor={errors.time ? 'red' : null}
@@ -486,8 +482,7 @@ export default function ReservationPage({ navigation }) {
                     minutes={14}
                   />
                 </Motion.View>
-              )}
-            />
+              )}></Controller>
             <Motion.View animate={{ x: visibleTime ? 0 : 100 }}>
               <Chip
                 mode='outlined'
