@@ -41,7 +41,6 @@ type FormValues = {
 };
 
 export default function ReservationPage({ navigation }) {
-  const theme = useTheme();
 
   // input data that is store in state
 
@@ -559,4 +558,4 @@ const styles = StyleSheet.create({
   },
 });
 
-// set time picker
+

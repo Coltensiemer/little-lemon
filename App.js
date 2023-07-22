@@ -23,10 +23,11 @@ function HomeStackScreen() {
   const HomeStack = createNativeStackNavigator();
   return (
 
+    // UserSignUp is breaking the app
     <HomeStack.Navigator>
       <HomeStack.Screen name='HomeScreen' component={HomeScreen} />
       <HomeStack.Screen name='Reservations' component={ReservationPage} />
-      <HomeScreen.Screen name='UserSignUp' component={UserSignUp} /> 
+      <HomeStack.Screen name='UserSignUp' component={UserSignUp} /> 
     </HomeStack.Navigator>
 
   );

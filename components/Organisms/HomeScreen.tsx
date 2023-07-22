@@ -1,15 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Header from '../Atoms/Header';
-import OnboardButton from '../Atoms/OnboardButton';
-import ReservationPage from './ReservationPage';
 import { fetchUserData } from '../../assets/Database.js/reservationData';
 import { useIsFocused } from '@react-navigation/native';
 import { Button, useTheme } from 'react-native-paper';
-import { useNavigation, NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Menulist from './Menulist/Menulist';
+
 
 
 
@@ -43,7 +38,6 @@ export default function HomeScreen({navigation}) {
         <Button
           mode={'contained'}
           compact={true}
-          //@ts-ignore
           onPress={() => navigation.navigate('Reservations')}
           style={{ width: 250, alignSelf: 'center' }}
         >
@@ -68,35 +62,11 @@ export default function HomeScreen({navigation}) {
           View Menu
         </Button>
       </View>
-
-      {/* <OnboardButton
-        styleText={null}
-        label={'Check Reservations'}
-        style={null}
-        styleContainer={null}
-        ScreenName={'WaitList'}
-      /> */}
       <View style={{ flex: 1 }}>
-        <OnboardButton
-          styleText={null}
-          label={'Sign Up'}
-          style={{
-            backgroundColor: 'none',
-          }}
-          styleContainer={null}
-          ScreenName={'FirstName'}
-        />
-        <OnboardButton
-          styleText={null}
-          label={'Profile'}
-          style={{
-            backgroundColor: 'none',
-          }}
-          styleContainer={null}
-          ScreenName={'Profile'}
-        />
-
-        <Text>Current Reservations: {reservationAmount(showData)} </Text>
+     <Button 
+     onPress={() => navigation.navigate('UserSignUp')}
+     mode={'text'}
+     >Sign Up</Button>
       </View>
     </View>
   );
