@@ -276,7 +276,6 @@ export default function ReservationPage({ navigation }) {
                 label='First and Last Name'
                 error={!!errors.firstName}
                 onChangeText={(text) => onChange(text)}
-                // onBlur={onBlur}
               />
             )}
           />
