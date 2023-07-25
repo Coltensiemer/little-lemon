@@ -86,6 +86,8 @@ app.get('/menu_query', async (req, res) => {
   }
 })
 
+
+// Post to users table
 app.post('/users', async (req, res)=> { 
 
   const {first_name, last_name, email, password} = req.body
@@ -99,5 +101,19 @@ app.post('/users', async (req, res)=> {
   } catch (error) {
     console.log('error setting up users', {error})
     
+  }
+})
+
+
+// recieve user's table info 
+
+app.get('/users', async (req, res) => { 
+  try {
+    const getUserInfo = await pool.query('SELECT Email, Password FROM users;')
+
+    res.json(getUserInfo.rows)
+
+  } catch (error) {
+    console.log('Getting user info:', error)
   }
 })

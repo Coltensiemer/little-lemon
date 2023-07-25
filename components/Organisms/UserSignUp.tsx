@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { TextInput, Button, Title } from 'react-native-paper';
+import { TextInput, Button, Title, Chip, Switch } from 'react-native-paper';
 import { useForm, Controller, useFormState } from 'react-hook-form';
 
 interface userData {
@@ -11,11 +11,7 @@ interface userData {
 }
 
 export default function UserSignUp() {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setlastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
+  const [passwordViewer, setPasswordViewer] = useState<boolean>(true)
   const {
     control,
     handleSubmit,
@@ -23,8 +19,6 @@ export default function UserSignUp() {
     getValues,
     watch,
   } = useForm();
-
-
 
   const password1 = watch('Password1');
 
@@ -128,8 +122,12 @@ export default function UserSignUp() {
       />
 
 {/* PASSWORD INPUT  */}
-<View>
+<View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
   <Text> Minimum eight characters, at least one letter and one number:</Text>
+  <Switch
+  value={!passwordViewer}
+onValueChange={() => setPasswordViewer(!passwordViewer)}
+  ></Switch>
 </View>
 <Controller
             control={control}
@@ -150,12 +148,13 @@ export default function UserSignUp() {
         label='Password'
         error={!!errors.Password1}
         onChangeText={(text) => onChange(text)}
-        // secureTextEntry
+        secureTextEntry={passwordViewer}
         style={null}
         mode='outlined'
       />
       )}
       />
+     
 <Controller
             control={control}
             name='Password2'
@@ -172,12 +171,14 @@ export default function UserSignUp() {
         label='Confirm Password'
         error={!!errors.Password2}
         onChangeText={(text) => onChange(text)}
-        secureTextEntry
-        style={null}
+        secureTextEntry={passwordViewer}
         mode='outlined'
       />
       )}
       />
+   
+
+ 
       
       <Button mode='contained' onPress={handleSubmit(handleSignIn)} style={null}>
         Sign Up

@@ -63,6 +63,10 @@ export default function HomeScreen({navigation}) {
         </Button>
       </View>
       <View style={{ flex: 1 }}>
+      <Button 
+     onPress={() => navigation.navigate('UserSignIn')}
+     mode={'text'}
+     >Sign In</Button>
      <Button 
      onPress={() => navigation.navigate('UserSignUp')}
      mode={'text'}

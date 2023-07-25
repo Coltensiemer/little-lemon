@@ -14,6 +14,7 @@ import ReservationPage from './components/Organisms/ReservationPage';
 import Profile from './components/Organisms/Profile';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import UserSignUp from './components/Organisms/UserSignUp'; 
+import UserSignIn from './components/Organisms/UserSignIn';
 
 //Navigation
 
@@ -28,6 +29,7 @@ function HomeStackScreen() {
       <HomeStack.Screen name='HomeScreen' component={HomeScreen} />
       <HomeStack.Screen name='Reservations' component={ReservationPage} />
       <HomeStack.Screen name='UserSignUp' component={UserSignUp} /> 
+      <HomeStack.Screen name='UserSignIn' component={UserSignIn} /> 
     </HomeStack.Navigator>
 
   );
