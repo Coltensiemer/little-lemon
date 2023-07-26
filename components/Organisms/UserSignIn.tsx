@@ -1,9 +1,10 @@
 import { View, Text } from 'react-native';
-import React from 'react';
+import React, {useContext} from 'react';
 import { TextInput, Button, Divider, Chip } from 'react-native-paper';
 import { useForm, Controller, useFormState } from 'react-hook-form';
 import { err } from 'react-native-svg/lib/typescript/xml';
 import { G } from 'react-native-svg';
+import { AuthContext } from '../../context/AuthContext';
 
 interface signInInfo { 
 	EmailSignin: string,
@@ -11,6 +12,7 @@ interface signInInfo {
 }
 
 export default function UserSignIn() {
+
   const {
     control,
     handleSubmit,
@@ -21,12 +23,27 @@ export default function UserSignIn() {
 
 const signInForm = watch('EmailSignin')
 
-const handleSignIn = (data: signInInfo) => { 
-console.log('sign in works', data)
+//@ts-ignore
+const {login} = useContext(AuthContext)
+
+const handleSignIn = async (data: signInInfo) => { 
+
+	try {
+		const options = { 
+			method: 'GET'
+		}
+		const response = await fetch('http://localhost:3100/users')
+
+		
+	} catch (error) {
+		console.log('error handle Signin', error)
+		
+	}
+
 
 }
 
-console.log(signInForm)
+
 
   return (
     <View>
@@ -54,7 +71,9 @@ console.log(signInForm)
           />
         )}
       />
-
+	  
+	 
+	 {/* <Text>{test}</Text> */}
       <Controller
         control={control}
         name='PasswordSignin'
@@ -74,7 +93,7 @@ console.log(signInForm)
           />
         )}
       />
-      <Button mode='contained' onPress={handleSubmit(handleSignIn)}>
+      <Button mode='contained' onPress={handleSubmit(login)}>
         Sign In
       </Button>
     </View>

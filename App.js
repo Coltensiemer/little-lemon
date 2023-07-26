@@ -16,6 +16,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import UserSignUp from './components/Organisms/UserSignUp'; 
 import UserSignIn from './components/Organisms/UserSignIn';
 
+
+import { AuthProvider } from './context/AuthContext';
 //Navigation
 
 
@@ -31,6 +33,7 @@ function HomeStackScreen() {
       <HomeStack.Screen name='UserSignUp' component={UserSignUp} /> 
       <HomeStack.Screen name='UserSignIn' component={UserSignIn} /> 
     </HomeStack.Navigator>
+   
 
   );
 }
@@ -88,7 +91,7 @@ export default function App() {
   const Tab = createBottomTabNavigator();
 
   return (
-
+ <AuthProvider>
     <NavigationContainer>
      <PaperProvider theme={theme}>
       <Tab.Navigator screenOptions={{ headerShown: true }}>
@@ -98,6 +101,7 @@ export default function App() {
       </Tab.Navigator>
       </PaperProvider>
     </NavigationContainer>
+    </AuthProvider>
 
   );
 }
