@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 import React, {useContext} from 'react';
 import { TextInput, Button, Divider, Chip } from 'react-native-paper';
 import { useForm, Controller, useFormState } from 'react-hook-form';
@@ -54,7 +54,7 @@ const handleSignIn = async (data: signInInfo) => {
         defaultValue=''
         rules={{
           required: {
-            value: true,
+            value: false, // need to be true to work
             message: 'Email is required',
           },
           pattern: {
@@ -80,7 +80,7 @@ const handleSignIn = async (data: signInInfo) => {
         defaultValue=''
         rules={{
           required: {
-            value: true,
+            value: false,
             message: 'Password is required',
           },
         }}

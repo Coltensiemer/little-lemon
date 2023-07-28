@@ -1,8 +1,9 @@
 import { ScrollView, StyleSheet, Text, View, Platform, Image} from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Button, Avatar, TextInput, Switch, Divider } from 'react-native-paper';
 // import {ReactComponent as defaultAvater } from '../../assets/account.svg'
 import * as ImagePicker from 'expo-image-picker';
+import { AuthContext } from '../../context/AuthContext';
 
 
 
@@ -11,6 +12,8 @@ export default function Profile() {
 
   const [imageUri, setImageUri] = useState<any>(null);
   const [imageBoolean, setImageBoolean] = useState<boolean>(false)
+  //@ts-ignore
+  const {logOut} = useContext(AuthContext)
 
   useEffect(() => { 
     const requestMediaLibraryPermissionsAsync = async () => {
@@ -33,6 +36,7 @@ export default function Profile() {
       quality: 1,
     });
     console.log(result);
+    //@ts-ignore
     if (!result.cancelled) {
       //@ts-expect-error
       setImageUri(result.uri);
@@ -128,7 +132,7 @@ export default function Profile() {
           justifyContent: 'center',
         }}
         mode='contained'
-        onPress={() => console.log('Pressed')}
+        onPress={() => logOut()}
       >
         Log Out
       </Button>

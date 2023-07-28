@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { View, Text } from 'react-native';
+import * as React  from 'react';
+import { View, Text, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
@@ -17,7 +17,7 @@ import UserSignUp from './components/Organisms/UserSignUp';
 import UserSignIn from './components/Organisms/UserSignIn';
 
 
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, AuthContext } from './context/AuthContext';
 //Navigation
 
 
@@ -26,7 +26,7 @@ function HomeStackScreen() {
   const HomeStack = createNativeStackNavigator();
   return (
 
-    // UserSignUp is breaking the app
+ 
     <HomeStack.Navigator>
       <HomeStack.Screen name='HomeScreen' component={HomeScreen} />
       <HomeStack.Screen name='Reservations' component={ReservationPage} />
@@ -36,6 +36,35 @@ function HomeStackScreen() {
    
 
   );
+}
+
+function signIN() { 
+  console.log('signed in')
+}
+// User does not have token
+function AuthStack() { 
+  const Tab = createBottomTabNavigator();
+  return ( 
+    <Tab.Navigator screenOptions={{ headerShown: false }}>
+      <Tab.Screen name='Home' component={HomeStackScreen} />
+      <Tab.Screen name="Sign In" component={UserSignIn} />
+  </Tab.Navigator>
+  )
+}
+
+
+// If User has Token
+function AppStack() { 
+  const Tab = createBottomTabNavigator();
+  return ( 
+    <Tab.Navigator screenOptions={{ headerShown: false }}>
+    <Tab.Screen name='Home' component={HomeStackScreen} />
+    <Tab.Screen name='Menu' component={Menulist} /> 
+    <Tab.Screen name='Reservation' component={ReservationPage} /> 
+    <Tab.Screen name='Profile' component={Profile} />
+  </Tab.Navigator>
+  )
+
 }
 
 const theme = {
@@ -88,17 +117,21 @@ const theme = {
 
 
 export default function App() {
-  const Tab = createBottomTabNavigator();
+
+
+  const {isLoading, isToken} = React.useContext(AuthContext)
+
+  if( isLoading ) { 
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <ActivityIndicator size={'large'} /> 
+    </View>
+  }
 
   return (
  <AuthProvider>
     <NavigationContainer>
      <PaperProvider theme={theme}>
-      <Tab.Navigator screenOptions={{ headerShown: true }}>
-        <Tab.Screen name='Home' component={HomeStackScreen} />
-        <Tab.Screen name='Menu' component={Menulist} /> 
-        <Tab.Screen name='Profile' component={Profile} />
-      </Tab.Navigator>
+  {isToken !== null ? <AppStack /> : <AuthStack />}
       </PaperProvider>
     </NavigationContainer>
     </AuthProvider>

@@ -7,17 +7,19 @@ export const AuthContext = createContext({});
 
 export const AuthProvider = ({children}) => { 
 
-	const [isloading, setLoading] = useState(true)
-	const [isToken, setToken] = useState(null)
+	const [isloading, setLoading] = useState<boolean>(true)
+	const [isToken, setToken] = useState<any>()
 
 	const login = () =>  { 
-		setToken('token')
+		setToken(null)
 		setLoading(false)
+		console.log('login')
 	}
 
 	const logOut = () => { 
 		setToken(null)
 		setLoading(true)
+		console.log('logged Out', isToken)
 	}
 	return ( 
 		<AuthContext.Provider value={{login, logOut, isloading, isToken}}>
