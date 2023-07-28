@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native'
-import React, { useContext, createContext, useState, Children } from 'react'
+import React, { useContext, createContext, useState, useEffect} from 'react'
 
 
 
@@ -8,19 +8,24 @@ export const AuthContext = createContext({});
 export const AuthProvider = ({children}) => { 
 
 	const [isloading, setLoading] = useState<boolean>(true)
-	const [isToken, setToken] = useState<any>()
+	const [isToken, setToken] = useState<any>(null)
 
 	const login = () =>  { 
-		setToken(null)
+		setToken(12342)
 		setLoading(false)
-		console.log('login')
+
 	}
 
 	const logOut = () => { 
 		setToken(null)
 		setLoading(true)
-		console.log('logged Out', isToken)
+		
 	}
+
+	useEffect(() => {
+		console.log('isToken:', isToken);
+	  }, [isToken]);
+
 	return ( 
 		<AuthContext.Provider value={{login, logOut, isloading, isToken}}>
 			{children}
