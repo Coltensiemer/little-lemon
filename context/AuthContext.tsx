@@ -1,5 +1,6 @@
 import { View, Text } from 'react-native'
 import React, { useContext, createContext, useState, useEffect} from 'react'
+import { G } from 'react-native-svg';
 
 
 
@@ -11,7 +12,7 @@ export const AuthProvider = ({children}) => {
 	const [isToken, setToken] = useState<any>(null)
 
 	const login = () =>  { 
-		setToken(12342)
+		setToken('asfasdf')
 		setLoading(false)
 
 	}
@@ -24,7 +25,8 @@ export const AuthProvider = ({children}) => {
 
 	useEffect(() => {
 		console.log('isToken:', isToken);
-	  }, [isToken]);
+		console.log('loading,', isloading)
+	  }, [isToken, isloading]);
 
 	return ( 
 		<AuthContext.Provider value={{login, logOut, isloading, isToken}}>

@@ -1,4 +1,4 @@
-import * as React  from 'react';
+import * as React from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -13,58 +13,79 @@ import Menulist from './components/Organisms/Menulist/Menulist';
 import ReservationPage from './components/Organisms/ReservationPage';
 import Profile from './components/Organisms/Profile';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import UserSignUp from './components/Organisms/UserSignUp'; 
+import UserSignUp from './components/Organisms/UserSignUp';
 import UserSignIn from './components/Organisms/UserSignIn';
-
 
 import { AuthProvider, AuthContext } from './context/AuthContext';
 //Navigation
 
-
-
 function HomeStackScreen() {
   const HomeStack = createNativeStackNavigator();
   return (
-
- 
     <HomeStack.Navigator>
       <HomeStack.Screen name='HomeScreen' component={HomeScreen} />
       <HomeStack.Screen name='Reservations' component={ReservationPage} />
-      <HomeStack.Screen name='UserSignUp' component={UserSignUp} /> 
-      <HomeStack.Screen name='UserSignIn' component={UserSignIn} /> 
+      <HomeStack.Screen name='UserSignUp' component={UserSignUp} />
+      <HomeStack.Screen name='UserSignIn' component={UserSignIn} />
     </HomeStack.Navigator>
-   
-
   );
 }
 
-function signIN() { 
-  console.log('signed in')
-}
+// function ReverseHomeStackScreen() {
+//   const HomeStack = createNativeStackNavigator();
+//   const {isLoading, isToken} = React.useContext(AuthContext)
+
+//   return (
+
+// isToken != null ?
+//   <HomeStack.Navigator>
+//   <HomeStack.Screen name='HomeScreen' component={HomeScreen} />
+//   <HomeStack.Screen name='Reservations' component={ReservationPage} />
+//   <HomeStack.Screen name='UserSignUp' component={UserSignUp} />
+//   <HomeStack.Screen name='UserSignIn' component={UserSignIn} />
+// </HomeStack.Navigator>  :
+
+// <HomeStack.Navigator>
+// <HomeStack.Screen name='Profile' component={Profile} />
+// <HomeStack.Screen name='Reservations' component={ReservationPage} />
+// <HomeStack.Screen name='UserSignUp' component={UserSignUp} />
+// <HomeStack.Screen name='UserSignIn' component={UserSignIn} />
+// </HomeStack.Navigator>
+
+//   )
+
+// }
+
 // User does not have token
-function AuthStack() { 
+function AuthStack() {
   const Tab = createBottomTabNavigator();
-  return ( 
+  return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen name='Home' component={HomeStackScreen} />
-      <Tab.Screen name="Sign In" component={UserSignIn} />
-  </Tab.Navigator>
-  )
+      <Tab.Screen name='Sign In' component={UserSignIn} />
+    </Tab.Navigator>
+  );
 }
 
-
 // If User has Token
-function AppStack() { 
+function AppStack() {
   const Tab = createBottomTabNavigator();
-  return ( 
+  const { isLoading, isToken } = React.useContext(AuthContext);
+  return (
+    isToken !=null ? 
+    <Tab.Navigator screenOptions={{ headerShown: false }}>
+      <Tab.Screen name='Home' component={HomeStackScreen} />
+      <Tab.Screen name='Menu' component={Menulist} />
+      <Tab.Screen name='Reservation' component={ReservationPage} />
+      <Tab.Screen name='Profile' component={Profile} />
+    </Tab.Navigator>
+    : 
     <Tab.Navigator screenOptions={{ headerShown: false }}>
     <Tab.Screen name='Home' component={HomeStackScreen} />
-    <Tab.Screen name='Menu' component={Menulist} /> 
-    <Tab.Screen name='Reservation' component={ReservationPage} /> 
     <Tab.Screen name='Profile' component={Profile} />
   </Tab.Navigator>
-  )
 
+  );
 }
 
 const theme = {
@@ -114,24 +135,16 @@ const theme = {
   },
 };
 
-
-
 export default function App() {
 
 
-  const {isLoading, isToken} = React.useContext(AuthContext)
-
- 
-
   return (
- <AuthProvider>
-    <NavigationContainer>
-     <PaperProvider theme={theme}>
-  {isToken !== null ? <AppStack /> : <AuthStack />}
-      </PaperProvider>
-    </NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer>
+        <PaperProvider theme={theme}>
+       <AppStack /> 
+        </PaperProvider>
+      </NavigationContainer>
     </AuthProvider>
-
   );
 }
-

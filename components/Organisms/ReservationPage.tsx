@@ -25,11 +25,7 @@ import {
 } from 'react-native-paper';
 import Header from '../Atoms/Header';
 import { useForm, Controller, useFormState } from 'react-hook-form';
-import EmailInput from '../Atoms/EmailInput';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
 import { Motion } from '@legendapp/motion';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 const db = SQLite.openDatabase('mydatabase.db');
 
 type FormValues = {

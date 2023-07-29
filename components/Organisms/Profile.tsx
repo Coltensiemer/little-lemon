@@ -1,31 +1,36 @@
-import { ScrollView, StyleSheet, Text, View, Platform, Image} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  Platform,
+  Image,
+} from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
 import { Button, Avatar, TextInput, Switch, Divider } from 'react-native-paper';
 // import {ReactComponent as defaultAvater } from '../../assets/account.svg'
 import * as ImagePicker from 'expo-image-picker';
 import { AuthContext } from '../../context/AuthContext';
+import { NavigationContainer } from '@react-navigation/native';
 
-
-
-
-export default function Profile() {
-
+export default function Profile({navigation}) {
   const [imageUri, setImageUri] = useState<any>(null);
-  const [imageBoolean, setImageBoolean] = useState<boolean>(false)
+  const [imageBoolean, setImageBoolean] = useState<boolean>(false);
   //@ts-ignore
-  const {logOut} = useContext(AuthContext)
+  const { logOut } = useContext(AuthContext);
 
-  useEffect(() => { 
+  useEffect(() => {
     const requestMediaLibraryPermissionsAsync = async () => {
-    if (Platform.OS !== 'web'){ 
-      const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync(); 
-        if (status !== 'granted') { 
-          alert('Permission Denied')
+      if (Platform.OS !== 'web') {
+        const { status } =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Permission Denied');
         }
-    }
-  }
-  requestMediaLibraryPermissionsAsync()
-  },[])
+      }
+    };
+    requestMediaLibraryPermissionsAsync();
+  }, []);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -40,22 +45,28 @@ export default function Profile() {
     if (!result.cancelled) {
       //@ts-expect-error
       setImageUri(result.uri);
-      setImageBoolean(true)
+      setImageBoolean(true);
     } else {
       alert('You did not select any image.');
     }
   };
 
-  
 
-
+ 
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.containContainer}
     >
       <View style={[styles.imageContainer, {}]}>
-        <Image source={imageBoolean ? {uri: imageUri} : require('../../assets/account.png')} style={{width: 120, height:120, alignSelf: 'center'}}/>
+        <Image
+          source={
+            imageBoolean
+              ? { uri: imageUri }
+              : require('../../assets/account.png')
+          }
+          style={{ width: 120, height: 120, alignSelf: 'center' }}
+        />
         <Button
           style={{
             width: 200,
@@ -72,9 +83,24 @@ export default function Profile() {
         </Button>
       </View>
       <View>
-        <TextInput style={{margin: 5, height: 40}} label='First Name' value={null} onChangeText={null} />
-        <TextInput style={{margin: 5, height: 40}} label='Last Name' value={null} onChangeText={null} />
-        <TextInput style={{margin: 5, height: 40}} label='Email' value={null} onChangeText={null} />
+        <TextInput
+          style={{ margin: 5, height: 40 }}
+          label='First Name'
+          value={null}
+          onChangeText={null}
+        />
+        <TextInput
+          style={{ margin: 5, height: 40 }}
+          label='Last Name'
+          value={null}
+          onChangeText={null}
+        />
+        <TextInput
+          style={{ margin: 5, height: 40 }}
+          label='Email'
+          value={null}
+          onChangeText={null}
+        />
       </View>
       <View style={styles.notificationContainer}>
         <Text> Notifications </Text>
@@ -132,7 +158,7 @@ export default function Profile() {
           justifyContent: 'center',
         }}
         mode='contained'
-        onPress={() => logOut()}
+        onPress={() => { logOut(); navigation.navigate('HomeScreen') }}
       >
         Log Out
       </Button>
