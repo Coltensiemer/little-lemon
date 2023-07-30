@@ -1,6 +1,7 @@
 import { View, Text } from 'react-native'
 import React, { useContext, createContext, useState, useEffect} from 'react'
 import { G } from 'react-native-svg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -12,20 +13,41 @@ export const AuthProvider = ({children}) => {
 	const [isToken, setToken] = useState<any>(null)
 
 	const login = () =>  { 
+		setLoading(true); 
 		setToken('asfasdf')
+		AsyncStorage.setItem('UserToken', 'asfasdf')
 		setLoading(false)
 
 	}
 
 	const logOut = () => { 
+		setLoading(true);
+		AsyncStorage.removeItem('UserToken'); 
 		setToken(null)
 		setLoading(true)
 		
 	}
 
+	// Checks if User Token is already stored
+	const isLoggedIn = async() => { 
+		
+		try {
+			setLoading(true)
+			let userToken = await AsyncStorage.getItem('UserToken')	
+			console.log('AsnycToken', userToken)
+			setToken(userToken);
+			setLoading(false)
+		} catch (error) {
+			console.log('Is logged in error', error)	
+		}
+	}
+
+	useEffect(() => {
+		isLoggedIn()
+	}, []);
+
 	useEffect(() => {
 		console.log('isToken:', isToken);
-		console.log('loading,', isloading)
 	  }, [isToken, isloading]);
 
 	return ( 

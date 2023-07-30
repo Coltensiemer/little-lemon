@@ -56,16 +56,8 @@ function HomeStackScreen() {
 
 // }
 
-// User does not have token
-function AuthStack() {
-  const Tab = createBottomTabNavigator();
-  return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen name='Home' component={HomeStackScreen} />
-      <Tab.Screen name='Sign In' component={UserSignIn} />
-    </Tab.Navigator>
-  );
-}
+
+
 
 // If User has Token
 function AppStack() {
@@ -82,7 +74,6 @@ function AppStack() {
     : 
     <Tab.Navigator screenOptions={{ headerShown: false }}>
     <Tab.Screen name='Home' component={HomeStackScreen} />
-    <Tab.Screen name='Profile' component={Profile} />
   </Tab.Navigator>
 
   );

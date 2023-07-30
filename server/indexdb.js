@@ -4,12 +4,9 @@ const cors = require('cors');
 const pool = require('./db');
 const port = 3100;
 
-
-
-// To Get server to connect locally and running 
+// To Get server to connect locally and running
 //cd in Terminal to ./server
-//nodemon indexdb  --- to watch for every change 
-
+//nodemon indexdb  --- to watch for every change
 
 //middleware
 app.use(cors());
@@ -60,8 +57,9 @@ app.get('/menu', async (req, res) => {
 
 app.get('/menu_items', async (req, res) => {
   try {
-    let queryString = 'SELECT m.title AS menu_title, menu_id,  mi.title AS item_title, mi.price, mi.id FROM menu m INNER JOIN menu_items mi ON m.id = mi.menu_id';
- 
+    let queryString =
+      'SELECT m.title AS menu_title, menu_id,  mi.title AS item_title, mi.price, mi.id FROM menu m INNER JOIN menu_items mi ON m.id = mi.menu_id';
+
     const getMenu = await pool.query(queryString);
     res.json(getMenu.rows);
   } catch (error) {
@@ -69,51 +67,86 @@ app.get('/menu_items', async (req, res) => {
   }
 });
 
-
-
-
-
-app.get('/menu_query', async (req, res) => { 
-  try { 
+app.get('/menu_query', async (req, res) => {
+  try {
     // let queryString = 'SELECT * FROM menu_items WHERE title LIKE '%B%' ';
-    
-    const getMenu = await pool.query("SELECT * FROM menu_items WHERE title LIKE '%h%'");
-    res.json(getMenu.rows); 
-  }
-  catch (error) {
-    console.log('Error in Query:', {error}) 
 
+    const getMenu = await pool.query(
+      "SELECT * FROM menu_items WHERE title LIKE '%h%'"
+    );
+    res.json(getMenu.rows);
+  } catch (error) {
+    console.log('Error in Query:', { error });
   }
-})
-
+});
 
 // Post to users table
-app.post('/users', async (req, res)=> { 
-
-  const {first_name, last_name, email, password} = req.body
+app.post('/users', async (req, res) => {
+  const { first_name, last_name, email, password } = req.body;
 
   try {
-    const setUsers = await pool.query( 'INSERT INTO users(first_name, last_name, email, password) VALUES($1, $2, $3, $4) RETURNING *',
-    [first_name, last_name, email, password])
+    const setUsers = await pool.query(
+      'INSERT INTO users(first_name, last_name, email, password) VALUES($1, $2, $3, $4) RETURNING *',
+      [first_name, last_name, email, password]
+    );
 
-    res.json(setUsers)
-    
+    res.json(setUsers);
   } catch (error) {
-    console.log('error setting up users', {error})
-    
+    console.log('error setting up users', { error });
   }
-})
+});
 
+// recieve user's table info
 
-// recieve user's table info 
-
-app.get('/users', async (req, res) => { 
+app.get('/users', async (req, res) => {
   try {
-    const getUserInfo = await pool.query('SELECT Email, Password FROM users;')
+    const getUserInfo = await pool.query('SELECT Email, Password FROM users;');
 
-    res.json(getUserInfo.rows)
+    res.json(getUserInfo.rows);
+  } catch (error) {
+    console.log('Getting user info:', error);
+  }
+});
+
+app.post('/login', async (req, res) => {
+  //Testing info
+  const users = [
+    {
+      id: 1,
+      email: 'Colten50@hotmail.com',
+      password: 'ColtenTes',
+    },
+  ];
+  try {
+    const { id, email, password } = users[0];
+
+  const results =  await pool.query(
+      'SELECT * FROM users WHERE email = $1',
+      [email]) 
+
+      const user = results.rows[0]
+      const queryPassword = user.password
+
+      if(results.rows.length === 0) { 
+        return res.status(401).json({message: 'Invalid email or password'})
+      }
+
+
+      if (results.rows.length > 0) {
+        if (password == queryPassword) { 
+          res.send({Message:'Successful'}
+          )
+        }
+        else { 
+          res.send({message: 'Email and Password Combination did not work'})
+        }
+      } else {
+        res.send({ message: 'Did not work' });
+      }
+
+   
 
   } catch (error) {
-    console.log('Getting user info:', error)
+    console.log('error with login', error);
   }
-})
+});
