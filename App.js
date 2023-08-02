@@ -7,8 +7,6 @@ import {
   PaperProvider,
 } from 'react-native-paper';
 import HomeScreen from './components/Organisms/HomeScreen';
-import SignUpFirstName from './components/Organisms/SignUpFirstName';
-import SignUpEmail from './components/Organisms/SignUpEmail';
 import Menulist from './components/Organisms/Menulist/Menulist';
 import ReservationPage from './components/Organisms/ReservationPage';
 import Profile from './components/Organisms/Profile';
@@ -17,8 +15,8 @@ import UserSignUp from './components/Organisms/UserSignUp';
 import UserSignIn from './components/Organisms/UserSignIn';
 
 import { AuthProvider, AuthContext } from './context/AuthContext';
-//Navigation
 
+//Navigation
 function HomeStackScreen() {
   const HomeStack = createNativeStackNavigator();
   return (
@@ -31,51 +29,21 @@ function HomeStackScreen() {
   );
 }
 
-// function ReverseHomeStackScreen() {
-//   const HomeStack = createNativeStackNavigator();
-//   const {isLoading, isToken} = React.useContext(AuthContext)
-
-//   return (
-
-// isToken != null ?
-//   <HomeStack.Navigator>
-//   <HomeStack.Screen name='HomeScreen' component={HomeScreen} />
-//   <HomeStack.Screen name='Reservations' component={ReservationPage} />
-//   <HomeStack.Screen name='UserSignUp' component={UserSignUp} />
-//   <HomeStack.Screen name='UserSignIn' component={UserSignIn} />
-// </HomeStack.Navigator>  :
-
-// <HomeStack.Navigator>
-// <HomeStack.Screen name='Profile' component={Profile} />
-// <HomeStack.Screen name='Reservations' component={ReservationPage} />
-// <HomeStack.Screen name='UserSignUp' component={UserSignUp} />
-// <HomeStack.Screen name='UserSignIn' component={UserSignIn} />
-// </HomeStack.Navigator>
-
-//   )
-
-// }
-
-
-
-
-// If User has Token
+// If User has Token or DOES NOT have TOKEN
 function AppStack() {
   const Tab = createBottomTabNavigator();
   const { isLoading, isToken } = React.useContext(AuthContext);
-  return (
-    isToken !=null ? 
+  return isToken != null ? (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen name='Home' component={HomeStackScreen} />
       <Tab.Screen name='Menu' component={Menulist} />
       <Tab.Screen name='Reservation' component={ReservationPage} />
       <Tab.Screen name='Profile' component={Profile} />
     </Tab.Navigator>
-    : 
+  ) : (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
-    <Tab.Screen name='Home' component={HomeStackScreen} />
-  </Tab.Navigator>
-
+      <Tab.Screen name='Sign In' component={UserSignIn} />
+    </Tab.Navigator>
   );
 }
 
@@ -127,15 +95,18 @@ const theme = {
 };
 
 export default function App() {
-
-
+  const Stack = createNativeStackNavigator();
   return (
     <AuthProvider>
-      <NavigationContainer>
-        <PaperProvider theme={theme}>
-       <AppStack /> 
-        </PaperProvider>
-      </NavigationContainer>
+      <PaperProvider theme={theme}>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name='AppStacks' component={AppStack} screenOptions={{ headerShown: false }}/>
+            <Stack.Screen name='Sign Up' component={UserSignUp} />
+            <Stack.Screen name='Home' component={HomeScreen} /> 
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
     </AuthProvider>
   );
 }

@@ -21,8 +21,8 @@ export default function HomeScreen({navigation}) {
   const isFocused = useIsFocused();
   const [showData, setData] = useState([]);
 
-  
-  const {login} = useContext(AuthContext)
+  //@ts-ignore
+  const {login, isToken} = useContext(AuthContext)
 
   const {
     control,
@@ -48,63 +48,10 @@ export default function HomeScreen({navigation}) {
   };
 
   return (
-    <View style={{ backgroundColor: theme.colors.background, flex: 1 }}>
+    <View style={{ backgroundColor: theme.colors.background, flex: 1, }}>
       <Header />
-     <Text style={{fontWeight:'bold', fontSize:30}}> Sign In</Text>
-     <Text>or Join Little Lemon</Text>
 
-
-     <View style={{flex: 1}}>
-      {/* Email SIGN IN */}
-      <Controller
-        control={control}
-        name='EmailSignin'
-        defaultValue=''
-        rules={{
-          required: {
-            value: false, // need to be true to work
-            message: 'Email is required',
-          },
-          pattern: {
-            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            message: 'Email is invalid',
-          },
-        }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            label='Email'
-            onChangeText={(text) => onChange(text)}
-            error={!!errors.EmailSignin}
-			mode='outlined'
-          />
-        )}
-      />
-	  
-	 
-	 
-      <Controller
-        control={control}
-        name='PasswordSignin'
-        defaultValue=''
-        rules={{
-          required: {
-            value: false,
-            message: 'Password is required',
-          },
-        }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            label='Password'
-            onChangeText={(text) => onChange(text)}
-            error={!!errors.PasswordSignin}
-			mode='outlined'
-          />
-        )}
-      />
-      <Button mode='contained' onPress={handleSubmit(login)}>
-        Sign In
-      </Button>
-    </View>
+    <Text>Hello, NAME</Text>
 
      
     </View>

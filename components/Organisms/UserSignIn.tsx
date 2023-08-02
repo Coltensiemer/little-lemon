@@ -1,17 +1,17 @@
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import React, {useContext} from 'react';
 import { TextInput, Button, Divider, Chip } from 'react-native-paper';
 import { useForm, Controller, useFormState } from 'react-hook-form';
-import { err } from 'react-native-svg/lib/typescript/xml';
-import { G } from 'react-native-svg';
 import { AuthContext } from '../../context/AuthContext';
+import Header from '../Atoms/Header';
+
 
 interface signInInfo { 
 	EmailSignin: string,
 	PasswordSignin: string,
 }
 
-export default function UserSignIn() {
+export default function UserSignIn({ navigation }) {
 
   const {
     control,
@@ -46,8 +46,25 @@ const handleSignIn = async (data: signInInfo) => {
 
 
   return (
-    <View>
+    <View style={{flex: 1}}>
+	<Header /> 
+	<View style={{flex: 1, justifyContent: 'flex-end', margin: 20}}>
+	<Text style={{fontWeight:'bold', fontSize:30,  marginBottom: 10}}> Sign In</Text>
+    {/* add link to SiGN NAV */}
+	<View style={{flexDirection: 'row'}}>
+     <Text >or</Text>
+	 <TouchableOpacity   onPress={() => {
+                  navigation.navigate('Sign Up');
+                }}>
+	 <Text style={{color: 'blue'}}>Sign Up </Text>
+	 </TouchableOpacity>
+	 </View>
+	 </View>
       {/* Email SIGN IN */}
+	  <View style={{flex: 2, margin: 20}}>
+		<Button   onPress={() => {
+                  navigation.navigate('HomeScreen');
+                }}>Click</Button>
       <Controller
         control={control}
         name='EmailSignin'
@@ -93,9 +110,11 @@ const handleSignIn = async (data: signInInfo) => {
           />
         )}
       />
-      <Button mode='contained' onPress={handleSubmit(login)}>
+	 
+      <Button style={{marginTop: 10}} mode='contained' onPress={handleSubmit(login)}>
         Sign In
       </Button>
+	  </View>
     </View>
   );
 }
