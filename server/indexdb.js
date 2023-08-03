@@ -4,6 +4,8 @@ const cors = require('cors');
 const pool = require('./db');
 const port = 3100;
 
+
+
 // To Get server to connect locally and running
 //cd in Terminal to ./server
 //nodemon indexdb  --- to watch for every change
@@ -11,6 +13,9 @@ const port = 3100;
 //middleware
 app.use(cors());
 app.use(express.json());
+
+//JsonWebToken
+var jwt = require('jsonwebtoken');
 
 //Routes
 
@@ -114,12 +119,15 @@ app.post('/login', async (req, res) => {
     {
       id: 1,
       email: 'Colten50@hotmail.com',
-      password: 'ColtenTes',
+      password: 'ColtenTest1',
     },
   ];
   try {
     const { id, email, password } = users[0];
 
+   const accessToken = jwt.sign({email: email}, 'asdfasefasdfasdf234134523')
+  
+console.log(accessToken)
   const results =  await pool.query(
       'SELECT * FROM users WHERE email = $1',
       [email]) 
@@ -136,6 +144,7 @@ app.post('/login', async (req, res) => {
         if (password == queryPassword) { 
           res.send({Message:'Successful'}
           )
+          res.json({accessToken: accessToken})
         }
         else { 
           res.send({message: 'Email and Password Combination did not work'})
