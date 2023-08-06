@@ -4,6 +4,9 @@ const cors = require('cors');
 const pool = require('./db');
 const port = 3100;
 
+// const dotenv = require('dotenv')
+// dotenv.config({ path: './.env' });
+require("dotenv").config()
 
 
 // To Get server to connect locally and running
@@ -125,9 +128,8 @@ app.post('/login', async (req, res) => {
   try {
     const { id, email, password } = users[0];
 
-   const accessToken = jwt.sign({email: email}, 'asdfasefasdfasdf234134523')
+   const accessToken = jwt.sign({email: email}, process.env.ACCESS_TOKEN_SECERT) 
   
-console.log(accessToken)
   const results =  await pool.query(
       'SELECT * FROM users WHERE email = $1',
       [email]) 
@@ -142,9 +144,9 @@ console.log(accessToken)
 
       if (results.rows.length > 0) {
         if (password == queryPassword) { 
-          res.send({Message:'Successful'}
+          res.send({Message:'Successful', Auth: true, AccessToken: accessToken, results}
           )
-          res.json({accessToken: accessToken})
+          
         }
         else { 
           res.send({message: 'Email and Password Combination did not work'})
