@@ -10,10 +10,10 @@ import { AuthContext } from '../../context/AuthContext';
 
 
 
-// interface signInInfo { 
-// 	EmailSignin: string,
-// 	PasswordSignin: string,
-// }
+interface signInInfo { 
+	EmailSignin: string,
+	PasswordSignin: string,
+}
 
 
 export default function HomeScreen({navigation}) {
@@ -52,7 +52,7 @@ export default function HomeScreen({navigation}) {
       <Header />
 
     <Text>Hello, NAME</Text>
-    <Text>Hello</Text>
+    <Text>Hello again</Text>
      
     </View>
   );

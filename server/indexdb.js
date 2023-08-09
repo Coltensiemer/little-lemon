@@ -77,7 +77,7 @@ app.get('/menu_items', async (req, res) => {
 
 app.get('/menu_query', async (req, res) => {
   try {
-    // let queryString = 'SELECT * FROM menu_items WHERE title LIKE '%B%' ';
+    
 
     const getMenu = await pool.query(
       "SELECT * FROM menu_items WHERE title LIKE '%h%'"
@@ -116,15 +116,62 @@ app.get('/users', async (req, res) => {
   }
 });
 
+// Test Data
+const users = [
+  {
+    id: 1,
+    email: 'Colten50@hotmail.com',
+    password: 'ColtenTest1',
+  },
+  {
+    id: 3,
+    email: 'Colten20@hotmail.com',
+    password: 'ColtenTest3',
+  },
+];
+
+// Verify function 
+
+const verifyLogin = (req, res, next) => { 
+  const authHeader = req.headers['authorization']
+const token = authHeader && authHeader.split(' ')[1]
+
+
+if (token === null ) { 
+  res.json({Auth: false, Message: 'No Token'})
+}
+else { 
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECERT, (err, user) => { 
+    
+
+    if (err) return res.json({Auth: false, Message: "Token is not verified", ERROR: err})
+
+    req.user = user
+    console.log(user)
+    next()
+  } )
+}
+
+
+}
+
+
+//Verify Login info 
+
+app.get('/verify', verifyLogin, async(req,res) => { 
+  res.json(users.filter(user => user.email === req.user.email))
+
+
+
+})
+
+
+
+
+// Login INTO 
 app.post('/login', async (req, res) => {
   //Testing info
-  const users = [
-    {
-      id: 1,
-      email: 'Colten50@hotmail.com',
-      password: 'ColtenTest1',
-    },
-  ];
+
   try {
     const { id, email, password } = users[0];
 
@@ -135,6 +182,7 @@ app.post('/login', async (req, res) => {
       [email]) 
 
       const user = results.rows[0]
+      
       const queryPassword = user.password
 
       if(results.rows.length === 0) { 
@@ -146,6 +194,7 @@ app.post('/login', async (req, res) => {
         if (password == queryPassword) { 
           res.send({Message:'Successful', Auth: true, AccessToken: accessToken, results}
           )
+          
           
         }
         else { 
