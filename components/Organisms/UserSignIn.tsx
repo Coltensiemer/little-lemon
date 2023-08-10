@@ -28,12 +28,31 @@ const {login} = useContext(AuthContext)
 
 const handleSignIn = async (data: signInInfo) => { 
 
+const signInInfo = { 
+  EmailSignin: data.EmailSignin,
+	PasswordSignin: data.PasswordSignin
+
+}
+
+
+
 	try {
 		const options = { 
-			method: 'GET'
+      method: 'POST', 
+			headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(signInInfo),
 		}
-		const response = await fetch('http://localhost:3100/users')
+		const response = await fetch('http://localhost:4100/login', options)
 
+    const responseData = await response.json();
+    
+    if (responseData.Auth === true) { 
+      login()
+      console.log('Login in Successfull')
+    }
+    else { 
+      console.log(responseData)
+    }
 		
 	} catch (error) {
 		console.log('error handle Signin', error)
@@ -111,7 +130,7 @@ const handleSignIn = async (data: signInInfo) => {
         )}
       />
 	 
-      <Button style={{marginTop: 10}} mode='contained' onPress={handleSubmit(login)}>
+      <Button style={{marginTop: 10}} mode='contained' onPress={handleSubmit(handleSignIn)}>
         Sign In
       </Button>
 	  </View>

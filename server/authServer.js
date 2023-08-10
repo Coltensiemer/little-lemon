@@ -78,23 +78,25 @@ const users = [
   
   // Login INTO
   app.post('/login', async (req, res) => {
-	//Testing info
+	
   
 	try {
-	  const { id, email, password } = users[0];
+	//   const { id, email, password } = users[0];
+
+	  const {EmailSignin, PasswordSignin } = req.body
   
 	  const accessToken = jwt.sign(
-		{ email: email },
+		{ email: EmailSignin },
 		process.env.ACCESS_TOKEN_SECERT, {expiresIn: '20s'}
 	  );
   
 	  const accessTokenRefresh = jwt.sign(
-		{ email: email },
+		{ email: EmailSignin },
 		process.env.REFRESH_TOKEN_SECERT
 	  );
   
 	  const results = await pool.query('SELECT * FROM users WHERE email = $1', [
-		email,
+		EmailSignin,
 	  ]);
   
 	  const user = results.rows[0];
@@ -106,7 +108,7 @@ const users = [
 	  }
   
 	  if (results.rows.length > 0) {
-		if (password == queryPassword) {
+		if (PasswordSignin == queryPassword) {
 		  res.send({
 			Message: 'Successful',
 			Auth: true,
@@ -119,6 +121,7 @@ const users = [
 		}
 	  } else {
 		res.send({ message: 'Did not work' });
+		
 	  }
 	} catch (error) {
 	  console.log('error with login', error);

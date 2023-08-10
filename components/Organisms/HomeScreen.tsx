@@ -52,7 +52,7 @@ export default function HomeScreen({navigation}) {
       <Header />
 
     <Text>Hello, NAME</Text>
-    <Text>Hello again</Text>
+    
      
     </View>
   );
