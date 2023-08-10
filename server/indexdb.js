@@ -4,10 +4,11 @@ const cors = require('cors');
 const pool = require('./db');
 const port = 3100;
 
+
+
 // const dotenv = require('dotenv')
 // dotenv.config({ path: './.env' });
-require("dotenv").config()
-
+require('dotenv').config();
 
 // To Get server to connect locally and running
 //cd in Terminal to ./server
@@ -19,6 +20,12 @@ app.use(express.json());
 
 //JsonWebToken
 var jwt = require('jsonwebtoken');
+
+
+//Listen
+app.listen(port, () => {
+  console.log(`port ${port} works!`);
+});
 
 //Routes
 
@@ -50,9 +57,6 @@ app.get('/reservations', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`port ${port} works!`);
-});
 
 app.get('/menu', async (req, res) => {
   try {
@@ -77,8 +81,6 @@ app.get('/menu_items', async (req, res) => {
 
 app.get('/menu_query', async (req, res) => {
   try {
-    
-
     const getMenu = await pool.query(
       "SELECT * FROM menu_items WHERE title LIKE '%h%'"
     );
@@ -116,97 +118,6 @@ app.get('/users', async (req, res) => {
   }
 });
 
-// Test Data
-const users = [
-  {
-    id: 1,
-    email: 'Colten50@hotmail.com',
-    password: 'ColtenTest1',
-  },
-  {
-    id: 3,
-    email: 'Colten20@hotmail.com',
-    password: 'ColtenTest3',
-  },
-];
-
-// Verify function 
-
-const verifyLogin = (req, res, next) => { 
-  const authHeader = req.headers['authorization']
-const token = authHeader && authHeader.split(' ')[1]
-
-
-if (token === null ) { 
-  res.json({Auth: false, Message: 'No Token'})
-}
-else { 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECERT, (err, user) => { 
-    
-
-    if (err) return res.json({Auth: false, Message: "Token is not verified", ERROR: err})
-
-    req.user = user
-    console.log(user)
-    next()
-  } )
-}
-
-
-}
-
-
-//Verify Login info 
-
-app.get('/verify', verifyLogin, async(req,res) => { 
-  res.json(users.filter(user => user.email === req.user.email))
 
 
 
-})
-
-
-
-
-// Login INTO 
-app.post('/login', async (req, res) => {
-  //Testing info
-
-  try {
-    const { id, email, password } = users[0];
-
-   const accessToken = jwt.sign({email: email}, process.env.ACCESS_TOKEN_SECERT) 
-  
-  const results =  await pool.query(
-      'SELECT * FROM users WHERE email = $1',
-      [email]) 
-
-      const user = results.rows[0]
-      
-      const queryPassword = user.password
-
-      if(results.rows.length === 0) { 
-        return res.status(401).json({message: 'Invalid email or password'})
-      }
-
-
-      if (results.rows.length > 0) {
-        if (password == queryPassword) { 
-          res.send({Message:'Successful', Auth: true, AccessToken: accessToken, results}
-          )
-          
-          
-        }
-        else { 
-          res.send({message: 'Email and Password Combination did not work'})
-        }
-      } else {
-        res.send({ message: 'Did not work' });
-      }
-
-   
-
-  } catch (error) {
-    console.log('error with login', error);
-  }
-});
