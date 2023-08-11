@@ -3,7 +3,9 @@ import React, {useContext} from 'react';
 import { TextInput, Button, Divider, Chip } from 'react-native-paper';
 import { useForm, Controller, useFormState } from 'react-hook-form';
 import { AuthContext } from '../../context/AuthContext';
+
 import Header from '../Atoms/Header';
+
 
 
 interface signInInfo { 
@@ -23,8 +25,10 @@ export default function UserSignIn({ navigation }) {
 
 const signInForm = watch('EmailSignin')
 
+
+
 //@ts-ignore
-const {login} = useContext(AuthContext)
+const {login, setUserData} = useContext(AuthContext)
 
 const handleSignIn = async (data: signInInfo) => { 
 
@@ -47,15 +51,18 @@ const signInInfo = {
     const responseData = await response.json();
     
     if (responseData.Auth === true) { 
-      login()
+      setUserData(responseData)
+      console.log(responseData)
+      login(responseData.AccessToken)
       console.log('Login in Successfull')
     }
     else { 
-      console.log(responseData)
+      console.log('User is not Auth')
     }
 		
 	} catch (error) {
 		console.log('error handle Signin', error)
+   
 		
 	}
 
@@ -116,7 +123,7 @@ const signInInfo = {
         defaultValue=''
         rules={{
           required: {
-            value: false,
+            value: true,
             message: 'Password is required',
           },
         }}

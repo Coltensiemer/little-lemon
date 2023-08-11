@@ -16,13 +16,29 @@ interface signInInfo {
 }
 
 
+interface isUserData { 
+  AccessToken: string;
+  Auth: boolean;
+  Message: string;
+  refreshToken: string;
+  user: {
+    email: string;
+    first_name: string;
+    id: number;
+    last_name: string;
+    password: string;
+}
+} 
+
 export default function HomeScreen({navigation}) {
   const theme = useTheme();
   const isFocused = useIsFocused();
   const [showData, setData] = useState([]);
 
   //@ts-ignore
-  const {login, isToken} = useContext(AuthContext)
+  const {login, isToken, isUserData} = useContext(AuthContext)
+  
+  
 
   const {
     control,
@@ -34,24 +50,14 @@ export default function HomeScreen({navigation}) {
 
 
 
-  useEffect(() => {
-    if (isFocused) {
-      fetchUserData((data) => {
-        setData(data);
-      });
-    }
-  }, [isFocused]);
 
-  const reservationAmount = (data) => {
-    const length = data.length;
-    return length;
-  };
 
   return (
     <View style={{ backgroundColor: theme.colors.background, flex: 1, }}>
       <Header />
 
-    <Text>Hello, NAME</Text>
+      <Text>Hello, {isUserData.user.first_name}</Text>
+      
     
      
     </View>

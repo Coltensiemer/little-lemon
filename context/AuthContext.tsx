@@ -3,21 +3,22 @@ import React, { useContext, createContext, useState, useEffect} from 'react'
 import { G } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
-
 export const AuthContext = createContext({}); 
 
 export const AuthProvider = ({children}) => { 
 
+
+	const [isUserData, setUserData] = useState<any>()
+	const [testData, setTestData] = useState<any>("hello!!")
 	const [isloading, setLoading] = useState<boolean>(true)
 	const [isToken, setToken] = useState<any>(null)
 
-	const login = () =>  { 
+	const login = (token) =>  { 
 		setLoading(true); 
-		setToken('asfasdf')
-		AsyncStorage.setItem('UserToken', 'asfasdf')
+		setToken(token)
+		AsyncStorage.setItem('UserToken', token)
 		setLoading(false)
-
+		console.log("data", isUserData)
 	}
 
 	const logOut = () => { 
@@ -51,7 +52,7 @@ export const AuthProvider = ({children}) => {
 	  }, [isToken, isloading]);
 
 	return ( 
-		<AuthContext.Provider value={{login, logOut, isloading, isToken}}>
+		<AuthContext.Provider value={{login, logOut, isloading, isToken, setUserData, isUserData, testData, setTestData}}>
 			{children}
 		</AuthContext.Provider>
 

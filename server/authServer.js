@@ -99,6 +99,7 @@ const users = [
 		EmailSignin,
 	  ]);
   
+	  //From the first database 
 	  const user = results.rows[0];
   
 	  const queryPassword = user.password;
@@ -114,7 +115,7 @@ const users = [
 			Auth: true,
 			AccessToken: accessToken,
 			refreshToken: accessTokenRefresh,
-			results,
+			user: user
 		  });
 		} else {
 		  res.send({ message: 'Email and Password Combination did not work' });
