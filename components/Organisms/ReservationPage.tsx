@@ -7,7 +7,7 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef, useContext } from 'react';
 import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates';
 import { en, registerTranslation } from 'react-native-paper-dates';
 registerTranslation('en', en);
@@ -26,17 +26,15 @@ import {
 import Header from '../Atoms/Header';
 import { useForm, Controller, useFormState } from 'react-hook-form';
 import { Motion } from '@legendapp/motion';
+import { AuthContext } from '../../context/AuthContext';
 
 
-type FormValues = {
-  full_name: string;
-  email: string;
-  date: string;
-  time: string;
-  group_total: string;
-};
+
 
 export default function ReservationPage({ navigation }) {
+
+  //@ts-ignore
+  const {isUserData} = useContext(AuthContext)
 
   // input data that is store in state
 
@@ -96,11 +94,13 @@ export default function ReservationPage({ navigation }) {
   );
 
   const submitForm = async (data: any) => {
+
+
     try {
       setVisibleModal(true);
       const formData = {
-        full_name: data.firstName,
-        email: data.isEmail,
+        full_name: isUserData?.user?.first_name + " " + isUserData?.user?.last_name,
+        email: isUserData?.user?.email,
         time: formatTime({
           hours: data.time.hours,
           minutes: data.time.minutes,
@@ -187,7 +187,7 @@ export default function ReservationPage({ navigation }) {
   // PROGRESS BAR
   const progressBar = () => {
     // Collects Values from React Form
-    const inputValues = getValues(['firstName', 'isEmail', 'isPartySize']);
+    const inputValues = getValues(['isPartySize']);
     const timeValues = getValues('time');
     const dateValues = getValues('date');
 
@@ -201,7 +201,7 @@ export default function ReservationPage({ navigation }) {
       (values) => values?.trim() != ''
     ).length;
 
-    const progressResults = (timeProgress + inputProgress + dateProgress) / 5;
+    const progressResults = (timeProgress + inputProgress + dateProgress) / 3;
 
     setProgress(progressResults);
 
@@ -239,7 +239,7 @@ export default function ReservationPage({ navigation }) {
           style={{ margin: 5} }
         />
      
-        <View
+        {/* <View
           style={{ height: 200, paddingHorizontal: 10, justifyContent: 'space-evenly' }}
         >
           <Controller
@@ -302,7 +302,7 @@ export default function ReservationPage({ navigation }) {
           >
             This is required.
           </Text>
-        </View>
+        </View> */}
         <View
           style={{
             flex: 1,
