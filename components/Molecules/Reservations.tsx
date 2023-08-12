@@ -64,7 +64,6 @@ export default function Reservations() {
 
   return (
     <View>
-      <Text>Colten Placeholder</Text>
       {reservationData.length > 0 ? (
       reservationData.map((reservation, index) => (
         <ReservationDisplay key={index} reservation={reservation} />
@@ -72,7 +71,7 @@ export default function Reservations() {
     ) : (
       <View>
       <Text>You have no current reservations</Text>
-      <Button>See previous</Button>
+      <Button>Make a Reservation</Button>
       </View>
     )}
     <Divider bold={true} /> 
