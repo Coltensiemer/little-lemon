@@ -25,8 +25,6 @@ export default function UserSignIn({ navigation }) {
 
 const signInForm = watch('EmailSignin')
 
-
-
 //@ts-ignore
 const {login, setUserData} = useContext(AuthContext)
 

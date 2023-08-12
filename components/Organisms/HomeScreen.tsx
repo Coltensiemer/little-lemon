@@ -1,22 +1,19 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
 import Header from '../Atoms/Header';
-import { fetchUserData } from '../../assets/Database.js/reservationData';
 import { useIsFocused } from '@react-navigation/native';
 import { Button, useTheme, TextInput } from 'react-native-paper';
 import { useForm, Controller, useFormState } from 'react-hook-form';
 import { AuthContext } from '../../context/AuthContext';
+import Reservations from '../Molecules/reservations';
+import { G } from 'react-native-svg';
 
-
-
-
-interface signInInfo { 
-	EmailSignin: string,
-	PasswordSignin: string,
+interface signInInfo {
+  EmailSignin: string;
+  PasswordSignin: string;
 }
 
-
-interface isUserData { 
+interface isUserData {
   AccessToken: string;
   Auth: boolean;
   Message: string;
@@ -27,39 +24,26 @@ interface isUserData {
     id: number;
     last_name: string;
     password: string;
+  };
 }
-} 
 
-export default function HomeScreen({navigation}) {
+export default function HomeScreen({ navigation }) {
   const theme = useTheme();
   const isFocused = useIsFocused();
   const [showData, setData] = useState([]);
 
   //@ts-ignore
-  const {login, isToken, isUserData} = useContext(AuthContext)
-  
-  
+  const { login, isToken, isUserData } = useContext(AuthContext);
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    getValues,
-    watch,
-  } = useForm();
-
-
-
-
+  // console.log('data', isUserData)
 
   return (
-    <View style={{ backgroundColor: theme.colors.background, flex: 1, }}>
+    <View style={{ backgroundColor: theme.colors.background, flex: 1 }}>
       <Header />
 
-      <Text>Hello, {isUserData.user.first_name}</Text>
-      
-    
-     
+      <Text>Hello, {isUserData?.user?.first_name}</Text>
+      <Text>{isUserData?.user?.email}</Text>
+      {/* <Reservations /> */}
     </View>
   );
 }

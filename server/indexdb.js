@@ -47,7 +47,7 @@ app.post('/reservations', async (req, res) => {
 
 // Get all Reservations
 
-app.get('/reservations', async (req, res) => {
+app.get('/getAllReservations', async (req, res) => {
   try {
     const getReservations = await pool.query('SELECT * FROM reservations');
 
@@ -56,6 +56,23 @@ app.get('/reservations', async (req, res) => {
     console.log(error.message);
   }
 });
+
+
+/// Get single reservation details 
+app.get('/getreservation', async (req, res) => {
+try {
+  const {email} = req.query
+  const getReservation = await pool.query('SELECT * FROM reservations WHERE email = $1', [email])
+
+  res.json(getReservation.rows)
+  
+} catch (error) {
+  console.log(error.message)
+  
+}
+
+}) 
+
 
 
 app.get('/menu', async (req, res) => {

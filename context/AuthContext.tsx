@@ -9,7 +9,6 @@ export const AuthProvider = ({children}) => {
 
 
 	const [isUserData, setUserData] = useState<any>()
-	const [testData, setTestData] = useState<any>("hello!!")
 	const [isloading, setLoading] = useState<boolean>(true)
 	const [isToken, setToken] = useState<any>(null)
 
@@ -52,7 +51,7 @@ export const AuthProvider = ({children}) => {
 	  }, [isToken, isloading]);
 
 	return ( 
-		<AuthContext.Provider value={{login, logOut, isloading, isToken, setUserData, isUserData, testData, setTestData}}>
+		<AuthContext.Provider value={{login, logOut, isloading, isToken, setUserData, isUserData}}>
 			{children}
 		</AuthContext.Provider>
 
