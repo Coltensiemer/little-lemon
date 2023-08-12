@@ -5,8 +5,10 @@ import { useIsFocused } from '@react-navigation/native';
 import { Button, useTheme, TextInput } from 'react-native-paper';
 import { useForm, Controller, useFormState } from 'react-hook-form';
 import { AuthContext } from '../../context/AuthContext';
-import Reservations from '../Molecules/reservations';
+import Reservations from '../Molecules/Reservations';
+
 import { G } from 'react-native-svg';
+
 
 interface signInInfo {
   EmailSignin: string;
@@ -43,7 +45,8 @@ export default function HomeScreen({ navigation }) {
 
       <Text>Hello, {isUserData?.user?.first_name}</Text>
       <Text>{isUserData?.user?.email}</Text>
-      {/* <Reservations /> */}
+      <Reservations />
+
     </View>
   );
 }
