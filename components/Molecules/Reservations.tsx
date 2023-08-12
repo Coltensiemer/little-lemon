@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { Button, Divider } from 'react-native-paper';
 
-export default function Reservations() {
+export default function Reservations({navigation}) {
   //@ts-ignore
   const { isUserData } = useContext(AuthContext);
 
@@ -13,7 +13,6 @@ export default function Reservations() {
 
   const getReservations = async () => {
     const email = isUserData?.user?.email;
-    
 
     const url = `http://localhost:3100/getreservation?email=${encodeURIComponent(
       email
@@ -29,9 +28,8 @@ export default function Reservations() {
       const response = await fetch(url, options);
       const data = await response.json();
 
-      setReservationData(data)
-      console.log(data)
-    
+      setReservationData(data);
+      console.log(data);
     } catch (error) {
       console.log('Error with getReservation:', error);
     }
@@ -40,7 +38,6 @@ export default function Reservations() {
   useEffect(() => {
     getReservations();
   }, []);
-
 
   function formatDate(dateString) {
     const date = new Date(dateString);
@@ -52,30 +49,36 @@ export default function Reservations() {
 
   // Function componenet for reservations
 
-  function ReservationDisplay({ reservation }) { 
+  function ReservationDisplay({ reservation }) {
     return (
-      <View style={{padding: 10}}>
+      <View style={{ padding: 10 }}>
         <Text>You have a Reservation for {reservation.group_total}</Text>
         <Text>Date: {formatDate(reservation.date)}</Text>
         <Text>Time: {reservation.time}</Text>
       </View>
-    )
+    );
   }
 
   return (
     <View>
+      <Divider bold={true} />
       {reservationData.length > 0 ? (
-      reservationData.map((reservation, index) => (
-        <ReservationDisplay key={index} reservation={reservation} />
-      ))
-    ) : (
-      <View>
-      <Text>You have no current reservations</Text>
-      <Button>Make a Reservation</Button>
-      </View>
-    )}
-    <Divider bold={true} /> 
+        reservationData.map((reservation, index) => (
+          <ReservationDisplay key={index} reservation={reservation} />
+        ))
+      ) : (
+        <View>
+          <Text>You have no current reservations</Text>
+          <Button
+            onPress={() => {
+              navigation.navigate('Reservation')
+            }}
+          >
+            Make a Reservation
+          </Button>
+        </View>
+      )}
+      <Divider bold={true} />
     </View>
   );
 }
-

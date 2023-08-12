@@ -15,6 +15,7 @@ import UserSignUp from './components/Organisms/UserSignUp';
 import UserSignIn from './components/Organisms/UserSignIn';
 
 import { AuthProvider, AuthContext } from './context/AuthContext';
+import Reservations from './components/Molecules/Reservations';
 
 //Navigation
 function HomeStackScreen() {
@@ -25,6 +26,8 @@ function HomeStackScreen() {
       <HomeStack.Screen name='Reservations' component={ReservationPage} />
       <HomeStack.Screen name='UserSignUp' component={UserSignUp} />
       <HomeStack.Screen name='UserSignIn' component={UserSignIn} />
+      <HomeStack.Screen name='ReservationComponent' component={Reservations} /> 
+      <HomeStack.Screen name='Reservation' component={ReservationPage} /> 
     </HomeStack.Navigator>
   );
 }
@@ -105,6 +108,8 @@ export default function App() {
             <Stack.Screen name='Sign In' component={UserSignIn} /> 
             <Stack.Screen name='Sign Up' component={UserSignUp} />
             <Stack.Screen name='Home' component={HomeScreen} /> 
+            <Stack.Screen name='Reservation' component={ReservationPage} /> 
+            <Stack.Screen name='ReservationComponent' component={Reservations} /> 
           </Stack.Navigator>
         </NavigationContainer>
       </PaperProvider>

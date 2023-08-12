@@ -26,7 +26,7 @@ import {
 import Header from '../Atoms/Header';
 import { useForm, Controller, useFormState } from 'react-hook-form';
 import { Motion } from '@legendapp/motion';
-const db = SQLite.openDatabase('mydatabase.db');
+
 
 type FormValues = {
   full_name: string;
@@ -126,17 +126,6 @@ export default function ReservationPage({ navigation }) {
     }
   };
 
-  // get ALL Reservations
-  // const getAllReservations = async () => {
-  //   try {
-  //     const response = await fetch('http://localhost:3100/reservations');
-  //     const jsonData = await response.json();
-  //     // console.log(jsonData);
-  //     setCustomer(jsonData);
-  //   } catch (err) {
-  //     console.log(`There was an error: ${err}`);
-  //   }
-  // };
 
   // Formates the date that is rendered
   function formatDate(dateString) {
@@ -237,10 +226,7 @@ export default function ReservationPage({ navigation }) {
     console.log(getDate)
   }, [watchAllFields]);
 
-  // UPdates RESERVATIONS after each submit
-  // useEffect(() => {
-  //   getAllReservations();
-  // }, [postReservation]);
+
 
   return (
     <ScrollView style={{ flex: 1 }}>

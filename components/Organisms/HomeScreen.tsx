@@ -9,7 +9,6 @@ import Reservations from '../Molecules/Reservations';
 
 import { G } from 'react-native-svg';
 
-
 interface signInInfo {
   EmailSignin: string;
   PasswordSignin: string;
@@ -42,12 +41,18 @@ export default function HomeScreen({ navigation }) {
   return (
     <View style={{ backgroundColor: theme.colors.background, flex: 1 }}>
       <Header />
-<View style={{flexDirection: 'row', justifyContent: 'left', margin: 10}}>
-      <Text style={{fontSize: 32, fontWeight: 'bold', paddingRight: 10}}>Hello</Text>
-        <Text style={{alignSelf: 'flex-end', fontSize: 24}}>{isUserData?.user?.first_name}</Text>
-        </View>
-      <Reservations />
-
+      <View
+      //@ts-ignore
+        style={{ flexDirection: 'row', justifyContent: 'left', margin: 10 }}
+      >
+        <Text style={{ fontSize: 32, fontWeight: 'bold', paddingRight: 10 }}>
+          Hello
+        </Text>
+        <Text style={{ alignSelf: 'flex-end', fontSize: 24 }}>
+          {isUserData?.user?.first_name}
+        </Text>
+      </View>
+      <Reservations navigation={navigation}/>
     </View>
   );
 }
