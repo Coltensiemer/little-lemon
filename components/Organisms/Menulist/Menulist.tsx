@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Filter from '../../Atoms/Filter';
-import { CartIcon } from '../../Atoms/CartIcon';
+import { CartIcon } from '../../Atoms/Icons';
 import MenuHeaders from '../../Atoms/MenuHeaders';
 import Header from '../../Atoms/Header';
 import { ThemeProvider, useTheme } from 'react-native-paper';

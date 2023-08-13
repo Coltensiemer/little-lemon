@@ -9,24 +9,6 @@ import Reservations from '../Molecules/Reservations';
 
 import { G } from 'react-native-svg';
 
-interface signInInfo {
-  EmailSignin: string;
-  PasswordSignin: string;
-}
-
-interface isUserData {
-  AccessToken: string;
-  Auth: boolean;
-  Message: string;
-  refreshToken: string;
-  user: {
-    email: string;
-    first_name: string;
-    id: number;
-    last_name: string;
-    password: string;
-  };
-}
 
 export default function HomeScreen({ navigation }) {
   const theme = useTheme();

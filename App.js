@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
@@ -13,9 +13,9 @@ import Profile from './components/Organisms/Profile';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import UserSignUp from './components/Organisms/UserSignUp';
 import UserSignIn from './components/Organisms/UserSignIn';
-
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import Reservations from './components/Molecules/Reservations';
+import { HomeIcon, MenuIcon, ReservationIcon, SettingsIcon } from './components/Atoms/Icons';
 
 //Navigation
 function HomeStackScreen() {
@@ -26,8 +26,8 @@ function HomeStackScreen() {
       <HomeStack.Screen name='Reservations' component={ReservationPage} />
       <HomeStack.Screen name='UserSignUp' component={UserSignUp} />
       <HomeStack.Screen name='UserSignIn' component={UserSignIn} />
-      <HomeStack.Screen name='ReservationComponent' component={Reservations} /> 
-      <HomeStack.Screen name='Reservation' component={ReservationPage} /> 
+      <HomeStack.Screen name='ReservationComponent' component={Reservations} />
+      <HomeStack.Screen name='Reservation' component={ReservationPage} />
     </HomeStack.Navigator>
   );
 }
@@ -37,14 +37,67 @@ function AppStack() {
   const Tab = createBottomTabNavigator();
   const { isLoading, isToken } = React.useContext(AuthContext);
   return isToken != null ? (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen name='Home' component={HomeStackScreen} />
-      <Tab.Screen name='Menu' component={Menulist} />
-      <Tab.Screen name='Reservation' component={ReservationPage} />
-      <Tab.Screen name='Profile' component={Profile} />
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: theme.colors.blue,
+        tabBarInactiveTintColor: theme.colors.primary,
+      }}
+    >
+      <Tab.Screen
+        name='Home'
+        component={HomeStackScreen}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            return (
+              <HomeIcon
+                color={focused ? theme.colors.blue : theme.colors.primary}
+              />
+            );
+          },
+        }}
+      />
+      <Tab.Screen
+        name='Menu'
+        component={Menulist}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            return (
+              <MenuIcon
+                color={focused ? theme.colors.blue : theme.colors.primary}
+              />
+            );
+          },
+        }}
+      />
+      <Tab.Screen name='Reservation' component={ReservationPage} 
+          options={{
+            tabBarIcon: ({ focused }) => {
+              return (
+                <ReservationIcon
+                  color={focused ? theme.colors.blue : theme.colors.primary}
+                />
+              );
+            },
+          }} />
+      <Tab.Screen name='Profile' component={Profile}     options={{
+          tabBarIcon: ({ focused }) => {
+            return (
+              <SettingsIcon
+                color={focused ? theme.colors.blue : theme.colors.primary}
+              />
+            );
+          },
+        }}/>
     </Tab.Navigator>
   ) : (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: theme.colors.blue,
+        tabBarInactiveTintColor: theme.colors.primary,
+      }}
+    >
       <Tab.Screen name='Sign In' component={UserSignIn} />
     </Tab.Navigator>
   );
@@ -94,6 +147,7 @@ const theme = {
     surfaceDisabled: 'rgba(22, 27, 30, 0.12)',
     onSurfaceDisabled: 'rgba(38, 27, 30, 0.38)',
     backdrop: 'rgba(36, 48, 54, 0.4)',
+    blue: 'blue',
   },
 };
 
@@ -104,12 +158,19 @@ export default function App() {
       <PaperProvider theme={theme}>
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen name='AppStacks' component={AppStack} screenOptions={{ headerShown: false }}/>
-            <Stack.Screen name='Sign In' component={UserSignIn} /> 
+            <Stack.Screen
+              name='AppStacks'
+              component={AppStack}
+              screenOptions={{ headerShown: false }}
+            />
+            <Stack.Screen name='Sign In' component={UserSignIn} />
             <Stack.Screen name='Sign Up' component={UserSignUp} />
-            <Stack.Screen name='Home' component={HomeScreen} /> 
-            <Stack.Screen name='Reservation' component={ReservationPage} /> 
-            <Stack.Screen name='ReservationComponent' component={Reservations} /> 
+            <Stack.Screen name='Home' component={HomeScreen} />
+            <Stack.Screen name='Reservation' component={ReservationPage} />
+            <Stack.Screen
+              name='ReservationComponent'
+              component={Reservations}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </PaperProvider>
