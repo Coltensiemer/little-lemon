@@ -8,16 +8,24 @@ import {
 } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
 import { Button, Avatar, TextInput, Switch, Divider } from 'react-native-paper';
-// import {ReactComponent as defaultAvater } from '../../assets/account.svg'
 import * as ImagePicker from 'expo-image-picker';
 import { AuthContext } from '../../context/AuthContext';
 import { NavigationContainer } from '@react-navigation/native';
 
-export default function Profile({navigation}) {
+
+export default function Profile({ navigation }) {
+    //@ts-ignore
+  const { logOut, isUserData } = useContext(AuthContext);
+
   const [imageUri, setImageUri] = useState<any>(null);
   const [imageBoolean, setImageBoolean] = useState<boolean>(false);
-  //@ts-ignore
-  const { logOut } = useContext(AuthContext);
+
+  const [editedFirstName, setEditedFirstName] = useState(isUserData?.user?.first_name);
+  const [editedLastName, setEditedLastName] = useState(isUserData?.user?.last_name);
+  
+  
+
+
 
   useEffect(() => {
     const requestMediaLibraryPermissionsAsync = async () => {
@@ -52,7 +60,44 @@ export default function Profile({navigation}) {
   };
 
 
- 
+  //store all changes into a new state. 
+
+  //On save changes, all change inputs are updated
+//text input will update
+
+const handleChanges = async () => { 
+
+  try {
+    const formData = { 
+      first_name: editedFirstName,
+      last_name: editedLastName,
+      email: isUserData?.user?.email
+    }
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    };
+
+    const response = await fetch('http://localhost:3100/updateUserfirstandlastname', options)
+    console.log("changes updated")
+  } catch (error) {
+    console.log("error trying to update first and last name:", error)
+    
+  }
+
+}
+
+
+
+// Discards any changes 
+const handleDiscardChanges = () => { 
+  setEditedFirstName(isUserData?.user?.first_name)
+  setEditedLastName(isUserData?.user?.last_name)
+}
+
+
+
   return (
     <ScrollView
       style={styles.container}
@@ -85,29 +130,22 @@ export default function Profile({navigation}) {
       <View>
         <TextInput
           style={{ margin: 5, height: 40 }}
-          label='First Name'
-          value={null}
-          onChangeText={null}
+          value={editedFirstName}
+          onChangeText={setEditedFirstName}
         />
         <TextInput
           style={{ margin: 5, height: 40 }}
-          label='Last Name'
-          value={null}
+          value={editedLastName}
           onChangeText={null}
         />
-        <TextInput
-          style={{ margin: 5, height: 40 }}
-          label='Email'
-          value={null}
-          onChangeText={null}
-        />
+     
       </View>
       <View style={styles.notificationContainer}>
         <Text> Notifications </Text>
         <View style={styles.switchContainer}>
           <Text style={styles.switchText}>
             {' '}
-            Order Statues
+           Dark Mode
             <Switch
               style={styles.switch}
               value={false}
@@ -139,10 +177,10 @@ export default function Profile({navigation}) {
         </View>
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-        <Button mode='elevated' onPress={() => console.log('Pressed')}>
+        <Button mode='elevated' onPress={() => handleDiscardChanges()}>
           Discard Changes
         </Button>
-        <Button mode='contained-tonal' onPress={() => console.log('Pressed')}>
+        <Button mode='contained-tonal' onPress={() => handleChanges()}>
           Save Changes
         </Button>
       </View>
@@ -158,7 +196,10 @@ export default function Profile({navigation}) {
           justifyContent: 'center',
         }}
         mode='contained'
-        onPress={() => { logOut(); navigation.navigate('HomeScreen') }}
+        onPress={() => {
+          logOut();
+          navigation.navigate('HomeScreen');
+        }}
       >
         Log Out
       </Button>

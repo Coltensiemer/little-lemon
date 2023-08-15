@@ -22,6 +22,7 @@ app.use(express.json());
 var jwt = require('jsonwebtoken');
 
 
+
 //Listen
 app.listen(port, () => {
   console.log(`port ${port} works!`);
@@ -136,5 +137,19 @@ app.get('/users', async (req, res) => {
 });
 
 
+// change user indo 
 
+app.post('/updateUserfirstandlastname', async (req, res) => { 
 
+  const {first_name, last_name, email} = req.body
+
+  try {
+    const update = await pool.query('UPDATE users SET first_name = $1, last_name = $2 WHERE email = $3;', [
+      first_name, last_name, email
+    ])
+
+  res.json(update)    
+  } catch (error) {
+    console.log('Error updating first and last name', error)
+  }
+})
