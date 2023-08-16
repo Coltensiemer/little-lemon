@@ -7,7 +7,7 @@ export const AuthContext = createContext({});
 
 export const AuthProvider = ({children}) => { 
 
-
+	const [isSettingData, setSettingData] = useState<any>()
 	const [isUserData, setUserData] = useState<any>()
 	const [isloading, setLoading] = useState<boolean>(true)
 	const [isToken, setToken] = useState<any>(null)
@@ -51,7 +51,7 @@ export const AuthProvider = ({children}) => {
 	  }, [isToken, isloading]);
 
 	return ( 
-		<AuthContext.Provider value={{login, logOut, isloading, isToken, setUserData, isUserData}}>
+		<AuthContext.Provider value={{login, logOut, isloading, isToken, setUserData, isUserData, isSettingData, setSettingData}}>
 			{children}
 		</AuthContext.Provider>
 

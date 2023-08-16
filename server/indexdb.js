@@ -23,6 +23,7 @@ var jwt = require('jsonwebtoken');
 
 
 
+
 //Listen
 app.listen(port, () => {
   console.log(`port ${port} works!`);
@@ -108,17 +109,38 @@ app.get('/menu_query', async (req, res) => {
   }
 });
 
+
+
 // Post to users table
 app.post('/users', async (req, res) => {
   const { first_name, last_name, email, password } = req.body;
 
   try {
+
+    const checkExistingEmail = await pool.query('SELECT * FROM users WHERE email = $1', [
+      email
+    ])
+  
+    if (checkExistingEmail.rows.length > 0)  return console.log("Email Already exist")
+
     const setUsers = await pool.query(
-      'INSERT INTO users(first_name, last_name, email, password) VALUES($1, $2, $3, $4) RETURNING *',
+      'INSERT INTO users (first_name, last_name, email, password) VALUES($1, $2, $3, $4) RETURNING *',
       [first_name, last_name, email, password]
     );
 
-    res.json(setUsers);
+
+
+    //Setting up user_setting for each user
+     
+    const defaultSettings = [ false, false, false, email ]
+
+    const userSettings = await pool.query('INSERT INTO user_settings (dark_mode, special_offers, newsletters, email) VALUES ($1, $2, $3, $4) RETURNING *;', defaultSettings )
+
+    return { 
+      user: setUsers.rows[0],
+      userSetting: userSettings.rows[0] 
+    }
+   
   } catch (error) {
     console.log('error setting up users', { error });
   }
@@ -152,4 +174,62 @@ app.post('/updateUserfirstandlastname', async (req, res) => {
   } catch (error) {
     console.log('Error updating first and last name', error)
   }
+})
+
+
+// Creates a row 
+app.post('/post_new_user_settings', async (req, res) => { 
+  try { 
+    const {user_id, dark_mode, special_offer, newsletters, created_at, updated_at } = req.body; 
+  
+    const request = await pool.query('INSERT INTO user_settings (dark_mode, special_offers, newsletters, user_id) VALUES ($1, $2, $3, $4) RETURNING *;', [dark_mode, special_offer, newsletters, user_id])
+  
+    res.json(request)
+    console.log('updated settings')
+
+  } 
+  catch (error) { 
+    console.log("Error with Posting user settings:", error)
+  }
+  
+  })
+
+
+
+
+//Push settings info into users_settings
+app.post('/post_user_settings', async (req, res) => { 
+try { 
+  const {user_id, dark_mode, special_offer, newsletters, created_at, updated_at } = req.body; 
+
+  const request = await pool.query('UPDATE user_settings SET dark_mode = $1, special_offers = $2, newsletters = $3 WHERE user_id = $4;', [dark_mode, special_offer, newsletters, user_id])
+
+  res.json(request)
+  console.log('updated settings')
+  console.log(request)
+} 
+catch (error) { 
+  console.log("Error with Posting user settings:", error)
+}
+
+})
+
+
+// Import user settings
+app.get('/get_user_settings', async (req, res) => { 
+
+const {email} = req.body
+
+  try {
+    const request = await pool.query('SELECT * FROM user_settings WHERE email = $1', [
+      email
+    ])
+
+    res.json(request)
+    
+  } catch (error) {
+    console.log("Error with getting settings", error)
+    
+  }
+
 })
