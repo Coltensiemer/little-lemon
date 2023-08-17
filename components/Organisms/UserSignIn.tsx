@@ -74,9 +74,9 @@ export default function UserSignIn({ navigation }) {
     }
   };
 
-  useEffect(() => { 
-    handleSettings(isUserData)
-  },[handleSignIn])
+  // useEffect(() => { 
+  //   handleSettings(isUserData)
+  // },[handleSignIn])
 
   return (
     <View style={{ flex: 1 }}>
