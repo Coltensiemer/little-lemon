@@ -19,6 +19,7 @@ export default function Profile({ navigation }) {
 
   const [imageUri, setImageUri] = useState<any>(null);
   const [imageBoolean, setImageBoolean] = useState<boolean>(false);
+  const [disableChanges, setDisableChanges] = useState<boolean>(true)
 
   const [editedFirstName, setEditedFirstName] = useState(isUserData?.user?.first_name);
   const [editedLastName, setEditedLastName] = useState(isUserData?.user?.last_name);
@@ -148,7 +149,7 @@ const handleDiscardChanges = () => {
            Dark Mode
             <Switch
               style={styles.switch}
-              value={false}
+              value={isUserData?.users?.dark_mode}
               onValueChange={null}
             ></Switch>
           </Text>
@@ -159,7 +160,7 @@ const handleDiscardChanges = () => {
             Special Offers
             <Switch
               style={styles.switch}
-              value={false}
+              value={isUserData?.users?.special_offers}
               onValueChange={null}
             ></Switch>
           </Text>
@@ -170,7 +171,7 @@ const handleDiscardChanges = () => {
             News Letter
             <Switch
               style={styles.switch}
-              value={false}
+              value={isUserData?.users?.newsletters}
               onValueChange={null}
             ></Switch>
           </Text>

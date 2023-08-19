@@ -193,6 +193,7 @@ app.post('/post_new_user_settings', async (req, res) => {
   }
   
   })
+  
 
 
 
@@ -200,13 +201,14 @@ app.post('/post_new_user_settings', async (req, res) => {
 //Push settings info into users_settings
 app.post('/post_user_settings', async (req, res) => { 
 try { 
-  const {user_id, dark_mode, special_offer, newsletters, created_at, updated_at } = req.body; 
+  const { dark_mode, special_offer, newsletters, email} = req.body; 
 
-  const request = await pool.query('UPDATE user_settings SET dark_mode = $1, special_offers = $2, newsletters = $3 WHERE user_id = $4;', [dark_mode, special_offer, newsletters, user_id])
+  if (email === null) return console.log("No email found")
+
+  const request = await pool.query('UPDATE user_settings SET dark_mode = $1, special_offers = $2, newsletters = $3 WHERE email = $4;', [dark_mode, special_offer, newsletters, email])
 
   res.json(request)
   console.log('updated settings')
-  console.log(request)
 } 
 catch (error) { 
   console.log("Error with Posting user settings:", error)

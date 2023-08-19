@@ -91,7 +91,7 @@ app.post('/login', async (req, res) => {
       process.env.REFRESH_TOKEN_SECERT
     );
 
-    const results = await pool.query('SELECT first_name, last_name, users.email, password, dark_mode FROM users INNER JOIN user_settings ON users.email = user_settings.email WHERE users.email = $1', [
+    const results = await pool.query('SELECT first_name, last_name, users.email, password, dark_mode, special_offers, newsletters FROM users INNER JOIN user_settings ON users.email = user_settings.email WHERE users.email = $1', [
       EmailSignin,
     ]);
 

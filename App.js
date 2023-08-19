@@ -15,7 +15,12 @@ import UserSignUp from './components/Organisms/UserSignUp';
 import UserSignIn from './components/Organisms/UserSignIn';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import Reservations from './components/Molecules/Reservations';
-import { HomeIcon, MenuIcon, ReservationIcon, SettingsIcon } from './components/Atoms/Icons';
+import {
+  HomeIcon,
+  MenuIcon,
+  ReservationIcon,
+  SettingsIcon,
+} from './components/Atoms/Icons';
 
 //Navigation
 function HomeStackScreen() {
@@ -70,17 +75,23 @@ function AppStack() {
           },
         }}
       />
-      <Tab.Screen name='Reservation' component={ReservationPage} 
-          options={{
-            tabBarIcon: ({ focused }) => {
-              return (
-                <ReservationIcon
-                  color={focused ? theme.colors.blue : theme.colors.primary}
-                />
-              );
-            },
-          }} />
-      <Tab.Screen name='Profile' component={Profile}     options={{
+      <Tab.Screen
+        name='Reservation'
+        component={ReservationPage}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            return (
+              <ReservationIcon
+                color={focused ? theme.colors.blue : theme.colors.primary}
+              />
+            );
+          },
+        }}
+      />
+      <Tab.Screen
+        name='Profile'
+        component={Profile}
+        options={{
           tabBarIcon: ({ focused }) => {
             return (
               <SettingsIcon
@@ -88,7 +99,8 @@ function AppStack() {
               />
             );
           },
-        }}/>
+        }}
+      />
     </Tab.Navigator>
   ) : (
     <Tab.Navigator
@@ -150,12 +162,60 @@ const theme = {
     blue: 'blue',
   },
 };
+const darkModeTheme = {
+  ...DefaultTheme,
+  myOwnProperty: true,
+  dark: true, // Indicate that this is a dark mode theme
+  colors: {
+    primary: '#1763b3', // Adjusted primary color for dark mode
+    onPrimary: '#ffffff',
+    primaryContainer: '#325a6e',
+    onPrimaryContainer: '#ffffff',
+    secondary: '#4f638e', // Adjusted secondary color for dark mode
+    onSecondary: '#ffffff',
+    secondaryContainer: '#738fa5',
+    onSecondaryContainer: '#ffffff',
+    tertiary: '#5f7d63', // Adjusted tertiary color for dark mode
+    onTertiary: '#ffffff',
+    tertiaryContainer: '#89a581',
+    onTertiaryContainer: '#ffffff',
+    error: 'red',
+    onError: '#ffffff',
+    errorContainer: '#a33c3c',
+    onErrorContainer: '#ffffff',
+    background: '#161b1e', // Adjusted background color for dark mode
+    onBackground: '#ffffff',
+    surface: '#1e2427', // Adjusted surface color for dark mode
+    onSurface: '#ffffff',
+    surfaceVariant: '#39464d',
+    onSurfaceVariant: '#ffffff',
+    outline: '#67767f',
+    outlineVariant: 'rgb(180, 197, 208)',
+    shadow: 'rgb(0, 0, 0)',
+    scrim: 'rgb(0, 0, 0)',
+    inverseSurface: 'rgb(42, 189, 248)',
+    inverseOnSurface: 'rgb(231, 239, 248)',
+    inversePrimary: 'rgb(42, 189, 248)',
+    elevation: {
+      level0: 'transparent',
+      level1: 'rgb(22, 27, 30)',
+      level2: 'rgb(29, 35, 39)',
+      level3: 'rgb(36, 42, 46)',
+      level4: 'rgb(40, 47, 51)',
+      level5: 'rgb(45, 52, 56)',
+    },
+    surfaceDisabled: 'rgba(255, 255, 255, 0.12)',
+    onSurfaceDisabled: 'rgba(255, 255, 255, 0.38)',
+    backdrop: 'rgba(0, 0, 0, 0.4)',
+    blue: 'blue',
+  },
+};
 
 export default function App() {
   const Stack = createNativeStackNavigator();
   return (
     <AuthProvider>
-      <PaperProvider theme={theme}>
+      <PaperProvider theme={darkModeTheme} dark={true}>
         <NavigationContainer>
           <Stack.Navigator>
             <Stack.Screen

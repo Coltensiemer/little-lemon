@@ -46,33 +46,36 @@ export default function UserSignIn({ navigation }) {
         console.log(responseData);
         login(responseData.AccessToken);
         console.log('Login in Successfull');
-      } else {
+      } 
+      else {
         console.log('User is not Auth');
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.log('error handle Signin', error);
     }
+
   };
 
-  const handleSettings = async (data: any) => {
-    const email = { email: data?.user?.email };
+  // const handleSettings = async (data: any) => {
+  //   const email = { email: data?.user?.email };
 
-    const options = {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    };
+  //   const options = {
+  //     method: 'GET',
+  //     headers: { 'Content-Type': 'application/json' },
+  //   };
 
-    try {
-      const response = await fetch(
-        `http://localhost:3100/get_user_settings?email=${encodeURIComponent(email)}`, options 
-      );
+  //   try {
+  //     const response = await fetch(
+  //       `http://localhost:3100/get_user_settings?email=${encodeURIComponent(email)}`, options 
+  //     );
 
-      setSettingData(response);
-      console.log(response);
-    } catch (error) {
-      console.log('Error fetching Handing Settings:', error);
-    }
-  };
+  //     setSettingData(response);
+  //     console.log(response);
+  //   } catch (error) {
+  //     console.log('Error fetching Handing Settings:', error);
+  //   }
+  // };
 
   // useEffect(() => { 
   //   handleSettings(isUserData)
