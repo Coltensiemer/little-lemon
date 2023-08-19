@@ -1,6 +1,6 @@
 import { View, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import React, { useContext, useEffect } from 'react';
-import { TextInput, Button, Divider, Chip } from 'react-native-paper';
+import {useTheme, TextInput, Button, Divider, Chip } from 'react-native-paper';
 import { useForm, Controller, useFormState } from 'react-hook-form';
 import { AuthContext } from '../../context/AuthContext';
 
@@ -25,6 +25,7 @@ export default function UserSignIn({ navigation }) {
 
   //@ts-ignore
   const { login, setUserData, isUserData, setSettingData } = useContext(AuthContext);
+  const theme = useTheme()
 
   const handleSignIn = async (data: signInInfo) => {
     const signInInfo = {
@@ -82,34 +83,27 @@ export default function UserSignIn({ navigation }) {
   // },[handleSignIn])
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background,}}>
       <Header />
       <View style={{ flex: 1, justifyContent: 'flex-end', margin: 20 }}>
-        <Text style={{ fontWeight: 'bold', fontSize: 30, marginBottom: 10 }}>
+        <Text style={{ fontWeight: 'bold', fontSize: 30, marginBottom: 10, color: theme.colors.primary }}>
           {' '}
           Sign In
         </Text>
         {/* add link to SiGN NAV */}
-        <View style={{ flexDirection: 'row' }}>
-          <Text>or</Text>
+        <View style={{ flexDirection: 'row', marginLeft: 10 }}>
+          <Text style={{color: theme.colors.secondary, marginRight: 5}}>or</Text>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate('Sign Up');
             }}
           >
-            <Text style={{ color: 'blue' }}>Sign Up </Text>
+            <Text style={{ color: theme.colors.secondary }}>Sign Up </Text>
           </TouchableOpacity>
         </View>
       </View>
       {/* Email SIGN IN */}
       <View style={{ flex: 2, margin: 20 }}>
-        <Button
-          onPress={() => {
-            navigation.navigate('HomeScreen');
-          }}
-        >
-          Click
-        </Button>
         <Controller
           control={control}
           name='EmailSignin'

@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { View, Text, ActivityIndicator, Image } from 'react-native';
+import { View, Text, ActivityIndicator, Image, SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
   MD3LightTheme as DefaultTheme,
   PaperProvider,
+  useTheme
 } from 'react-native-paper';
 import HomeScreen from './components/Organisms/HomeScreen';
 import Menulist from './components/Organisms/Menulist/Menulist';
@@ -21,6 +22,10 @@ import {
   ReservationIcon,
   SettingsIcon,
 } from './components/Atoms/Icons';
+
+
+
+
 
 //Navigation
 function HomeStackScreen() {
@@ -41,12 +46,14 @@ function HomeStackScreen() {
 function AppStack() {
   const Tab = createBottomTabNavigator();
   const { isLoading, isToken } = React.useContext(AuthContext);
+  const theme = useTheme()
   return isToken != null ? (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: theme.colors.blue,
         tabBarInactiveTintColor: theme.colors.primary,
+        tabBarBackground: theme.colors.primary
       }}
     >
       <Tab.Screen
@@ -106,8 +113,9 @@ function AppStack() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: theme.colors.blue,
-        tabBarInactiveTintColor: theme.colors.primary,
+        tabBarActiveTintColor: theme.colors.primary,
+        tabBarInactiveTintColor: theme.colors.onSecondary,
+        tabBarActiveBackgroundColor: theme.colors.background
       }}
     >
       <Tab.Screen name='Sign In' component={UserSignIn} />
@@ -115,7 +123,7 @@ function AppStack() {
   );
 }
 
-const theme = {
+const lightModeTheme = {
   ...DefaultTheme,
   myOwnProperty: true,
   colors: {
@@ -213,15 +221,21 @@ const darkModeTheme = {
 
 export default function App() {
   const Stack = createNativeStackNavigator();
+  
+  const [darkMode, setDarkMode] = React.useState(true)
+
+  const switchTheme = darkMode ? darkModeTheme : lightModeTheme;  
+
   return (
+    <SafeAreaView style={{flex:1}}>
     <AuthProvider>
-      <PaperProvider theme={darkModeTheme} dark={true}>
+      <PaperProvider theme={switchTheme}>
         <NavigationContainer>
-          <Stack.Navigator>
+          <Stack.Navigator screenOptions={{
+          headerShown: false}} >
             <Stack.Screen
               name='AppStacks'
               component={AppStack}
-              screenOptions={{ headerShown: false }}
             />
             <Stack.Screen name='Sign In' component={UserSignIn} />
             <Stack.Screen name='Sign Up' component={UserSignUp} />
@@ -235,5 +249,6 @@ export default function App() {
         </NavigationContainer>
       </PaperProvider>
     </AuthProvider>
+    </SafeAreaView>
   );
 }

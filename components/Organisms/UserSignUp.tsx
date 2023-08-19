@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import { TextInput, Button, Title, Chip, Switch, Portal, Modal } from 'react-native-paper';
+import { View, StyleSheet, } from 'react-native';
+import {useTheme, TextInput, Button, Title, Chip, Switch, Portal, Modal, Text } from 'react-native-paper';
 import { useForm, Controller, useFormState } from 'react-hook-form';
 
 interface userData {
@@ -13,6 +13,8 @@ interface userData {
 export default function UserSignUp({navigation}) {
   const [passwordViewer, setPasswordViewer] = useState<boolean>(true);
   const [visibleModal, setVisibleModal] = useState<boolean>(true); 
+
+  const theme = useTheme()
 
   const {
     control,
@@ -50,7 +52,8 @@ export default function UserSignUp({navigation}) {
   };
 
   return (
-    <View style={{ flex: 1, margin: 20 }}>
+    <View style={{ flex: 1, padding: 20, backgroundColor: theme.colors.background  }}>
+      
       <Title style={{ fontWeight: 'bold' }}>User Sign Up</Title>
       {/* FIRST NAME INPUT */}
       <Controller
