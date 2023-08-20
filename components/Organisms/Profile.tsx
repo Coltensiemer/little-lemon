@@ -1,16 +1,16 @@
 import {
   ScrollView,
   StyleSheet,
-  Text,
   View,
   Platform,
   Image,
 } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
-import { Button, Avatar, TextInput, Switch, Divider } from 'react-native-paper';
+import { Button, Avatar, TextInput, Switch, Divider, useTheme, Text} from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import { AuthContext } from '../../context/AuthContext';
 import { NavigationContainer } from '@react-navigation/native';
+
 
 
 export default function Profile({ navigation }) {
@@ -23,8 +23,12 @@ export default function Profile({ navigation }) {
 
   const [editedFirstName, setEditedFirstName] = useState(isUserData?.user?.first_name);
   const [editedLastName, setEditedLastName] = useState(isUserData?.user?.last_name);
+
+  const [editDarkMode, setEditDarkMode] = useState(isUserData?.users?.dark_mode)
+  const [editSpecialOffers, setSpecialOffers] = useState(isUserData?.users?.special_offers)
+  const [editNewsLetter, setNewsLetter] = useState(isUserData?.users?.newsletter)
   
-  
+  const theme = useTheme();
 
 
 
@@ -101,8 +105,11 @@ const handleDiscardChanges = () => {
 
   return (
     <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.containContainer}
+      style={{  
+       flex: 1,
+        backgroundColor: theme.colors.background
+    }}
+      contentContainerStyle={null}
     >
       <View style={[styles.imageContainer, {}]}>
         <Image
@@ -128,7 +135,7 @@ const handleDiscardChanges = () => {
           Change Picture
         </Button>
       </View>
-      <View>
+      <View style={{padding: 10}}>
         <TextInput
           style={{ margin: 5, height: 40 }}
           value={editedFirstName}
@@ -142,43 +149,47 @@ const handleDiscardChanges = () => {
      
       </View>
       <View style={styles.notificationContainer}>
-        <Text> Notifications </Text>
+         
+        <Text style={{padding: 10}}> Notifications </Text>
         <View style={styles.switchContainer}>
           <Text style={styles.switchText}>
             {' '}
            Dark Mode
+           </Text>
             <Switch
               style={styles.switch}
-              value={isUserData?.users?.dark_mode}
+              value={editDarkMode}
               onValueChange={null}
             ></Switch>
-          </Text>
+      
         </View>
         <View style={styles.switchContainer}>
           <Text style={styles.switchText}>
             {' '}
             Special Offers
+            </Text>
             <Switch
               style={styles.switch}
-              value={isUserData?.users?.special_offers}
+              value={editSpecialOffers}
               onValueChange={null}
             ></Switch>
-          </Text>
+         
         </View>
         <View style={styles.switchContainer}>
           <Text style={styles.switchText}>
             {' '}
             News Letter
+            </Text>
             <Switch
               style={styles.switch}
-              value={isUserData?.users?.newsletters}
+              value={editNewsLetter}
               onValueChange={null}
             ></Switch>
-          </Text>
+     
         </View>
       </View>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-        <Button mode='elevated' onPress={() => handleDiscardChanges()}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: 10 }}>
+        <Button mode='outlined' style={{backgroundColor: theme.colors.onSecondaryContainer}} onPress={() => handleDiscardChanges()}>
           Discard Changes
         </Button>
         <Button mode='contained-tonal' onPress={() => handleChanges()}>
@@ -209,12 +220,8 @@ const handleDiscardChanges = () => {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    height: '20%',
-    width: '80%',
-    alignSelf: 'center',
-  },
+
+
   containContainer: {
     justifyContent: 'center',
   },
@@ -222,15 +229,21 @@ const styles = StyleSheet.create({
   imageContainer: {
     flexDirection: 'column',
     alignItems: null,
-    margin: 20,
+  
   },
   notificationContainer: {
-    justifyContent: 'space-evenly',
+    width: '100%',
+    justifyContent: 'space-around',
     alignItems: 'center',
-    margin: 48,
+    padding: 20,
+
   },
   switchContainer: {
-    // Adjust the space for Notifications
+    flexDirection: 'row',
+    justifyContent: 'space-between', 
+    alignItems: 'center',
+    width: '80%',
+    marginBottom: 20
   },
   switchText: {
     paddingRight: 50,

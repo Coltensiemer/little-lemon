@@ -22,6 +22,7 @@ import {
   ReservationIcon,
   SettingsIcon,
 } from './components/Atoms/Icons';
+import Header from './components/Atoms/Header';
 
 
 
@@ -31,7 +32,7 @@ import {
 function HomeStackScreen() {
   const HomeStack = createNativeStackNavigator();
   return (
-    <HomeStack.Navigator>
+    <HomeStack.Navigator screenOptions={{headerShown: false}}>
       <HomeStack.Screen name='HomeScreen' component={HomeScreen} />
       <HomeStack.Screen name='Reservations' component={ReservationPage} />
       <HomeStack.Screen name='UserSignUp' component={UserSignUp} />
@@ -51,9 +52,12 @@ function AppStack() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: theme.colors.blue,
+        tabBarActiveTintColor: theme.colors.onSecondary,
         tabBarInactiveTintColor: theme.colors.primary,
-        tabBarBackground: theme.colors.primary
+        tabBarActiveBackgroundColor: theme.colors.background,
+        tabBarInactiveBackgroundColor: theme.colors.backdrop,
+        tabBarItemStyle: { borderTopColor: theme.colors.secondary, borderWidth: 2}
+      
       }}
     >
       <Tab.Screen
@@ -113,9 +117,12 @@ function AppStack() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: theme.colors.primary,
+        tabBarActiveTintColor: theme.colors.onSecondary,
         tabBarInactiveTintColor: theme.colors.onSecondary,
-        tabBarActiveBackgroundColor: theme.colors.background
+        tabBarActiveBackgroundColor: theme.colors.background,
+        tabBarItemStyle: { borderTopColor: theme.colors.secondary, borderWidth: 2,}
+      
+      
       }}
     >
       <Tab.Screen name='Sign In' component={UserSignIn} />
@@ -227,15 +234,17 @@ export default function App() {
   const switchTheme = darkMode ? darkModeTheme : lightModeTheme;  
 
   return (
-    <SafeAreaView style={{flex:1}}>
     <AuthProvider>
       <PaperProvider theme={switchTheme}>
         <NavigationContainer>
           <Stack.Navigator screenOptions={{
-          headerShown: false}} >
+          headerShown: true,
+        headerTitle: (prop) => <Header {...prop} />}
+          } >
             <Stack.Screen
               name='AppStacks'
               component={AppStack}
+              
             />
             <Stack.Screen name='Sign In' component={UserSignIn} />
             <Stack.Screen name='Sign Up' component={UserSignUp} />
@@ -249,6 +258,6 @@ export default function App() {
         </NavigationContainer>
       </PaperProvider>
     </AuthProvider>
-    </SafeAreaView>
+    
   );
 }

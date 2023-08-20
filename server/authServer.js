@@ -100,6 +100,8 @@ app.post('/login', async (req, res) => {
     //From the first database
     const user = results.rows[0];
 
+    console.log('users', user)
+
     const queryPassword = user.password;
 
     if (results.rows.length === 0) {

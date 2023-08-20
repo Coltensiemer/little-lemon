@@ -1,7 +1,6 @@
 import {
   Animated,
   StyleSheet,
-  Text,
   View,
   Platform,
   ScrollView,
@@ -19,7 +18,7 @@ import {
   useTheme,
   Portal,
   Modal,
-  
+  Text,
   ProgressBar,
   Chip,
 } from 'react-native-paper';
@@ -31,10 +30,12 @@ import { AuthContext } from '../../context/AuthContext';
 
 
 
+
 export default function ReservationPage({ navigation }) {
 
   //@ts-ignore
   const {isUserData} = useContext(AuthContext)
+  const theme = useTheme()
 
   // input data that is store in state
 
@@ -229,80 +230,14 @@ export default function ReservationPage({ navigation }) {
 
 
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <View style={[styles.mainContainer]}>
+    
+      <View style={[styles.mainContainer, {backgroundColor: theme.colors.background}]}>
         
-        <Header />
         <ProgressBar
           color={isProgressColor}
           progress={isProgress}
           style={{ margin: 5} }
         />
-     
-        {/* <View
-          style={{ height: 200, paddingHorizontal: 10, justifyContent: 'space-evenly' }}
-        >
-          <Controller
-            control={control}
-            name='firstName'
-            defaultValue=''
-            rules={{
-              required: {
-                value: true,
-                message: 'Name is required',
-              },
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                mode='outlined'
-                label='First and Last Name'
-                error={!!errors.firstName}
-                onChangeText={(text) => onChange(text)}
-              />
-            )}
-          />
-          <Text
-            style={
-              errors.firstName ? { color: 'black' } : { color: 'transparent' }
-            }
-          >
-            This is required.
-          </Text>
-
-          <Controller
-            control={control}
-            name='isEmail'
-            defaultValue=''
-            rules={{
-              required: {
-                value: true,
-                message: 'Email is required',
-              },
-              pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: 'Email is invalid',
-              },
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                mode='outlined'
-                textContentType='emailAddress'
-                label='Email'
-                error={!!errors.isEmail}
-                // value={isEmail}
-                onChangeText={(text) => onChange(text)}
-                // style={{null}}
-              />
-            )}
-          />
-          <Text
-            style={
-              errors.isEmail ? { color: 'black' } : { color: 'transparent' }
-            }
-          >
-            This is required.
-          </Text>
-        </View> */}
         <View
           style={{
             flex: 1,
@@ -357,7 +292,6 @@ export default function ReservationPage({ navigation }) {
             style={{
               paddingBottom: 20,
               justifyContent: 'space-around',
-              alignItems: 'center',
               flexDirection: 'row'
             }}
           >
@@ -523,7 +457,7 @@ export default function ReservationPage({ navigation }) {
           </View>
         </View>
       </View>
-    </ScrollView>
+    
   );
 }
 
@@ -531,6 +465,8 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     marginTop: 10,
+
+    
   },
   dataTexts: {
     flex: 1,

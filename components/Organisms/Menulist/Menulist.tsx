@@ -3,7 +3,6 @@ import {
   FlatList,
   SectionList,
   StyleSheet,
-  Text,
   View,
   TouchableOpacity,
 } from 'react-native';
@@ -12,7 +11,7 @@ import Filter from '../../Atoms/Filter';
 import { CartIcon } from '../../Atoms/Icons';
 import MenuHeaders from '../../Atoms/MenuHeaders';
 import Header from '../../Atoms/Header';
-import { ThemeProvider, useTheme } from 'react-native-paper';
+import { ThemeProvider, useTheme, Text } from 'react-native-paper';
 import debounce from 'lodash.debounce';
 import { json } from 'express';
 

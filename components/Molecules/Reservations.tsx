@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
-import { Button, Divider } from 'react-native-paper';
+import { Button, Divider, Text } from 'react-native-paper';
 
 export default function Reservations({navigation}) {
   //@ts-ignore
@@ -29,7 +29,7 @@ export default function Reservations({navigation}) {
       const data = await response.json();
 
       setReservationData(data);
-      console.log(data);
+      console.log('Get Reservations Successful')
     } catch (error) {
       console.log('Error with getReservation:', error);
     }

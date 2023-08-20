@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, } from 'react-native';
-import {useTheme, TextInput, Button, Title, Chip, Switch, Portal, Modal, Text } from 'react-native-paper';
+import { View, StyleSheet } from 'react-native';
+import {
+  useTheme,
+  TextInput,
+  Button,
+  Title,
+  Chip,
+  Switch,
+  Portal,
+  Modal,
+  Text,
+} from 'react-native-paper';
 import { useForm, Controller, useFormState } from 'react-hook-form';
 
 interface userData {
@@ -10,11 +20,11 @@ interface userData {
   Password1: string;
 }
 
-export default function UserSignUp({navigation}) {
+export default function UserSignUp({ navigation }) {
   const [passwordViewer, setPasswordViewer] = useState<boolean>(true);
-  const [visibleModal, setVisibleModal] = useState<boolean>(true); 
+  const [visibleModal, setVisibleModal] = useState<boolean>(false);
 
-  const theme = useTheme()
+  const theme = useTheme();
 
   const {
     control,
@@ -52,8 +62,9 @@ export default function UserSignUp({navigation}) {
   };
 
   return (
-    <View style={{ flex: 1, padding: 20, backgroundColor: theme.colors.background  }}>
-      
+    <View
+      style={{ flex: 1, padding: 20, backgroundColor: theme.colors.background }}
+    >
       <Title style={{ fontWeight: 'bold' }}>User Sign Up</Title>
       {/* FIRST NAME INPUT */}
       <Controller
@@ -187,14 +198,39 @@ export default function UserSignUp({navigation}) {
         )}
       />
       <Portal>
-        <Modal visible={visibleModal}
-        onDismiss={() => setVisibleModal(false)}
-        contentContainerStyle={{backgroundColor: 'white',
-        padding: 20,
-        margin: 10,}}>
-          <Text style={{fontSize: 16, fontWeight: 'bold', justifyContent: 'center', alignSelf:  'center', margin: 40 }}>Congrats on Signing Up!</Text>
+        <Modal
+          visible={visibleModal}
+          onDismiss={() => setVisibleModal(false)}
+          contentContainerStyle={{
+            backgroundColor: theme.colors.background,
+            borderColor: theme.colors.primary,
+            borderWidth: 2,
+            padding: 20,
+            margin: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: 'bold',
+              justifyContent: 'center',
+              alignSelf: 'center',
+              margin: 40,
+            }}
+          >
+            Congrats on Signing Up!
+          </Text>
 
-          <Button mode='contained' style={{margin: 10}} onPress={() => {navigation.navigate('Sign In')}}> Continue</Button>
+          <Button
+            mode='contained'
+            style={{ margin: 10 }}
+            onPress={() => {
+              navigation.navigate('Sign In'), setVisibleModal(false);
+            }}
+          >
+            {' '}
+            Continue
+          </Button>
         </Modal>
       </Portal>
       <Button
