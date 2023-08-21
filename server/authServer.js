@@ -29,18 +29,18 @@ function generateAccesToken(user) {
 }
 
 // Test Data
-const users = [
-  {
-    id: 1,
-    email: 'Colten50@hotmail.com',
-    password: 'ColtenTest1',
-  },
-  {
-    id: 3,
-    email: 'Colten20@hotmail.com',
-    password: 'ColtenTest3',
-  },
-];
+// const users = [
+//   {
+//     id: 1,
+//     email: 'Colten50@hotmail.com',
+//     password: 'ColtenTest1',
+//   },
+//   {
+//     id: 3,
+//     email: 'Colten20@hotmail.com',
+//     password: 'ColtenTest3',
+//   },
+// ];
 
 // Verify function
 
@@ -91,7 +91,7 @@ app.post('/login', async (req, res) => {
       process.env.REFRESH_TOKEN_SECERT
     );
 
-    const results = await pool.query('SELECT first_name, last_name, users.email, password, dark_mode, special_offers, newsletters FROM users INNER JOIN user_settings ON users.email = user_settings.email WHERE users.email = $1', [
+    const results = await pool.query('SELECT u.first_name, u.last_name, u.email, u.password, us.dark_mode, us.special_offers, us.newsletters FROM users u INNER JOIN user_settings us ON u.email = us.email WHERE u.email = $1', [
       EmailSignin,
     ]);
 

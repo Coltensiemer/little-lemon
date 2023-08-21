@@ -4,8 +4,6 @@ const cors = require('cors');
 const pool = require('./db');
 const port = 3100;
 
-
-
 // const dotenv = require('dotenv')
 // dotenv.config({ path: './.env' });
 require('dotenv').config();
@@ -20,9 +18,6 @@ app.use(express.json());
 
 //JsonWebToken
 var jwt = require('jsonwebtoken');
-
-
-
 
 //Listen
 app.listen(port, () => {
@@ -59,23 +54,20 @@ app.get('/getAllReservations', async (req, res) => {
   }
 });
 
-
-/// Get single reservation details 
+/// Get single reservation details
 app.get('/getreservation', async (req, res) => {
-try {
-  const {email} = req.query
-  const getReservation = await pool.query('SELECT * FROM reservations WHERE email = $1', [email])
+  try {
+    const { email } = req.query;
+    const getReservation = await pool.query(
+      'SELECT * FROM reservations WHERE email = $1',
+      [email]
+    );
 
-  res.json(getReservation.rows)
-  
-} catch (error) {
-  console.log(error.message)
-  
-}
-
-}) 
-
-
+    res.json(getReservation.rows);
+  } catch (error) {
+    console.log(error.message);
+  }
+});
 
 app.get('/menu', async (req, res) => {
   try {
@@ -109,38 +101,37 @@ app.get('/menu_query', async (req, res) => {
   }
 });
 
-
-
 // Post to users table
 app.post('/users', async (req, res) => {
   const { first_name, last_name, email, password } = req.body;
 
   try {
+    const checkExistingEmail = await pool.query(
+      'SELECT * FROM users WHERE email = $1',
+      [email]
+    );
 
-    const checkExistingEmail = await pool.query('SELECT * FROM users WHERE email = $1', [
-      email
-    ])
-  
-    if (checkExistingEmail.rows.length > 0)  return console.log("Email Already exist")
+    if (checkExistingEmail.rows.length > 0)
+      return console.log('Email Already exist');
 
     const setUsers = await pool.query(
       'INSERT INTO users (first_name, last_name, email, password) VALUES($1, $2, $3, $4) RETURNING *',
       [first_name, last_name, email, password]
     );
 
-
-
     //Setting up user_setting for each user
-     
-    const defaultSettings = [ false, false, false, email ]
 
-    const userSettings = await pool.query('INSERT INTO user_settings (dark_mode, special_offers, newsletters, email) VALUES ($1, $2, $3, $4) RETURNING *;', defaultSettings )
+    const defaultSettings = [false, false, false, email];
 
-    return { 
+    const userSettings = await pool.query(
+      'INSERT INTO user_settings (dark_mode, special_offers, newsletters, email) VALUES ($1, $2, $3, $4) RETURNING *;',
+      defaultSettings
+    );
+
+    return {
       user: setUsers.rows[0],
-      userSetting: userSettings.rows[0] 
-    }
-   
+      userSetting: userSettings.rows[0],
+    };
   } catch (error) {
     console.log('error setting up users', { error });
   }
@@ -158,80 +149,79 @@ app.get('/users', async (req, res) => {
   }
 });
 
+// change user indo
 
-// change user indo 
-
-app.post('/updateUserfirstandlastname', async (req, res) => { 
-
-  const {first_name, last_name, email} = req.body
+app.post('/updateUserfirstandlastname', async (req, res) => {
+  const { first_name, last_name, email } = req.body;
 
   try {
-    const update = await pool.query('UPDATE users SET first_name = $1, last_name = $2 WHERE email = $3;', [
-      first_name, last_name, email
-    ])
+    const update = await pool.query(
+      'UPDATE users SET first_name = $1, last_name = $2 WHERE email = $3;',
+      [first_name, last_name, email]
+    );
 
-  res.json(update)    
+    res.json(update);
   } catch (error) {
-    console.log('Error updating first and last name', error)
+    console.log('Error updating first and last name', error);
   }
-})
+});
 
+// Creates a row
+// app.post('/post_new_user_settings', async (req, res) => {
+//   try {
+//     const {user_id, dark_mode, special_offer, newsletters, created_at, updated_at } = req.body;
 
-// Creates a row 
-app.post('/post_new_user_settings', async (req, res) => { 
-  try { 
-    const {user_id, dark_mode, special_offer, newsletters, created_at, updated_at } = req.body; 
-  
-    const request = await pool.query('INSERT INTO user_settings (dark_mode, special_offers, newsletters, user_id) VALUES ($1, $2, $3, $4) RETURNING *;', [dark_mode, special_offer, newsletters, user_id])
-  
-    res.json(request)
-    console.log('updated settings')
+//     const request = await pool.query('INSERT INTO user_settings (dark_mode, special_offers, newsletters, user_id) VALUES ($1, $2, $3, $4) RETURNING *;', [dark_mode, special_offer, newsletters, user_id])
 
-  } 
-  catch (error) { 
-    console.log("Error with Posting user settings:", error)
-  }
-  
-  })
-  
+//     res.json(request)
+//     console.log('updated settings')
 
+//   }
+//   catch (error) {
+//     console.log("Error with Posting user settings:", error)
+//   }
 
-
+//   })
 
 //Push settings info into users_settings
-app.post('/post_user_settings', async (req, res) => { 
-try { 
-  const { dark_mode, special_offer, newsletters, email} = req.body; 
+app.post('/post_user_settings', async (req, res) => {
+  try {
+    const { dark_mode, special_offer, newsletters, email } = req.body;
 
-  if (email === null) return console.log("No email found")
+    if (email === null) return res.status(400).json({message: "No email"}).console.log('No email');
 
-  const request = await pool.query('UPDATE user_settings SET dark_mode = $1, special_offers = $2, newsletters = $3 WHERE email = $4;', [dark_mode, special_offer, newsletters, email])
+    const emailComparison = await pool.query(
+      'SELECT email FROM user_settings WHERE email = $1',
+      [email]
+    );
 
-  res.json(request)
-  console.log('updated settings')
-} 
-catch (error) { 
-  console.log("Error with Posting user settings:", error)
-}
+    if (emailComparison.rows.length === 0)
+      return res.status(401).json({ message: 'Email not found' }); 
 
-})
+    const request = await pool.query(
+      'UPDATE user_settings SET dark_mode = $1, special_offers = $2, newsletters = $3 WHERE email = $4;',
+      [dark_mode, special_offer, newsletters, email]
+    );
 
+    res.json(request);
+    console.log('updated settings');
+  } catch (error) {
+    console.log('Error with Posting user settings:', error);
+  }
+});
 
 // Import user settings
-app.get('/get_user_settings', async (req, res) => { 
-
-const {email} = req.body
+app.get('/get_user_settings', async (req, res) => {
+  const { email } = req.body;
 
   try {
-    const request = await pool.query('SELECT * FROM user_settings WHERE email = $1', [
-      email
-    ])
+    const request = await pool.query(
+      'SELECT * FROM user_settings WHERE email = $1',
+      [email]
+    );
 
-    res.json(request)
-    
+    res.json(request);
   } catch (error) {
-    console.log("Error with getting settings", error)
-    
+    console.log('Error with getting settings', error);
   }
-
-})
+});

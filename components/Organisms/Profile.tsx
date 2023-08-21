@@ -24,9 +24,9 @@ export default function Profile({ navigation }) {
   const [editedFirstName, setEditedFirstName] = useState(isUserData?.user?.first_name);
   const [editedLastName, setEditedLastName] = useState(isUserData?.user?.last_name);
 
-  const [editDarkMode, setEditDarkMode] = useState(isUserData?.users?.dark_mode)
-  const [editSpecialOffers, setSpecialOffers] = useState(isUserData?.users?.special_offers)
-  const [editNewsLetter, setNewsLetter] = useState(isUserData?.users?.newsletter)
+  const [editDarkMode, setEditDarkMode] = useState(isUserData?.user?.dark_mode)
+  const [editSpecialOffers, setSpecialOffers] = useState(isUserData?.user?.special_offers)
+  const [editNewsLetter, setNewsLetter] = useState(isUserData?.user?.newsletters)
   
   const theme = useTheme();
 
@@ -76,7 +76,11 @@ const handleChanges = async () => {
     const formData = { 
       first_name: editedFirstName,
       last_name: editedLastName,
-      email: isUserData?.user?.email
+      email: isUserData?.user?.email,
+      dark_mode: editDarkMode,
+      special_offer: editSpecialOffers,
+      newsletters: editNewsLetter,
+
     }
     const options = {
       method: 'POST',
@@ -85,7 +89,11 @@ const handleChanges = async () => {
     };
 
     const response = await fetch('http://localhost:3100/updateUserfirstandlastname', options)
-    console.log("changes updated")
+    console.log("First name and last name updated")
+
+
+    const notificationsResponse = await fetch('http://localhost:3100/post_user_settings', options)
+    console.log("Notifications updated")
   } catch (error) {
     console.log("error trying to update first and last name:", error)
     
@@ -99,6 +107,9 @@ const handleChanges = async () => {
 const handleDiscardChanges = () => { 
   setEditedFirstName(isUserData?.user?.first_name)
   setEditedLastName(isUserData?.user?.last_name)
+  setEditDarkMode(isUserData?.user?.dark_mode)
+  setNewsLetter(isUserData?.user?.editNewsLetter)
+  setSpecialOffers(isUserData?.user?.editSpecialOffers)
 }
 
 
@@ -159,7 +170,7 @@ const handleDiscardChanges = () => {
             <Switch
               style={styles.switch}
               value={editDarkMode}
-              onValueChange={null}
+              onValueChange={() => {setEditDarkMode(!editDarkMode)}}
             ></Switch>
       
         </View>
@@ -171,7 +182,7 @@ const handleDiscardChanges = () => {
             <Switch
               style={styles.switch}
               value={editSpecialOffers}
-              onValueChange={null}
+              onValueChange={() => {setSpecialOffers(!editSpecialOffers)}}
             ></Switch>
          
         </View>
@@ -183,7 +194,7 @@ const handleDiscardChanges = () => {
             <Switch
               style={styles.switch}
               value={editNewsLetter}
-              onValueChange={null}
+              onValueChange={() => {setNewsLetter(!editNewsLetter)}}
             ></Switch>
      
         </View>
