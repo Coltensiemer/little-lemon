@@ -15,7 +15,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 export default function Profile({ navigation }) {
     //@ts-ignore
-  const { logOut, isUserData } = useContext(AuthContext);
+  const { logOut, isUserData, UserSettings } = useContext(AuthContext);
 
   const [imageUri, setImageUri] = useState<any>(null);
   const [imageBoolean, setImageBoolean] = useState<boolean>(false);
@@ -24,9 +24,9 @@ export default function Profile({ navigation }) {
   const [editedFirstName, setEditedFirstName] = useState(isUserData?.user?.first_name);
   const [editedLastName, setEditedLastName] = useState(isUserData?.user?.last_name);
 
-  const [editDarkMode, setEditDarkMode] = useState(isUserData?.user?.dark_mode)
-  const [editSpecialOffers, setSpecialOffers] = useState(isUserData?.user?.special_offers)
-  const [editNewsLetter, setNewsLetter] = useState(isUserData?.user?.newsletters)
+  const [editDarkMode, setEditDarkMode] = useState(UserSettings.darkmode)
+  const [editSpecialOffers, setSpecialOffers] = useState(UserSettings.specialOffers)
+  const [editNewsLetter, setNewsLetter] = useState(UserSettings.newsletters)
   
   const theme = useTheme();
 

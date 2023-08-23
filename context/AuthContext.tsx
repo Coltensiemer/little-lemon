@@ -5,12 +5,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const AuthContext = createContext({}); 
 
+// export interface notifications { 
+// 	darkmode: boolean,
+// 	specialOffers: boolean,
+// 	newsletters: boolean
+// }
+
 export const AuthProvider = ({children}) => { 
 
 	const [isSettingData, setSettingData] = useState<any>()
 	const [isUserData, setUserData] = useState<any>()
 	const [isloading, setLoading] = useState<boolean>(true)
 	const [isToken, setToken] = useState<any>(null)
+	const [UserSettings, setUserSettings] = useState<any>({darkmode: true, specialOffers: false, newsletters: false})
 
 	const login = (token) =>  { 
 		setLoading(true); 
@@ -51,7 +58,7 @@ export const AuthProvider = ({children}) => {
 	  }, [isToken, isloading]);
 
 	return ( 
-		<AuthContext.Provider value={{login, logOut, isloading, isToken, setUserData, isUserData, isSettingData, setSettingData}}>
+		<AuthContext.Provider value={{login, logOut, isloading, isToken, setUserData, isUserData, isSettingData, setSettingData, UserSettings, setUserSettings}}>
 			{children}
 		</AuthContext.Provider>
 

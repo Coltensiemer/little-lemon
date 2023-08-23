@@ -1,6 +1,6 @@
 import { View, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import React, { useContext, useEffect } from 'react';
-import {useTheme, TextInput, Button, Divider, Chip } from 'react-native-paper';
+import { useTheme, TextInput, Button, Divider, Chip } from 'react-native-paper';
 import { useForm, Controller, useFormState } from 'react-hook-form';
 import { AuthContext } from '../../context/AuthContext';
 
@@ -24,8 +24,8 @@ export default function UserSignIn({ navigation }) {
   const signInForm = watch('EmailSignin');
 
   //@ts-ignore
-  const { login, setUserData, isUserData, setSettingData } = useContext(AuthContext);
-  const theme = useTheme()
+  const { login, setUserData, setUserSettings, UserSettings } = useContext(AuthContext);
+  const theme = useTheme();
 
   const handleSignIn = async (data: signInInfo) => {
     const signInInfo = {
@@ -44,18 +44,22 @@ export default function UserSignIn({ navigation }) {
 
       if (responseData.Auth === true) {
         setUserData(responseData);
-        console.log(responseData);
+        setUserSettings({
+          darkmode: responseData?.user?.dark_mode,
+          specialOffers: responseData?.user?.special_offers,
+          newsletters: responseData?.user?.newsletters
+        });
+        
+     
+        console.log("settings", UserSettings)
         login(responseData.AccessToken);
         console.log('Login in Successfull');
-      } 
-      else {
+      } else {
         console.log('User is not Auth');
       }
-    }
-    catch (error) {
+    } catch (error) {
       console.log('error handle Signin', error);
     }
-
   };
 
   // const handleSettings = async (data: any) => {
@@ -68,7 +72,7 @@ export default function UserSignIn({ navigation }) {
 
   //   try {
   //     const response = await fetch(
-  //       `http://localhost:3100/get_user_settings?email=${encodeURIComponent(email)}`, options 
+  //       `http://localhost:3100/get_user_settings?email=${encodeURIComponent(email)}`, options
   //     );
 
   //     setSettingData(response);
@@ -78,21 +82,30 @@ export default function UserSignIn({ navigation }) {
   //   }
   // };
 
-  // useEffect(() => { 
+  // useEffect(() => {
   //   handleSettings(isUserData)
   // },[handleSignIn])
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background,}}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <Header />
       <View style={{ flex: 1, justifyContent: 'flex-end', margin: 20 }}>
-        <Text style={{ fontWeight: 'bold', fontSize: 30, marginBottom: 10, color: theme.colors.primary }}>
+        <Text
+          style={{
+            fontWeight: 'bold',
+            fontSize: 30,
+            marginBottom: 10,
+            color: theme.colors.primary,
+          }}
+        >
           {' '}
           Sign In
         </Text>
         {/* add link to SiGN NAV */}
         <View style={{ flexDirection: 'row', marginLeft: 10 }}>
-          <Text style={{color: theme.colors.secondary, marginRight: 5}}>or</Text>
+          <Text style={{ color: theme.colors.secondary, marginRight: 5 }}>
+            or
+          </Text>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate('Sign Up');
