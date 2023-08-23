@@ -96,7 +96,6 @@ const handleChanges = async () => {
     console.log("Notifications updated")
     
 try {
-  console.log(isUserData.user.email)
   updateUser(isUserData.user.email)
   console.log("Getting update user info successful")
 } catch (error) {

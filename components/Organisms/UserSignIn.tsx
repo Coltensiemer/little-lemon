@@ -5,7 +5,7 @@ import { useForm, Controller, useFormState } from 'react-hook-form';
 import { AuthContext } from '../../context/AuthContext';
 
 import Header from '../Atoms/Header';
-import { err } from 'react-native-svg/lib/typescript/xml';
+
 
 interface signInInfo {
   EmailSignin: string;
@@ -49,8 +49,6 @@ export default function UserSignIn({ navigation }) {
           specialOffers: responseData?.user?.special_offers,
           newsletters: responseData?.user?.newsletters
         });
-        
-     
         console.log("settings", UserSettings)
         login(responseData.AccessToken);
         console.log('Login in Successfull');

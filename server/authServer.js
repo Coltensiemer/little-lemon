@@ -146,11 +146,32 @@ app.post('/token', async (req, res) => {
 
 
 app.get('/userUpdate', async (req, res) => { 
-  const {Email} = req.body
+  const { Email } = req.body; // Access the query parameter named "Email"
 
-  const results = await pool.query('SELECT u.first_name, u.last_name, u.email, u.password, us.dark_mode, us.special_offers, us.newsletters FROM users u INNER JOIN user_settings us ON u.email = us.email WHERE u.email = $1', [
-    Email,
-  ]);
+  try {
+    const results = await pool.query('SELECT u.first_name, u.last_name, u.email, u.password, us.dark_mode, us.special_offers, us.newsletters FROM users u INNER JOIN user_settings us ON u.email = us.email WHERE u.email = $1', [
+      Email,
+    ]);
+   if ( results.rows.length === 0) return res.status(404).json({message: "Results failed", results});
 
-  res.json(results)
-})
+    const user = results.rows[0]; // Assuming you expect one user based on email
+    console.log(user)
+    const formattedResponse = {
+      message: 'User data retrieved successfully',
+      user: {
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        password: user.password,
+        dark_mode: user.dark_mode,
+        special_offers: user.special_offers,
+        newsletters: user.newsletters,
+      },
+    };
+    res.json(formattedResponse);
+
+  } catch (error) {
+    console.error('Error with retrieving user data', error);
+    res.status(500).json({ error: 'An error occurred while retrieving user data' });
+  }
+});
