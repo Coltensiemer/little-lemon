@@ -15,7 +15,7 @@ export const AuthProvider = ({children}) => {
 
 	const [isSettingData, setSettingData] = useState<any>()
 	const [isUserData, setUserData] = useState<any>()
-	const [isloading, setLoading] = useState<boolean>(true)
+	const [isloading, setLoading] = useState<boolean>(false)
 	const [isToken, setToken] = useState<any>(null)
 	const [UserSettings, setUserSettings] = useState<any>({darkmode: true, specialOffers: false, newsletters: false})
 
@@ -49,6 +49,25 @@ export const AuthProvider = ({children}) => {
 		}
 	}
 
+	const updateUser = async(email) => { 
+
+		try {
+			
+			const options = {
+				method: 'GET',
+				headers: { 'Content-Type': 'application/json' },
+			  };
+
+			  const response = await fetch(`/userUpdate?email=${encodeURIComponent(email)}`, options)
+
+			  console.log("Update user info was successfull", response)
+			
+		} catch (error) {
+			console.log('Error with Updating user', error)
+			
+		}
+	}
+
 	useEffect(() => {
 		isLoggedIn()
 	}, []);
@@ -58,7 +77,7 @@ export const AuthProvider = ({children}) => {
 	  }, [isToken, isloading]);
 
 	return ( 
-		<AuthContext.Provider value={{login, logOut, isloading, isToken, setUserData, isUserData, isSettingData, setSettingData, UserSettings, setUserSettings}}>
+		<AuthContext.Provider value={{login, logOut, isloading, isToken, setUserData, isUserData, isSettingData, setSettingData, UserSettings, setUserSettings, updateUser}}>
 			{children}
 		</AuthContext.Provider>
 

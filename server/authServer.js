@@ -100,8 +100,6 @@ app.post('/login', async (req, res) => {
     //From the first database
     const user = results.rows[0];
 
-    console.log('users', user)
-
     const queryPassword = user.password;
 
     if (results.rows.length === 0) {
@@ -145,3 +143,14 @@ app.post('/token', async (req, res) => {
     res.json({ tokenAccess: tokenAccess });
   });
 });
+
+
+app.get('/userUpdate', async (req, res) => { 
+  const {Email} = req.body
+
+  const results = await pool.query('SELECT u.first_name, u.last_name, u.email, u.password, us.dark_mode, us.special_offers, us.newsletters FROM users u INNER JOIN user_settings us ON u.email = us.email WHERE u.email = $1', [
+    Email,
+  ]);
+
+  res.json(results)
+})

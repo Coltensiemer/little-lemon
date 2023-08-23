@@ -249,25 +249,27 @@ function AppStack() {
 
 // }
 
-function updateTheme() { 
-    const {  UserSettings, isLoading } = React.useContext(AuthContext);
+// function updateTheme() { 
+//     const {  UserSettings, isLoading } = React.useContext(AuthContext);
 
 
-    // React.useEffect(() => { 
-    //   if (!isLoading) { 
-    //     const calculateTheme = updateTheme()
-    //   }
-    // }, [isLoading])
+//     // React.useEffect(() => { 
+//     //   if (!isLoading) { 
+//     //     const calculateTheme = updateTheme()
+//     //   }
+//     // }, [isLoading])
 
 
-  const darkModeIndicator = UserSettings?.darkmode ?? false;
+//   const darkModeIndicator = UserSettings?.darkmode ?? false;
 
-  console.log('settings', UserSettings)
- const [darkMode, setDarkMode] = React.useState(darkModeIndicator)
-  const switchTheme = darkMode ? darkModeTheme :  lightModeTheme  
+//   console.log('settings', UserSettings)
+//  const [darkMode, setDarkMode] = React.useState(darkModeIndicator)
+//   const switchTheme = darkMode ? darkModeTheme :  lightModeTheme  
    
- return switchTheme; 
-}
+//  return switchTheme; 
+// }
+
+
 
 
 
@@ -278,7 +280,7 @@ export default function App() {
 
   return (
     <AuthProvider>
-    <PaperProvider theme={updateTheme()}>
+    <PaperProvider theme={lightModeTheme}>
     <NavigationContainer>
       <Stack.Navigator screenOptions={{
       headerShown: true,

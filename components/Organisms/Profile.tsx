@@ -15,7 +15,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 export default function Profile({ navigation }) {
     //@ts-ignore
-  const { logOut, isUserData, UserSettings } = useContext(AuthContext);
+  const { logOut, isUserData, UserSettings, updateUser } = useContext(AuthContext);
 
   const [imageUri, setImageUri] = useState<any>(null);
   const [imageBoolean, setImageBoolean] = useState<boolean>(false);
@@ -94,6 +94,14 @@ const handleChanges = async () => {
 
     const notificationsResponse = await fetch('http://localhost:3100/post_user_settings', options)
     console.log("Notifications updated")
+    
+try {
+  console.log(isUserData.user.email)
+  updateUser(isUserData.user.email)
+  console.log("Getting update user info successful")
+} catch (error) {
+ console.log("error with GET updated user info") 
+}
   } catch (error) {
     console.log("error trying to update first and last name:", error)
     
