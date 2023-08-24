@@ -14,7 +14,7 @@ import Profile from './components/Organisms/Profile';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import UserSignUp from './components/Organisms/UserSignUp';
 import UserSignIn from './components/Organisms/UserSignIn';
-import { AuthProvider, AuthContext } from './context/AuthContext';
+import { AuthProvider, AuthContext, useAuthContext } from './context/AuthContext';
 import Reservations from './components/Molecules/Reservations';
 import {
   HomeIcon,
@@ -23,7 +23,9 @@ import {
   SettingsIcon,
 } from './components/Atoms/Icons';
 import Header from './components/Atoms/Header';
-import { ThemeProvider } from './context/useThemeContext';
+import { ThemeProvider, ThemeContext } from './context/useThemeContext';
+import { Use } from 'react-native-svg';
+// import { lightModeTheme, darkModeTheme } from '../assets/Themes/themes';
 
 
 
@@ -235,27 +237,18 @@ function AppStack() {
 
 
 
-// function themer() { 
-//   const {switchTheme} = React.useContext(useTheme); 
-
-// console.log('Themer', switchTheme)
-
-
-// }
 
 
 
 
-export default function App() {
+function App() {
   const Stack = createNativeStackNavigator();
 
-
-  
+const {UserSettings} = useAuthContext() 
 
   return (
-    <AuthProvider> 
-    <ThemeProvider>
-    <PaperProvider theme={lightModeTheme}>
+ 
+    <PaperProvider theme={UserSettings.darkmode ? darkModeTheme: lightModeTheme}>
     <NavigationContainer>
       <Stack.Navigator screenOptions={{
       headerShown: true,
@@ -277,8 +270,18 @@ export default function App() {
       </Stack.Navigator>
     </NavigationContainer>
   </PaperProvider>
-  </ThemeProvider>
-    </AuthProvider>
+
     
   );
+}
+
+export default function AppWrapper() { 
+
+  return ( 
+    <AuthProvider>
+      <App>
+
+      </App>
+    </AuthProvider>
+  )
 }

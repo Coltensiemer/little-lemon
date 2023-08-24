@@ -4,6 +4,7 @@ import { G } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const AuthContext = createContext({});
+export const useAuthContext = () => React.useContext(AuthContext)
 
 export type notifications = {
 	darkmode: boolean,
@@ -17,7 +18,7 @@ export const AuthProvider = ({ children }) => {
   const [isloading, setLoading] = useState<boolean>(false);
   const [isToken, setToken] = useState<any>(null);
   const [UserSettings, setUserSettings] = useState<notifications>({
-    darkmode: true,
+    darkmode: false,
     specialOffers: false,
     newsletters: false,
   });
@@ -75,9 +76,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+
+
+
+
+
   useEffect(() => {
     isLoggedIn();
   }, []);
+
+  useEffect(() => { 
+
+  }, [use])
 
   useEffect(() => {
     console.log('isToken:', isToken);
