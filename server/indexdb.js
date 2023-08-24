@@ -203,7 +203,7 @@ app.post('/post_user_settings', async (req, res) => {
       [dark_mode, special_offer, newsletters, email]
     );
 
-    res.json(request);
+    res.json(request)
     console.log('updated settings');
   } catch (error) {
     console.log('Error with Posting user settings:', error);

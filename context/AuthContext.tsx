@@ -5,18 +5,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const AuthContext = createContext({});
 
-// export interface notifications {
-// 	darkmode: boolean,
-// 	specialOffers: boolean,
-// 	newsletters: boolean
-// }
+export type notifications = {
+	darkmode: boolean,
+	specialOffers: boolean,
+	newsletters: boolean
+}
 
 export const AuthProvider = ({ children }) => {
   const [isSettingData, setSettingData] = useState<any>();
   const [isUserData, setUserData] = useState<any>();
   const [isloading, setLoading] = useState<boolean>(false);
   const [isToken, setToken] = useState<any>(null);
-  const [UserSettings, setUserSettings] = useState<any>({
+  const [UserSettings, setUserSettings] = useState<notifications>({
     darkmode: true,
     specialOffers: false,
     newsletters: false,

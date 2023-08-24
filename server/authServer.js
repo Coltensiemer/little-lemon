@@ -155,7 +155,7 @@ app.get('/userUpdate', async (req, res) => {
    if ( results.rows.length === 0) return res.status(404).json({message: "Results failed", results});
 
     const user = results.rows[0]; // Assuming you expect one user based on email
-    console.log(user)
+    
     const formattedResponse = {
       message: 'User data retrieved successfully',
       user: {
