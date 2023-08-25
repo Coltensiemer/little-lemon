@@ -1,19 +1,29 @@
 import { View, Text } from 'react-native';
-import React, { useContext, createContext, useState, useEffect } from 'react';
+import React, { useContext, createContext, useState, useEffect, useReducer } from 'react';
 import { G } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const AuthContext = createContext({});
-export const useAuthContext = () => React.useContext(AuthContext)
+export const useAuthContext = () => React.useContext(AuthContext);
 
-export type notifications = {
-	darkmode: boolean,
-	specialOffers: boolean,
-	newsletters: boolean
+export interface ContextState { 
+  
+
 }
 
+export type notifications = {
+  darkmode: boolean;
+  specialOffers: boolean;
+  newsletters: boolean;
+};
+
 export const AuthProvider = ({ children }) => {
-  const [isSettingData, setSettingData] = useState<any>();
+
+  // const [state, dispatch] = useReducer(AuthReducer, INITIAL_State); 
+
+
+
+  // const [isSettingData, setSettingData] = useState<any>();
   const [isUserData, setUserData] = useState<any>();
   const [isloading, setLoading] = useState<boolean>(false);
   const [isToken, setToken] = useState<any>(null);
@@ -62,10 +72,6 @@ export const AuthProvider = ({ children }) => {
         `http://localhost:4100/userUpdate?Email=${encodeURI(Email)}`,
         options
       );
-
-    //   if (!response.ok) return console.log('Fail response for updateUser');
-
-
       const responseData = await response.json();
       console.log('updateUser function successfull', response);
 
@@ -76,18 +82,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-
-
-
-
-
   useEffect(() => {
     isLoggedIn();
   }, []);
-
-  useEffect(() => { 
-
-  }, [use])
 
   useEffect(() => {
     console.log('isToken:', isToken);
@@ -102,8 +99,7 @@ export const AuthProvider = ({ children }) => {
         isToken,
         setUserData,
         isUserData,
-        isSettingData,
-        setSettingData,
+     
         UserSettings,
         setUserSettings,
         updateUser,

@@ -1,11 +1,17 @@
 import * as React from 'react';
-import { View, Text, ActivityIndicator, Image, SafeAreaView } from 'react-native';
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  Image,
+  SafeAreaView,
+} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
   MD3LightTheme as DefaultTheme,
   PaperProvider,
-  useTheme
+  useTheme,
 } from 'react-native-paper';
 import HomeScreen from './components/Organisms/HomeScreen';
 import Menulist from './components/Organisms/Menulist/Menulist';
@@ -14,7 +20,11 @@ import Profile from './components/Organisms/Profile';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import UserSignUp from './components/Organisms/UserSignUp';
 import UserSignIn from './components/Organisms/UserSignIn';
-import { AuthProvider, AuthContext, useAuthContext } from './context/AuthContext';
+import {
+  AuthProvider,
+  AuthContext,
+  useAuthContext,
+} from './context/AuthContext';
 import Reservations from './components/Molecules/Reservations';
 import {
   HomeIcon,
@@ -23,112 +33,105 @@ import {
   SettingsIcon,
 } from './components/Atoms/Icons';
 import Header from './components/Atoms/Header';
-import { ThemeProvider, ThemeContext } from './context/useThemeContext';
-import { Use } from 'react-native-svg';
-// import { lightModeTheme, darkModeTheme } from '../assets/Themes/themes';
-
-
+import { lightModeTheme, darkModeTheme } from './assets/Themes/themes';
 
 //Themes
-export const lightModeTheme = {
-	...DefaultTheme,
-	myOwnProperty: true,
-	colors: {
-	  primary: '#004478',
-	  onPrimary: '#ffffff',
-	  primaryContainer: '#9ddfff',
-	  onPrimaryContainer: '#001625',
-	  secondary: '#3f506b',
-	  onSecondary: '#ffffff',
-	  secondaryContainer: '#bbd4f5',
-	  onSecondaryContainer: '#041a24',
-	  tertiary: '#47654a',
-	  onTertiary: '#ffffff',
-	  tertiaryContainer: '#c4ebcc',
-	  onTertiaryContainer: '#092107',
-	  error: 'red',
-	  onError: '#ffffff',
-	  errorContainer: '#d6adff',
-	  onErrorContainer: '#000241',
-	  background: '#fffbff',
-	  onBackground: '#161b1e',
-	  surface: '#fffbff',
-	  onSurface: '#161b1e',
-	  surfaceVariant: '#cfede1',
-	  onSurfaceVariant: '#39464d',
-	  outline: '#67767f',
-	  outlineVariant: 'rgb(180, 197, 208)',
-	  shadow: 'rgb(0, 0, 0)',
-	  scrim: 'rgb(0, 0, 0)',
-	  inverseSurface: 'rgb(42, 189, 248)',
-	  inverseOnSurface: 'rgb(231, 239, 248)',
-	  inversePrimary: 'rgb(42, 189, 248)',
-	  elevation: {
-		level0: 'transparent',
-		level1: 'rgb(242, 243, 248)',
-		level2: 'rgb(235, 238, 244)',
-		level3: 'rgb(227, 233, 240)',
-		level4: 'rgb(224, 232, 239)',
-		level5: 'rgb(219, 228, 236)',
-	  },
-	  surfaceDisabled: 'rgba(22, 27, 30, 0.12)',
-	  onSurfaceDisabled: 'rgba(38, 27, 30, 0.38)',
-	  backdrop: 'rgba(36, 48, 54, 0.4)',
-	  blue: 'blue',
-	},
-  };
+// export const lightModeTheme = {
+//   ...DefaultTheme,
+//   myOwnProperty: true,
+//   colors: {
+//     primary: '#004478',
+//     onPrimary: '#ffffff',
+//     primaryContainer: '#9ddfff',
+//     onPrimaryContainer: '#001625',
+//     secondary: '#3f506b',
+//     onSecondary: '#ffffff',
+//     secondaryContainer: '#bbd4f5',
+//     onSecondaryContainer: '#041a24',
+//     tertiary: '#47654a',
+//     onTertiary: '#ffffff',
+//     tertiaryContainer: '#c4ebcc',
+//     onTertiaryContainer: '#092107',
+//     error: 'red',
+//     onError: '#ffffff',
+//     errorContainer: '#d6adff',
+//     onErrorContainer: '#000241',
+//     background: '#fffbff',
+//     onBackground: '#161b1e',
+//     surface: '#fffbff',
+//     onSurface: '#161b1e',
+//     surfaceVariant: '#cfede1',
+//     onSurfaceVariant: '#39464d',
+//     outline: '#67767f',
+//     outlineVariant: 'rgb(180, 197, 208)',
+//     shadow: 'rgb(0, 0, 0)',
+//     scrim: 'rgb(0, 0, 0)',
+//     inverseSurface: 'rgb(42, 189, 248)',
+//     inverseOnSurface: 'rgb(231, 239, 248)',
+//     inversePrimary: 'rgb(42, 189, 248)',
+//     elevation: {
+//       level0: 'transparent',
+//       level1: 'rgb(242, 243, 248)',
+//       level2: 'rgb(235, 238, 244)',
+//       level3: 'rgb(227, 233, 240)',
+//       level4: 'rgb(224, 232, 239)',
+//       level5: 'rgb(219, 228, 236)',
+//     },
+//     surfaceDisabled: 'rgba(22, 27, 30, 0.12)',
+//     onSurfaceDisabled: 'rgba(38, 27, 30, 0.38)',
+//     backdrop: 'rgba(36, 48, 54, 0.4)',
+//     blue: 'blue',
+//   },
+// };
 
-
-  export const darkModeTheme = {
-	...DefaultTheme,
-	myOwnProperty: true,
-	dark: true, // Indicate that this is a dark mode theme
-	colors: {
-	  primary: '#1763b3', // Adjusted primary color for dark mode
-	  onPrimary: '#ffffff',
-	  primaryContainer: '#325a6e',
-	  onPrimaryContainer: '#ffffff',
-	  secondary: '#4f638e', // Adjusted secondary color for dark mode
-	  onSecondary: '#ffffff',
-	  secondaryContainer: '#738fa5',
-	  onSecondaryContainer: '#ffffff',
-	  tertiary: '#5f7d63', // Adjusted tertiary color for dark mode
-	  onTertiary: '#ffffff',
-	  tertiaryContainer: '#89a581',
-	  onTertiaryContainer: '#ffffff',
-	  error: 'red',
-	  onError: '#ffffff',
-	  errorContainer: '#a33c3c',
-	  onErrorContainer: '#ffffff',
-	  background: '#161b1e', // Adjusted background color for dark mode
-	  onBackground: '#ffffff',
-	  surface: '#1e2427', // Adjusted surface color for dark mode
-	  onSurface: '#ffffff',
-	  surfaceVariant: '#39464d',
-	  onSurfaceVariant: '#ffffff',
-	  outline: '#67767f',
-	  outlineVariant: 'rgb(180, 197, 208)',
-	  shadow: 'rgb(0, 0, 0)',
-	  scrim: 'rgb(0, 0, 0)',
-	  inverseSurface: 'rgb(42, 189, 248)',
-	  inverseOnSurface: 'rgb(231, 239, 248)',
-	  inversePrimary: 'rgb(42, 189, 248)',
-	  elevation: {
-		level0: 'transparent',
-		level1: 'rgb(22, 27, 30)',
-		level2: 'rgb(29, 35, 39)',
-		level3: 'rgb(36, 42, 46)',
-		level4: 'rgb(40, 47, 51)',
-		level5: 'rgb(45, 52, 56)',
-	  },
-	  surfaceDisabled: 'rgba(255, 255, 255, 0.12)',
-	  onSurfaceDisabled: 'rgba(255, 255, 255, 0.38)',
-	  backdrop: 'rgba(0, 0, 0, 0.4)',
-	  blue: 'blue',
-	},
-  };
-  
-  
+// export const darkModeTheme = {
+//   ...DefaultTheme,
+//   myOwnProperty: true,
+//   dark: true, // Indicate that this is a dark mode theme
+//   colors: {
+//     primary: '#1763b3', // Adjusted primary color for dark mode
+//     onPrimary: '#ffffff',
+//     primaryContainer: '#325a6e',
+//     onPrimaryContainer: '#ffffff',
+//     secondary: '#4f638e', // Adjusted secondary color for dark mode
+//     onSecondary: '#ffffff',
+//     secondaryContainer: '#738fa5',
+//     onSecondaryContainer: '#ffffff',
+//     tertiary: '#5f7d63', // Adjusted tertiary color for dark mode
+//     onTertiary: '#ffffff',
+//     tertiaryContainer: '#89a581',
+//     onTertiaryContainer: '#ffffff',
+//     error: 'red',
+//     onError: '#ffffff',
+//     errorContainer: '#a33c3c',
+//     onErrorContainer: '#ffffff',
+//     background: '#161b1e', // Adjusted background color for dark mode
+//     onBackground: '#ffffff',
+//     surface: '#1e2427', // Adjusted surface color for dark mode
+//     onSurface: '#ffffff',
+//     surfaceVariant: '#39464d',
+//     onSurfaceVariant: '#ffffff',
+//     outline: '#67767f',
+//     outlineVariant: 'rgb(180, 197, 208)',
+//     shadow: 'rgb(0, 0, 0)',
+//     scrim: 'rgb(0, 0, 0)',
+//     inverseSurface: 'rgb(42, 189, 248)',
+//     inverseOnSurface: 'rgb(231, 239, 248)',
+//     inversePrimary: 'rgb(42, 189, 248)',
+//     elevation: {
+//       level0: 'transparent',
+//       level1: 'rgb(22, 27, 30)',
+//       level2: 'rgb(29, 35, 39)',
+//       level3: 'rgb(36, 42, 46)',
+//       level4: 'rgb(40, 47, 51)',
+//       level5: 'rgb(45, 52, 56)',
+//     },
+//     surfaceDisabled: 'rgba(255, 255, 255, 0.12)',
+//     onSurfaceDisabled: 'rgba(255, 255, 255, 0.38)',
+//     backdrop: 'rgba(0, 0, 0, 0.4)',
+//     blue: 'blue',
+//   },
+// };
 
 
 
@@ -137,7 +140,7 @@ export const lightModeTheme = {
 function HomeStackScreen() {
   const HomeStack = createNativeStackNavigator();
   return (
-    <HomeStack.Navigator screenOptions={{headerShown: false}}>
+    <HomeStack.Navigator screenOptions={{ headerShown: false }}>
       <HomeStack.Screen name='HomeScreen' component={HomeScreen} />
       <HomeStack.Screen name='Reservations' component={ReservationPage} />
       <HomeStack.Screen name='UserSignUp' component={UserSignUp} />
@@ -152,7 +155,7 @@ function HomeStackScreen() {
 function AppStack() {
   const Tab = createBottomTabNavigator();
   const { isLoading, isToken } = React.useContext(AuthContext);
-  const theme = useTheme()
+  const theme = useTheme();
   return isToken != null ? (
     <Tab.Navigator
       screenOptions={{
@@ -161,8 +164,10 @@ function AppStack() {
         tabBarInactiveTintColor: theme.colors.primary,
         tabBarActiveBackgroundColor: theme.colors.background,
         tabBarInactiveBackgroundColor: theme.colors.backdrop,
-        tabBarItemStyle: { borderTopColor: theme.colors.secondary, borderWidth: 2}
-      
+        tabBarItemStyle: {
+          borderTopColor: theme.colors.secondary,
+          borderWidth: 2,
+        },
       }}
     >
       <Tab.Screen
@@ -225,9 +230,10 @@ function AppStack() {
         tabBarActiveTintColor: theme.colors.onSecondary,
         tabBarInactiveTintColor: theme.colors.onSecondary,
         tabBarActiveBackgroundColor: theme.colors.background,
-        tabBarItemStyle: { borderTopColor: theme.colors.secondary, borderWidth: 2,}
-      
-      
+        tabBarItemStyle: {
+          borderTopColor: theme.colors.secondary,
+          borderWidth: 2,
+        },
       }}
     >
       <Tab.Screen name='Sign In' component={UserSignIn} />
@@ -235,53 +241,40 @@ function AppStack() {
   );
 }
 
-
-
-
-
-
-
 function App() {
   const Stack = createNativeStackNavigator();
 
-const {UserSettings} = useAuthContext() 
+  /// Set Default to USER Setting appreance 
+
+  const { UserSettings } = useAuthContext();
 
   return (
- 
-    <PaperProvider theme={UserSettings.darkmode ? darkModeTheme: lightModeTheme}>
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{
-      headerShown: true,
-    headerTitle: (prop) => <Header {...prop} />}
-      } >
-        <Stack.Screen
-          name='AppStacks'
-          component={AppStack}
-          
-        />
-        <Stack.Screen name='Sign In' component={UserSignIn} />
-        <Stack.Screen name='Sign Up' component={UserSignUp} />
-        <Stack.Screen name='Home' component={HomeScreen} />
-        <Stack.Screen name='Reservation' component={ReservationPage} />
-        <Stack.Screen
-          name='ReservationComponent'
-          component={Reservations}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  </PaperProvider>
-
-    
+    <PaperProvider
+      theme={UserSettings.darkmode ? darkModeTheme : lightModeTheme}
+    >
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: true,
+            headerTitle: (prop) => <Header {...prop} />,
+          }}
+        >
+          <Stack.Screen name='AppStacks' component={AppStack} />
+          <Stack.Screen name='Sign In' component={UserSignIn} />
+          <Stack.Screen name='Sign Up' component={UserSignUp} />
+          <Stack.Screen name='Home' component={HomeScreen} />
+          <Stack.Screen name='Reservation' component={ReservationPage} />
+          <Stack.Screen name='ReservationComponent' component={Reservations} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
   );
 }
 
-export default function AppWrapper() { 
-
-  return ( 
+export default function AppWrapper() {
+  return (
     <AuthProvider>
-      <App>
-
-      </App>
+      <App></App>
     </AuthProvider>
-  )
+  );
 }
