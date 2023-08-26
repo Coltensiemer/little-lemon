@@ -1,25 +1,53 @@
 import { View, Text } from 'react-native'
 import React, {useReducer} from 'react'
-import { notifications } from './AuthContext'
+import {  ContextState } from './AuthContext'
 
 
+// Data of set named values
 export enum ReducerActions { 
-	setUser,
-	clearUser
+ 	logIn, 
+	logOut
+} 
+
+
+type logIn = { 
+	type: ReducerActions.logIn,
+	payLoad: any
 }
 
-type setContextUser = { 
-	type: ReducerActions.setUser,
-	payLoad: string
+type logOut={ 
+	type: ReducerActions.logOut,
 }
 
-type clearContextUser ={ 
-	type: ReducerActions.clearUser,
+
+type ConfigActionType = logIn | logOut
+
+export const ContextReducer = ( 
+	state: ContextState,
+	action: ConfigActionType
+): ContextState => { 
+	switch(action.type) { 
+		case ReducerActions.logIn: 
+		return { 
+			...state, 
+			isUserData: action.payLoad, 
+			isloading: action.payLoad, 
+			istoken: action.payLoad,
+
+
+		}
+	case ReducerActions.logOut: 
+	return { 
+		...state, 
+		isUserData: {},
+		isloading:  false,
+		istoken: "",
+		userSettings: { 
+			darkmode: false,
+			specialOffers: false,
+			newsletters: false, 
+		}
+	}
+
+	}
 }
-
-type ConfigActionType = setContextUser | clearContextUser
-
-// export const ContextReducer = ( 
-// 	state: notifications,
-// 	action: ConfigActionType
-// )

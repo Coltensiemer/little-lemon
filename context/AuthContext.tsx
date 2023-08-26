@@ -1,29 +1,46 @@
 import { View, Text } from 'react-native';
-import React, { useContext, createContext, useState, useEffect, useReducer } from 'react';
+import React, { useContext, createContext, useState, useEffect, useReducer, Context } from 'react';
 import { G } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ContextReducer } from './AuthReducer';
 
 export const AuthContext = createContext({});
 export const useAuthContext = () => React.useContext(AuthContext);
 
 export interface ContextState { 
-  
+  isUserData: {}, 
+  isloading: boolean,
+  istoken: string,
+  userSettings: { 
+    darkmode: boolean,
+    specialOffers: boolean,
+    newsletters: boolean,
+  }
 
 }
 
-export type notifications = {
-  darkmode: boolean;
-  specialOffers: boolean;
-  newsletters: boolean;
-};
+
+
+
+
+const INITIAL_State: ContextState = { 
+  isUserData: {}, 
+  isloading: false,
+  istoken: "",
+  userSettings: { 
+    darkmode: false,
+    specialOffers: false, 
+    newsletters: false, 
+  }
+}
 
 export const AuthProvider = ({ children }) => {
 
-  // const [state, dispatch] = useReducer(AuthReducer, INITIAL_State); 
+  const [state, dispatch] = useReducer(ContextReducer, INITIAL_State); 
 
 
 
-  // const [isSettingData, setSettingData] = useState<any>();
+  
   const [isUserData, setUserData] = useState<any>();
   const [isloading, setLoading] = useState<boolean>(false);
   const [isToken, setToken] = useState<any>(null);
