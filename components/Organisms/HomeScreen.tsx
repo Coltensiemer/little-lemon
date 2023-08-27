@@ -6,6 +6,7 @@ import { Button, useTheme, Text, TextInput } from 'react-native-paper';
 import { useForm, Controller, useFormState } from 'react-hook-form';
 import { AuthContext } from '../../context/AuthContext';
 import Reservations from '../Molecules/Reservations';
+import { G } from 'react-native-svg';
 
 
 export default function HomeScreen({ navigation }) {
@@ -16,6 +17,7 @@ export default function HomeScreen({ navigation }) {
   //@ts-ignore
   const { login, isToken, isUserData } = useContext(AuthContext);
 
+  console.log("User Data:", isUserData)
   return (
     <View style={{ backgroundColor: theme.colors.background, flex: 1 }}>
       <View
@@ -26,7 +28,7 @@ export default function HomeScreen({ navigation }) {
           Hello
         </Text>
         <Text style={{ alignSelf: 'flex-end', fontSize: 24 }}>
-          {isUserData?.user?.first_name}
+          {isUserData?.isUserData.first_name}
         </Text>
       </View>
       <Reservations navigation={navigation} />

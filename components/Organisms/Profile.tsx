@@ -15,18 +15,18 @@ import { NavigationContainer } from '@react-navigation/native';
 
 export default function Profile({ navigation }) {
     //@ts-ignore
-  const { logOut, isUserData, UserSettings, updateUser } = useContext(AuthContext);
+  const { logOut, isUserData, userSettings } = useContext(AuthContext);
 
   const [imageUri, setImageUri] = useState<any>(null);
   const [imageBoolean, setImageBoolean] = useState<boolean>(false);
   const [disableChanges, setDisableChanges] = useState<boolean>(true)
 
-  const [editedFirstName, setEditedFirstName] = useState(isUserData?.user?.first_name);
-  const [editedLastName, setEditedLastName] = useState(isUserData?.user?.last_name);
+  const [editedFirstName, setEditedFirstName] = useState(isUserData?.isUserData?.first_name);
+  const [editedLastName, setEditedLastName] = useState(isUserData?.isUserData?.last_name);
 
-  const [editDarkMode, setEditDarkMode] = useState(UserSettings.darkmode)
-  const [editSpecialOffers, setSpecialOffers] = useState(UserSettings.specialOffers)
-  const [editNewsLetter, setNewsLetter] = useState(UserSettings.newsletters)
+  const [editDarkMode, setEditDarkMode] = useState(isUserData?.isUserData.darkmode)
+  const [editSpecialOffers, setSpecialOffers] = useState(isUserData?.isUserData.specialOffers)
+  const [editNewsLetter, setNewsLetter] = useState(isUserData?.isUserData.newsletters)
   
   const theme = useTheme();
 
@@ -96,7 +96,6 @@ const handleChanges = async () => {
     console.log("Notifications updated")
     
 try {
-  updateUser(isUserData.user.email)
   console.log("Getting update user info successful")
 } catch (error) {
  console.log("error with GET updated user info") 

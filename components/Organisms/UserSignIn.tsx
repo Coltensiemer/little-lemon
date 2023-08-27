@@ -2,7 +2,7 @@ import { View, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import React, { useContext, useEffect } from 'react';
 import { useTheme, TextInput, Button, Divider, Chip } from 'react-native-paper';
 import { useForm, Controller, useFormState } from 'react-hook-form';
-import { AuthContext } from '../../context/AuthContext';
+import { AuthContext, AuthContextType } from '../../context/AuthContext';
 
 import Header from '../Atoms/Header';
 
@@ -13,6 +13,11 @@ interface signInInfo {
 }
 
 export default function UserSignIn({ navigation }) {
+
+
+//@ts-ignore
+  const {login} = useContext<AuthContextType>(AuthContext)
+
   const {
     control,
     handleSubmit,
@@ -23,8 +28,6 @@ export default function UserSignIn({ navigation }) {
 
   const signInForm = watch('EmailSignin');
 
-  //@ts-ignore
-  const { login, setUserData, setUserSettings, UserSettings } = useContext(AuthContext);
   const theme = useTheme();
 
   const handleSignIn = async (data: signInInfo) => {
@@ -43,15 +46,10 @@ export default function UserSignIn({ navigation }) {
       const responseData = await response.json();
 
       if (responseData.Auth === true) {
-        setUserData(responseData);
-        setUserSettings({
-          darkmode: responseData?.user?.dark_mode,
-          specialOffers: responseData?.user?.special_offers,
-          newsletters: responseData?.user?.newsletters
-        });
-        console.log("settings", UserSettings)
-        login(responseData.AccessToken);
-        console.log('Login in Successfull');
+        login(responseData.AccessToken, responseData.user, false);
+
+      
+        console.log('Login in Successfull', responseData);
       } else {
         console.log('User is not Auth');
       }

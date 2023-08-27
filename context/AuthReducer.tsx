@@ -6,7 +6,8 @@ import {  ContextState } from './AuthContext'
 // Data of set named values
 export enum ReducerActions { 
  	logIn, 
-	logOut
+	logOut,
+	loggedIn
 } 
 
 
@@ -19,8 +20,12 @@ type logOut={
 	type: ReducerActions.logOut,
 }
 
+type loggedIn = { 
+	type: ReducerActions.loggedIn
+}
 
-type ConfigActionType = logIn | logOut
+
+type ConfigActionType = logIn | logOut | loggedIn
 
 export const ContextReducer = ( 
 	state: ContextState,
@@ -41,13 +46,18 @@ export const ContextReducer = (
 		...state, 
 		isUserData: {},
 		isloading:  false,
-		istoken: "",
+		istoken: null,
 		userSettings: { 
 			darkmode: false,
 			specialOffers: false,
 			newsletters: false, 
 		}
 	}
+	case ReducerActions.loggedIn: 
+
+
+	default: 
+	return state; 
 
 	}
 }
