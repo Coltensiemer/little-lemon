@@ -5,17 +5,30 @@ import {
   Platform,
   Image,
 } from 'react-native';
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useReducer } from 'react';
 import { Button, Avatar, TextInput, Switch, Divider, useTheme, Text} from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import { AuthContext } from '../../context/AuthContext';
 import { NavigationContainer } from '@react-navigation/native';
+import { ProfileState, ProfileReducer } from '../../context/ProfileReducer';
+
 
 
 
 export default function Profile({ navigation }) {
     //@ts-ignore
-  const { logOut, isUserData, userSettings } = useContext(AuthContext);
+  const { logOut, isUserData} = useContext(AuthContext);
+
+ const INITIAL_StateProfile: ProfileState = { 
+    first_name:isUserData?.isUserData?.first_name,
+      last_name: isUserData?.isUserData?.last_name,
+      dark_mode: isUserData?.isUserData.darkmode,
+      special_offers: isUserData?.isUserData.specialOffers,
+      news_letters: isUserData?.isUserData.newsletters, 
+    
+    } 
+
+  const [stateProfile, dispatchProfile] = useReducer(ProfileReducer, INITIAL_StateProfile)
 
   const [imageUri, setImageUri] = useState<any>(null);
   const [imageBoolean, setImageBoolean] = useState<boolean>(false);
@@ -74,12 +87,12 @@ const handleChanges = async () => {
 
   try {
     const formData = { 
-      first_name: editedFirstName,
-      last_name: editedLastName,
-      email: isUserData?.user?.email,
-      dark_mode: editDarkMode,
-      special_offer: editSpecialOffers,
-      newsletters: editNewsLetter,
+      first_name: stateProfile.first_name,
+      last_name: stateProfile.last_name,
+      email: isUserData?.isUserData?.email,
+      dark_mode: stateProfile.dark_mode,
+      special_offer: stateProfile.special_offers,
+      newsletters: stateProfile.special_offers, 
 
     }
     const options = {
@@ -155,12 +168,12 @@ const handleDiscardChanges = () => {
       <View style={{padding: 10}}>
         <TextInput
           style={{ margin: 5, height: 40 }}
-          value={editedFirstName}
+          value={stateProfile.first_name}
           onChangeText={setEditedFirstName}
         />
         <TextInput
           style={{ margin: 5, height: 40 }}
-          value={editedLastName}
+          value={stateProfile.last_name}
           onChangeText={null}
         />
      
@@ -175,7 +188,7 @@ const handleDiscardChanges = () => {
            </Text>
             <Switch
               style={styles.switch}
-              value={editDarkMode}
+              value={stateProfile.dark_mode}
               onValueChange={() => {setEditDarkMode(!editDarkMode)}}
             ></Switch>
       
@@ -187,7 +200,7 @@ const handleDiscardChanges = () => {
             </Text>
             <Switch
               style={styles.switch}
-              value={editSpecialOffers}
+              value={stateProfile.special_offers}
               onValueChange={() => {setSpecialOffers(!editSpecialOffers)}}
             ></Switch>
          
@@ -199,7 +212,7 @@ const handleDiscardChanges = () => {
             </Text>
             <Switch
               style={styles.switch}
-              value={editNewsLetter}
+              value={stateProfile.news_letters}
               onValueChange={() => {setNewsLetter(!editNewsLetter)}}
             ></Switch>
      

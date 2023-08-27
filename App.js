@@ -147,7 +147,7 @@ function App() {
 
   /// Set Default to USER Setting appreance 
 
-  // const { UserSettings } = useAuthContext();
+  const { isUserData } = useAuthContext();
 
   return (
     <PaperProvider

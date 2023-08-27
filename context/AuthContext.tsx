@@ -11,6 +11,8 @@ import { G } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ContextReducer, ReducerActions } from './AuthReducer';
 
+
+
 export const AuthContext = createContext({});
 export const useAuthContext = () => React.useContext(AuthContext);
 
@@ -40,8 +42,11 @@ const INITIAL_State: ContextState = {
   },
 };
 
+
+
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(ContextReducer, INITIAL_State);
+  
 
   // const [isUserData, setUserData] = useState<any>();
   const [isloading, setLoading] = useState<boolean>(false);
