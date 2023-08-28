@@ -10,7 +10,7 @@ import { Button, Avatar, TextInput, Switch, Divider, useTheme, Text} from 'react
 import * as ImagePicker from 'expo-image-picker';
 import { AuthContext } from '../../context/AuthContext';
 import { NavigationContainer } from '@react-navigation/native';
-import { ProfileState, ProfileReducer } from '../../context/ProfileReducer';
+import { ProfileState, ProfileReducer, ReducerAction, init } from '../../context/ProfileReducer';
 
 
 
@@ -28,22 +28,13 @@ export default function Profile({ navigation }) {
     
     } 
 
-  const [stateProfile, dispatchProfile] = useReducer(ProfileReducer, INITIAL_StateProfile)
+  const [stateProfile, dispatchProfile] = useReducer(ProfileReducer, INITIAL_StateProfile, init)
 
   const [imageUri, setImageUri] = useState<any>(null);
   const [imageBoolean, setImageBoolean] = useState<boolean>(false);
   const [disableChanges, setDisableChanges] = useState<boolean>(true)
 
-  const [editedFirstName, setEditedFirstName] = useState(isUserData?.isUserData?.first_name);
-  const [editedLastName, setEditedLastName] = useState(isUserData?.isUserData?.last_name);
-
-  const [editDarkMode, setEditDarkMode] = useState(isUserData?.isUserData.darkmode)
-  const [editSpecialOffers, setSpecialOffers] = useState(isUserData?.isUserData.specialOffers)
-  const [editNewsLetter, setNewsLetter] = useState(isUserData?.isUserData.newsletters)
-  
   const theme = useTheme();
-
-
 
   useEffect(() => {
     const requestMediaLibraryPermissionsAsync = async () => {
@@ -78,10 +69,6 @@ export default function Profile({ navigation }) {
   };
 
 
-  //store all changes into a new state. 
-
-  //On save changes, all change inputs are updated
-//text input will update
 
 const handleChanges = async () => { 
 
@@ -124,11 +111,12 @@ try {
 
 // Discards any changes 
 const handleDiscardChanges = () => { 
-  setEditedFirstName(isUserData?.user?.first_name)
-  setEditedLastName(isUserData?.user?.last_name)
-  setEditDarkMode(isUserData?.user?.dark_mode)
-  setNewsLetter(isUserData?.user?.editNewsLetter)
-  setSpecialOffers(isUserData?.user?.editSpecialOffers)
+  dispatchProfile({
+    type: ReducerAction.resetProfile, 
+    payload: INITIAL_StateProfile
+  })
+  
+
 }
 
 
@@ -169,12 +157,16 @@ const handleDiscardChanges = () => {
         <TextInput
           style={{ margin: 5, height: 40 }}
           value={stateProfile.first_name}
-          onChangeText={setEditedFirstName}
+          onChangeText={(e) => { 
+            dispatchProfile({type: ReducerAction.setFirstName, payload: e})
+          }}
         />
         <TextInput
           style={{ margin: 5, height: 40 }}
           value={stateProfile.last_name}
-          onChangeText={null}
+          onChangeText={(e) => { 
+            dispatchProfile({type: ReducerAction.setLastName, payload: e})
+          }}
         />
      
       </View>
@@ -189,7 +181,7 @@ const handleDiscardChanges = () => {
             <Switch
               style={styles.switch}
               value={stateProfile.dark_mode}
-              onValueChange={() => {setEditDarkMode(!editDarkMode)}}
+            onValueChange={(e) => dispatchProfile({type: ReducerAction.setDarkMode, payload: !stateProfile.dark_mode })}
             ></Switch>
       
         </View>
@@ -201,7 +193,7 @@ const handleDiscardChanges = () => {
             <Switch
               style={styles.switch}
               value={stateProfile.special_offers}
-              onValueChange={() => {setSpecialOffers(!editSpecialOffers)}}
+              onValueChange={(e) => dispatchProfile({type: ReducerAction.setSpecialOffers, payload: !stateProfile.special_offers})}
             ></Switch>
          
         </View>
@@ -213,13 +205,13 @@ const handleDiscardChanges = () => {
             <Switch
               style={styles.switch}
               value={stateProfile.news_letters}
-              onValueChange={() => {setNewsLetter(!editNewsLetter)}}
+              onValueChange={(e) => dispatchProfile({type: ReducerAction.setNewsLetters, payload: !stateProfile.news_letters })}
             ></Switch>
      
         </View>
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: 10 }}>
-        <Button mode='outlined' style={{backgroundColor: theme.colors.onSecondaryContainer}} onPress={() => handleDiscardChanges()}>
+        <Button mode='outlined'  onPress={() => handleDiscardChanges()}>
           Discard Changes
         </Button>
         <Button mode='contained-tonal' onPress={() => handleChanges()}>
