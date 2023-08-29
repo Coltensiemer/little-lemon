@@ -146,7 +146,7 @@ app.post('/token', async (req, res) => {
 
 
 app.get('/userUpdate', async (req, res) => { 
-  const { Email } = req.body; // Access the query parameter named "Email"
+  const { Email } = req.query; // Access the query parameter named "Email"
 
   try {
     const results = await pool.query('SELECT u.first_name, u.last_name, u.email, u.password, us.dark_mode, us.special_offers, us.newsletters FROM users u INNER JOIN user_settings us ON u.email = us.email WHERE u.email = $1', [
@@ -164,7 +164,7 @@ app.get('/userUpdate', async (req, res) => {
         email: user.email,
         password: user.password,
         dark_mode: user.dark_mode,
-        special_offers: user.special_offers,
+        special_offer: user.special_offers,
         newsletters: user.newsletters,
       },
     };

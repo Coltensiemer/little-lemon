@@ -10,6 +10,7 @@ import React, {
 import { G } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ContextReducer, ReducerActions } from './AuthReducer';
+import { ProfileState } from './ProfileReducer'; 
 
 
 
@@ -26,6 +27,7 @@ export interface ContextState {
     newsletters: boolean;
   };
 }
+
 
 export interface AuthContextType {
   login: (token: string, userData: any, loading: boolean) => void;
@@ -94,25 +96,20 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const updateUser = async (Email) => {
+  const updateUser = async (userData: ProfileState ) => {
     try {
-      const options = {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      };
-
-      const response = await fetch(
-        `http://localhost:4100/userUpdate?Email=${encodeURI(Email)}`,
-        options
-      );
-      const responseData = await response.json();
-      console.log('updateUser function successfull', response);
-
-      // setUserData(responseData);
-      console.log('Updated user data successful', responseData);
+      dispatch({ 
+        type: ReducerActions.updateUser,
+        payload: { 
+          isUserData: userData
+        }
+      })
+      
     } catch (error) {
-      console.log('Error with Updating user', error);
+      console.log("There was an error Updating User", error)
+      
     }
+  
   };
 
   useEffect(() => {

@@ -148,9 +148,11 @@ function App() {
 
   const colorScheme = Appearance.getColorScheme();
 
-  const colorPref = colorScheme === 'dark' ? false : true
+  const colorPref = colorScheme === 'dark' ? true : false
 
   const { isUserData } = useAuthContext();
+
+  console.log('app', isUserData)
   
   return (
     <PaperProvider

@@ -7,7 +7,8 @@ import {  ContextState } from './AuthContext'
 export enum ReducerActions { 
  	logIn, 
 	logOut,
-	loggedIn
+	loggedIn,
+	updateUser,
 } 
 
 
@@ -25,8 +26,13 @@ type loggedIn = {
 	payload: any
 }
 
+type updateUser = { 
+	type: ReducerActions.updateUser,
+	payload: any
+}
 
-type ConfigActionType = logIn | logOut | loggedIn
+
+type ConfigActionType = logIn | logOut | loggedIn | updateUser
 
 export const ContextReducer = ( 
 	state: ContextState,
@@ -54,9 +60,11 @@ export const ContextReducer = (
 		...state,
 		istoken: action.payload,
 		isloading: action.payload,
-
-
-
+	}
+	case ReducerActions.updateUser:
+	return { 
+		...state, 
+		isUserData: action.payload,
 	}
 
 
