@@ -13,7 +13,7 @@ export enum ReducerActions {
 
 type logIn = { 
 	type: ReducerActions.logIn,
-	payLoad: any
+	payload: any
 }
 
 type logOut={ 
@@ -22,6 +22,7 @@ type logOut={
 
 type loggedIn = { 
 	type: ReducerActions.loggedIn
+	payload: any
 }
 
 
@@ -35,9 +36,9 @@ export const ContextReducer = (
 		case ReducerActions.logIn: 
 		return { 
 			...state, 
-			isUserData: action.payLoad, 
-			isloading: action.payLoad, 
-			istoken: action.payLoad,
+			isUserData: action.payload, 
+			isloading: action.payload, 
+			istoken: action.payload,
 
 
 		}
@@ -47,13 +48,16 @@ export const ContextReducer = (
 		isUserData: {},
 		isloading:  false,
 		istoken: null,
-		userSettings: { 
-			darkmode: false,
-			specialOffers: false,
-			newsletters: false, 
-		}
 	}
 	case ReducerActions.loggedIn: 
+	return { 
+		...state,
+		istoken: action.payload,
+		isloading: action.payload,
+
+
+
+	}
 
 
 	default: 

@@ -49,16 +49,16 @@ export const AuthProvider = ({ children }) => {
   
 
   // const [isUserData, setUserData] = useState<any>();
-  const [isloading, setLoading] = useState<boolean>(false);
-  const [isToken, setToken] = useState<any>(null);
+  // const [isloading, setLoading] = useState<boolean>(false);
+  // const [isToken, setToken] = useState<any>(null);
 
   const login = (AccessToken: string, UserData: any, loading: boolean) => {
     dispatch({
       type: ReducerActions.logIn,
-      payLoad: {
+      payload: {
         isUserData: UserData,
         isloading: loading,
-        isToken: AccessToken,
+        istoken: AccessToken,
       },
     });
 
@@ -79,44 +79,47 @@ export const AuthProvider = ({ children }) => {
   // Checks if User Token is already stored
   const isLoggedIn = async () => {
     try {
-      setLoading(true);
       let userToken = await AsyncStorage.getItem('UserToken');
+      dispatch({ 
+        type: ReducerActions.loggedIn,
+        payload: { 
+          isToken: userToken,
+          isLoading: false,
+        }
+      })
       console.log('AsnycToken', userToken);
-      setToken(userToken);
-      setLoading(false);
+  
     } catch (error) {
       console.log('Is logged in error', error);
     }
   };
 
-  // const updateUser = async (Email) => {
-  //   try {
-  //     const options = {
-  //       method: 'GET',
-  //       headers: { 'Content-Type': 'application/json' },
-  //     };
+  const updateUser = async (Email) => {
+    try {
+      const options = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      };
 
-  //     const response = await fetch(
-  //       `http://localhost:4100/userUpdate?Email=${encodeURI(Email)}`,
-  //       options
-  //     );
-  //     const responseData = await response.json();
-  //     console.log('updateUser function successfull', response);
+      const response = await fetch(
+        `http://localhost:4100/userUpdate?Email=${encodeURI(Email)}`,
+        options
+      );
+      const responseData = await response.json();
+      console.log('updateUser function successfull', response);
 
-  //     // setUserData(responseData);
-  //     console.log('Updated user data successful', responseData);
-  //   } catch (error) {
-  //     console.log('Error with Updating user', error);
-  //   }
-  // };
+      // setUserData(responseData);
+      console.log('Updated user data successful', responseData);
+    } catch (error) {
+      console.log('Error with Updating user', error);
+    }
+  };
 
   useEffect(() => {
     isLoggedIn();
   }, []);
 
-  useEffect(() => {
-    console.log('isToken:', isToken);
-  }, [isToken, isloading]);
+
 
   return (
     <AuthContext.Provider
@@ -124,6 +127,7 @@ export const AuthProvider = ({ children }) => {
         ...state,
         login,
         logOut,
+        updateUser
       }}
     >
       {children}

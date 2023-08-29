@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   Image,
   SafeAreaView,
+  Appearance
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -145,13 +146,15 @@ function AppStack() {
 function App() {
   const Stack = createNativeStackNavigator();
 
-  /// Set Default to USER Setting appreance 
+  const colorScheme = Appearance.getColorScheme();
+
+  const colorPref = colorScheme === 'dark' ? false : true
 
   const { isUserData } = useAuthContext();
-
+  
   return (
     <PaperProvider
-      theme={ false ? darkModeTheme : lightModeTheme}
+      theme={ isUserData?.isUserData?.dark_mode || colorPref ? darkModeTheme : lightModeTheme}
     >
       <NavigationContainer>
         <Stack.Navigator

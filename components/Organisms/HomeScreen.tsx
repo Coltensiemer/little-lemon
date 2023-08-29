@@ -11,26 +11,22 @@ import { G } from 'react-native-svg';
 
 export default function HomeScreen({ navigation }) {
   const theme = useTheme();
-  const isFocused = useIsFocused();
-  const [showData, setData] = useState([]);
+
 
   //@ts-ignore
-  const { login, isToken, isUserData } = useContext(AuthContext);
+  const { isUserData } = useContext(AuthContext);
 
   console.log("User Data:", isUserData)
   return (
     <View style={{ backgroundColor: theme.colors.background, flex: 1 }}>
-      <View
-        //@ts-ignore
-        style={{ flexDirection: 'row', justifyContent: 'left', margin: 10 }}
-      >
+    
         <Text style={{ fontSize: 32, fontWeight: 'bold', paddingRight: 10 }}>
           Hello
         </Text>
         <Text style={{ alignSelf: 'flex-end', fontSize: 24 }}>
-          {isUserData?.isUserData.first_name}
+          {isUserData?.isUserData?.first_name}
         </Text>
-      </View>
+     
       <Reservations navigation={navigation} />
     </View>
   );

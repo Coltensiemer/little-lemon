@@ -22,9 +22,9 @@ export default function Profile({ navigation }) {
  const INITIAL_StateProfile: ProfileState = { 
     first_name:isUserData?.isUserData?.first_name,
       last_name: isUserData?.isUserData?.last_name,
-      dark_mode: isUserData?.isUserData.darkmode,
-      special_offers: isUserData?.isUserData.specialOffers,
-      news_letters: isUserData?.isUserData.newsletters, 
+      dark_mode: isUserData?.isUserData?.darkmode,
+      special_offers: isUserData?.isUserData?.specialOffers,
+      news_letters: isUserData?.isUserData?.newsletters, 
     
     } 
 
