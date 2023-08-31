@@ -18,15 +18,15 @@ export default function HomeScreen({ navigation }) {
 
   console.log("User Data:", isUserData)
   return (
-    <View style={{ backgroundColor: theme.colors.background, flex: 1 }}>
-    
+    <View style={{ backgroundColor: theme.colors.background, flex: 1, }}>
+    <View style={{flexDirection: 'row', padding: 20}}>
         <Text style={{ fontSize: 32, fontWeight: 'bold', paddingRight: 10 }}>
           Hello
         </Text>
         <Text style={{ alignSelf: 'flex-end', fontSize: 24 }}>
           {isUserData?.isUserData?.first_name}
         </Text>
-     
+        </View>
       <Reservations navigation={navigation} />
     </View>
   );

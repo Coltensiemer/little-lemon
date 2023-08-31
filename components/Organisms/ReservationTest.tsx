@@ -11,9 +11,7 @@ export default function Reservations() {
   //Function to get if reservations where made
 
   const getReservations = async () => {
-    const email = isUserData?.user?.email;
-    console.log(email);
-
+    const email = isUserData?.isUserData?.email;
     const url = `http://localhost:3100/getreservation?email=${encodeURIComponent(
       email
     )}`;
@@ -36,23 +34,23 @@ export default function Reservations() {
   };
 
   useEffect(() => {
-    // getReservations();
+    getReservations();
   }, []);
 
 
   //Function componenet for reservations
 
-// function ReservationDisplay() { 
+function ReservationDisplay() { 
 
-// 	return ( 
-// 		<Text>Testing dispaly</Text>
-// 	)
-// } 
+	return ( 
+		<Text>Testing dispaly</Text>
+	)
+} 
 
   return (
     <View>
       <Text>Colten</Text>
-	  {/* <ReservationDisplay />  */}
+	  <ReservationDisplay /> 
     </View>
   );
 }

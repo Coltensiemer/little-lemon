@@ -3,16 +3,23 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { Button, Divider, Text } from 'react-native-paper';
 
-export default function Reservations({navigation}) {
+function dateComparison(reservation) { 
+  const today = new Date()
+  const currentDate = (today.getMonth()+1)+'-'+today.getDate() + '-' +today.getFullYear(); 
+
+  const reservationDate = reservation.date
+ }
+
+export default function Reservations({ navigation }) {
   //@ts-ignore
   const { isUserData } = useContext(AuthContext);
 
   const [reservationData, setReservationData] = useState([]);
 
-  //Function to get if reservations where made
+  console.log(reservationData.map((e) => e.date))
 
   const getReservations = async () => {
-    const email = isUserData?.user?.email;
+    const email = isUserData?.isUserData?.email;
 
     const url = `http://localhost:3100/getreservation?email=${encodeURIComponent(
       email
@@ -29,7 +36,7 @@ export default function Reservations({navigation}) {
       const data = await response.json();
 
       setReservationData(data);
-      console.log('Get Reservations Successful')
+      console.log('Get Reservations Successful');
     } catch (error) {
       console.log('Error with getReservation:', error);
     }
@@ -37,7 +44,7 @@ export default function Reservations({navigation}) {
 
   useEffect(() => {
     getReservations();
-  }, []);
+  }, [isUserData.isUserData]);
 
   function formatDate(dateString) {
     const date = new Date(dateString);
@@ -48,7 +55,6 @@ export default function Reservations({navigation}) {
   }
 
   // Function componenet for reservations
-
   function ReservationDisplay({ reservation }) {
     return (
       <View style={{ padding: 10 }}>
@@ -63,7 +69,7 @@ export default function Reservations({navigation}) {
     <View>
       <Divider bold={true} />
       {reservationData.length > 0 ? (
-        reservationData.map((reservation, index) => (
+       reservationData.map((reservation, index) => (
           <ReservationDisplay key={index} reservation={reservation} />
         ))
       ) : (
@@ -71,7 +77,7 @@ export default function Reservations({navigation}) {
           <Text>You have no current reservations</Text>
           <Button
             onPress={() => {
-              navigation.navigate('Reservation')
+              navigation.navigate('Reservation');
             }}
           >
             Make a Reservation

@@ -100,8 +100,8 @@ export default function ReservationPage({ navigation }) {
     try {
       setVisibleModal(true);
       const formData = {
-        full_name: isUserData?.user?.first_name + " " + isUserData?.user?.last_name,
-        email: isUserData?.user?.email,
+        full_name: isUserData?.isUserData?.first_name + " " + isUserData?.isUserData?.last_name,
+        email: isUserData?.isUserData?.email,
         time: formatTime({
           hours: data.time.hours,
           minutes: data.time.minutes,
