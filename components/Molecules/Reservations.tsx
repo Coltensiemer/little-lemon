@@ -2,13 +2,10 @@ import { StyleSheet, View } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { Button, Divider, Text } from 'react-native-paper';
+import { dateComparison } from './dateComparison/dateComparison';
 
-function dateComparison(reservation) { 
-  const today = new Date()
-  const currentDate = (today.getMonth()+1)+'-'+today.getDate() + '-' +today.getFullYear(); 
 
-  const reservationDate = reservation.date
- }
+
 
 export default function Reservations({ navigation }) {
   //@ts-ignore
@@ -72,7 +69,8 @@ export default function Reservations({ navigation }) {
        reservationData.map((reservation, index) => (
           <ReservationDisplay key={index} reservation={reservation} />
         ))
-      ) : (
+      )
+      : (
         <View>
           <Text>You have no current reservations</Text>
           <Button

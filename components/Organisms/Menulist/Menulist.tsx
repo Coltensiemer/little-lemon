@@ -176,7 +176,6 @@ export default function Menulist() {
     >
       <Header />
       {/* <Filter onChangeSearch={handleFilterChange} /> */}
-      <Text></Text>
       <MenuHeaders onSelectHeader={handleHeaderSelection} />
       {isLoading ? (
         <SectionList
