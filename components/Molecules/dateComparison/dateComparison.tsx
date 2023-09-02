@@ -1,26 +1,21 @@
 
 
-export function dateComparison(reservation: Array<any>) {
-  if (!reservation || reservation.length === 0) return; 
+
+
+
+
+export function dateComparison(reservation:string) {
+  if (!reservation || reservation.length === 0) return null;
 
   const today = new Date();
-  
-  console.log('current', today)
 
-  console.log(reservation)
-  const comparisonResults = reservation.map((res) => {
-      const reservationDate = new Date(res.date);
+  const reservationDate = new Date(reservation);
 
-      console.log("reservationDate", reservationDate)
-      
-      if (reservationDate < today) {
-          return "Past"; // Reservation has happened in the past
-      } else if (reservationDate > today) {
-          return "Future"; // Reservation is in the future
-      } else {
-          return "Today"; // Reservation is for the current day
-      }
-  });
-
-  return comparisonResults;
+  if (reservationDate < today) {
+    return 'Past'; 
+  } else if (reservationDate > today) {
+    return 'Future'; 
+  } else {
+    return 'Today'; 
+  }
 }
