@@ -7,6 +7,8 @@ import { dateComparison } from './dateComparison/dateComparison';
 
 
 
+
+
 export default function Reservations({ navigation }) {
   //@ts-ignore
   const { isUserData } = useContext(AuthContext);
@@ -51,6 +53,32 @@ export default function Reservations({ navigation }) {
     return formattedDate;
   }
 
+
+  function DateComparisonRender({ reservation }) {
+    const comparisonResults = dateComparison(reservation);
+
+      console.log("results",comparisonResults)
+    return (
+      <>
+        {comparisonResults.map((result: string, index: number) => (
+          <View key={index}>
+            {result === "Past" && <Text>Previous Reservation</Text>}
+            {result === "Future" && <Text>Upcoming</Text>}
+            {result === "Today" && <Text>Your Reservation for the day.</Text>}
+          </View>
+        ))}
+      </>
+    );
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+
   // Function componenet for reservations
   function ReservationDisplay({ reservation }) {
     return (
@@ -58,12 +86,16 @@ export default function Reservations({ navigation }) {
         <Text>You have a Reservation for {reservation.group_total}</Text>
         <Text>Date: {formatDate(reservation.date)}</Text>
         <Text>Time: {reservation.time}</Text>
+        
       </View>
     );
   }
 
   return (
     <View>
+       {reservationData.map((reservation, index) => (
+          <DateComparisonRender key={index} reservation={[reservation]} />
+        ))}
       <Divider bold={true} />
       {reservationData.length > 0 ? (
        reservationData.map((reservation, index) => (

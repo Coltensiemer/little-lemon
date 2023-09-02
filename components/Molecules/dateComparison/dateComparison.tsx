@@ -1,16 +1,17 @@
-import { StyleSheet, View } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../../../context/AuthContext';
-import { Button, Divider, Text } from 'react-native-paper';
+
 
 export function dateComparison(reservation: Array<any>) {
-  if (reservation.length === 0) return [];
+  if (!reservation || reservation.length === 0) return; 
 
   const today = new Date();
-  const currentDate = today.toISOString();
+  
+  console.log('current', today)
 
+  console.log(reservation)
   const comparisonResults = reservation.map((res) => {
       const reservationDate = new Date(res.date);
+
+      console.log("reservationDate", reservationDate)
       
       if (reservationDate < today) {
           return "Past"; // Reservation has happened in the past
