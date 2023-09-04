@@ -6,6 +6,7 @@ import { Button, useTheme, Text, TextInput } from 'react-native-paper';
 import { useForm, Controller, useFormState } from 'react-hook-form';
 import { AuthContext } from '../../context/AuthContext';
 import Reservations from '../Molecules/Reservations';
+import MenuDaily from '../Molecules/MenuDaily';
 import { G } from 'react-native-svg';
 
 
@@ -28,6 +29,7 @@ export default function HomeScreen({ navigation }) {
         </Text>
         </View>
       <Reservations navigation={navigation} />
+      <MenuDaily /> 
     </View>
   );
 }
