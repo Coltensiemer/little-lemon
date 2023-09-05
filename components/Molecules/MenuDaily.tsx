@@ -1,10 +1,22 @@
 import { View, Text, SectionList } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import { getMenu } from '../../javascript/menuList'
+import { Card } from 'react-native-paper'
 
 export default function MenuDaily() {
 
+	const [MenuDaily, setMenuDaily] = useState()
 
+useEffect(() => { 
+const fetchMenu = () => { 
+	try {
+		getMenu(setMenuDaily)
+	} catch (error) {
+		console.log("Error getting menu in MenuDaily", getMenu)
+	}
+}
+fetchMenu()
+},[])
 
 
 
@@ -12,17 +24,10 @@ export default function MenuDaily() {
   return (
 	<View>
 		<Text>Testing</Text>
-		{/* <SectionList 
-		sections={menuItem}
-		renderItem={({item}) => (
-			<View>
-				<Text>{item}</Text>
-			</View>
-		)}
-		keyExtractor={(item, index) => item + index}
-		renderSectionHeader={({section: {title}}) => (
-			<Text>{title}</Text>)}
-		/>  */}
+		<Card>
+			<Card.Title  title="title"/> 
+		</Card>
+
 	</View>
   )
 }

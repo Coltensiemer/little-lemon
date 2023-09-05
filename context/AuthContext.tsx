@@ -11,9 +11,8 @@ import { G } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ContextReducer, ReducerActions } from './AuthReducer';
 import { ProfileState } from './ProfileReducer';
-import { getMenu, MenuState} from '../javascript/menuList';
+import { getMenu, MenuState } from '../javascript/menuList';
 import { daySize } from 'react-native-paper-dates/lib/typescript/Date/dateUtils';
-
 
 export const AuthContext = createContext({});
 export const useAuthContext = () => React.useContext(AuthContext);
@@ -97,25 +96,8 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // const menu = async () => {
-  //   try {
-  //     const menuData = await getMenu()
-  //     dispatch({ 
-  //       type: ReducerActions.getMenu,
-  //       payload: { 
-  //         menuList: menuData
-  //       }
-  //     })
-  //     console.log(JSON.stringify(menuData, null, 2));
-
-  //   } catch (error) {
-  //     console.log('There was an error trying to retrive menu list:', error)
-  //   }
-    
-  // }
-
   useEffect(() => {
-    isLoggedIn()
+    isLoggedIn();
   }, []);
 
   return (
@@ -125,7 +107,6 @@ export const AuthProvider = ({ children }) => {
         login,
         logOut,
         updateUser,
-       
       }}
     >
       {children}

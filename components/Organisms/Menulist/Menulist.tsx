@@ -5,6 +5,7 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
+  Image
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -17,32 +18,30 @@ import { getMenu } from '../../../javascript/menuList';
 
 // function to edit data into array for State to be reneder in FlatList
 
-
-
 export default function Menulist() {
   const theme = useTheme();
 
   //@ts-ignore
 
-
- 
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState(true);
   //Store selected header ID from MENUHEADERS
   const [selectedHeader, setSelectedHeader] = useState([]);
   //Where API Fetch of menu is stored
   const [menu, setMenu] = useState<any>([]);
-  
 
   useEffect(() => {
-    getMenu(setMenu)
+    const fetchMenu = async () => {
+      try {
+        getMenu(setMenu);
+        setLoading(true);
+      } catch (error) {
+        console.log('There was an error fetching menu:', error);
+      }
+    };
+
+    fetchMenu();
   }, []);
-
-  useEffect(() => {
-    console.log('menu', menu)
-  }, [getMenu]);
-
-
 
   const handleHeaderSelection = (header: any) => {
     setIsOpen(false);
@@ -52,24 +51,6 @@ export default function Menulist() {
       setSelectedHeader((prev) => [...prev, header]);
     }
   };
-
-  // const getMenu = async () => {
-  //   try {
-  //     // orginal -- don't delele
-  //     const response = await fetch('http://localhost:3100/menu_items');
-  //     const jsonData = await response.json();
-  //     setMenu(editData(jsonData))
-  //     setLoading(true);
-  //   } catch (error) {
-  //     console.log(`Error Message: ${error.Message}`);
-  //   }
-  // };
-
-  // //rendering Data
-  // useEffect(() => {
-  //   getMenu();
-  // }, []);
-
 
   //Render Menu is sections are closed
   useEffect(() => {
@@ -107,6 +88,7 @@ export default function Menulist() {
 
     return theItem ? (
       <View style={[styles.itemcontainer]}>
+        {/* <Image style={{width: 50, height: 50}}/> */}
         <View>
           <Text>{item.item_title}</Text>
           <Text style={{ fontStyle: 'italic' }}>${item.price}</Text>
@@ -124,11 +106,9 @@ export default function Menulist() {
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
       <Header />
-      {/* <Filter onChangeSearch={handleFilterChange} /> */}
       <MenuHeaders onSelectHeader={handleHeaderSelection} />
       {isLoading ? (
         <SectionList
-          // sections={isFilteredData}
           sections={menu}
           renderItem={renderItem}
           keyExtractor={({ id }) => id.toString()}
