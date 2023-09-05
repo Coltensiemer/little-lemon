@@ -88,11 +88,12 @@ export default function Menulist() {
 
     return theItem ? (
       <View style={[styles.itemcontainer]}>
-        {/* <Image style={{width: 50, height: 50}}/> */}
+
         <View>
           <Text>{item.item_title}</Text>
           <Text style={{ fontStyle: 'italic' }}>${item.price}</Text>
         </View>
+        <Image source={item.image} style={{width: 100, height: 50}}/>
         <View style={{ alignItems: 'center' }}>
           <CartIcon />
           <Text style={{ fontSize: 10 }}>Add to Cart</Text>
