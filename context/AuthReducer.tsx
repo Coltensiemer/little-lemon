@@ -9,6 +9,7 @@ export enum ReducerActions {
 	logOut,
 	loggedIn,
 	updateUser,
+
 } 
 
 
@@ -32,7 +33,9 @@ type updateUser = {
 }
 
 
-type ConfigActionType = logIn | logOut | loggedIn | updateUser
+
+
+type ConfigActionType = logIn | logOut | loggedIn | updateUser 
 
 export const ContextReducer = ( 
 	state: ContextState,
@@ -66,8 +69,6 @@ export const ContextReducer = (
 		...state, 
 		isUserData: action.payload,
 	}
-
-
 	default: 
 	return state; 
 

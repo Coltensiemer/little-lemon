@@ -10,8 +10,9 @@ import React, {
 import { G } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ContextReducer, ReducerActions } from './AuthReducer';
-import { ProfileState } from './ProfileReducer'; 
-
+import { ProfileState } from './ProfileReducer';
+import { getMenu, MenuState} from '../javascript/menuList';
+import { daySize } from 'react-native-paper-dates/lib/typescript/Date/dateUtils';
 
 
 export const AuthContext = createContext({});
@@ -28,7 +29,6 @@ export interface ContextState {
   };
 }
 
-
 export interface AuthContextType {
   login: (token: string, userData: any, loading: boolean) => void;
 }
@@ -44,15 +44,8 @@ const INITIAL_State: ContextState = {
   },
 };
 
-
-
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(ContextReducer, INITIAL_State);
-  
-
-  // const [isUserData, setUserData] = useState<any>();
-  // const [isloading, setLoading] = useState<boolean>(false);
-  // const [isToken, setToken] = useState<any>(null);
 
   const login = (AccessToken: string, UserData: any, loading: boolean) => {
     dispatch({
@@ -67,56 +60,63 @@ export const AuthProvider = ({ children }) => {
     AsyncStorage.setItem('UserToken', AccessToken);
   };
 
-
-
-
   const logOut = () => {
-   dispatch({ 
-    type: ReducerActions.logOut,
-   })
+    dispatch({
+      type: ReducerActions.logOut,
+    });
     AsyncStorage.removeItem('UserToken');
-  
   };
 
   // Checks if User Token is already stored
   const isLoggedIn = async () => {
     try {
       let userToken = await AsyncStorage.getItem('UserToken');
-      dispatch({ 
+      dispatch({
         type: ReducerActions.loggedIn,
-        payload: { 
+        payload: {
           isToken: userToken,
           isLoading: false,
-        }
-      })
+        },
+      });
       console.log('AsnycToken', userToken);
-  
     } catch (error) {
       console.log('Is logged in error', error);
     }
   };
 
-  const updateUser = async (userData: ProfileState ) => {
+  const updateUser = async (userData: ProfileState) => {
     try {
-      dispatch({ 
+      dispatch({
         type: ReducerActions.updateUser,
-        payload: { 
-          isUserData: userData
-        }
-      })
-      
+        payload: {
+          isUserData: userData,
+        },
+      });
     } catch (error) {
-      console.log("There was an error Updating User", error)
-      
+      console.log('There was an error Updating User', error);
     }
-  
   };
 
+  // const menu = async () => {
+  //   try {
+  //     const menuData = await getMenu()
+  //     dispatch({ 
+  //       type: ReducerActions.getMenu,
+  //       payload: { 
+  //         menuList: menuData
+  //       }
+  //     })
+  //     console.log(JSON.stringify(menuData, null, 2));
+
+  //   } catch (error) {
+  //     console.log('There was an error trying to retrive menu list:', error)
+  //   }
+    
+  // }
+
   useEffect(() => {
-    isLoggedIn();
+    isLoggedIn()
   }, []);
-
-
 
   return (
     <AuthContext.Provider
@@ -124,7 +124,8 @@ export const AuthProvider = ({ children }) => {
         ...state,
         login,
         logOut,
-        updateUser
+        updateUser,
+       
       }}
     >
       {children}
