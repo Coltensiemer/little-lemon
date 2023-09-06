@@ -16,6 +16,7 @@ import { ThemeProvider, useTheme, Text } from 'react-native-paper';
 import { useAuthContext } from '../../../context/AuthContext';
 import { getMenu } from '../../../javascript/menuList';
 
+
 // function to edit data into array for State to be reneder in FlatList
 
 export default function Menulist() {
@@ -72,6 +73,7 @@ export default function Menulist() {
               padding: 5,
               borderBottomWidth: 1,
               borderBottomColor: 'grey',
+              backgroundColor: theme.colors.primary
             },
           ]}
         >
@@ -94,10 +96,6 @@ export default function Menulist() {
           <Text style={{ fontStyle: 'italic' }}>${item.price}</Text>
         </View>
         <Image source={item.image} style={{width: 100, height: 50}}/>
-        <View style={{ alignItems: 'center' }}>
-          <CartIcon />
-          <Text style={{ fontSize: 10 }}>Add to Cart</Text>
-        </View>
       </View>
     ) : null;
   };
@@ -106,7 +104,6 @@ export default function Menulist() {
     <SafeAreaView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
-      <Header />
       <MenuHeaders onSelectHeader={handleHeaderSelection} />
       {isLoading ? (
         <SectionList

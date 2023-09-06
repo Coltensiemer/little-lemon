@@ -8,7 +8,7 @@ import {
   Platform,
   TouchableOpacity,
 } from 'react-native';
-import { Chip } from 'react-native-paper';
+import { Chip, useTheme} from 'react-native-paper';
 
 export default function MenuHeaders({ onSelectHeader }) {
   const [isHeaders, setHeaders] = useState<any>();
@@ -73,10 +73,11 @@ export default function MenuHeaders({ onSelectHeader }) {
     MenuHeaderGet();
   }, []);
 
+  const theme= useTheme()
 
   // WHAT IS RENDERED
   return (
-    <View style={{ justifyContent: 'space-evenly', flexDirection: 'row' }}>
+    <View style={{ justifyContent: 'space-evenly', flexDirection: 'row', backgroundColor: theme.colors.background }}>
       {isLoading === true ? (
         isHeaders.map((header) => (
           <View

@@ -12,8 +12,6 @@ import { G } from 'react-native-svg';
 
 export default function HomeScreen({ navigation }) {
   const theme = useTheme();
-
-
   //@ts-ignore
   const { isUserData } = useContext(AuthContext);
 

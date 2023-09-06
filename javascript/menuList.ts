@@ -43,7 +43,6 @@ export function editMenuData(data): MenuState {
     let image = null
     if (matchImage) { 
       image = matchImage.image
-      console.log(image)
     }
 
     if (existingSection) {
