@@ -5,7 +5,7 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
-  Image
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -15,7 +15,6 @@ import Header from '../../Atoms/Header';
 import { ThemeProvider, useTheme, Text } from 'react-native-paper';
 import { useAuthContext } from '../../../context/AuthContext';
 import { getMenu } from '../../../javascript/menuList';
-
 
 // function to edit data into array for State to be reneder in FlatList
 
@@ -73,7 +72,7 @@ export default function Menulist() {
               padding: 5,
               borderBottomWidth: 1,
               borderBottomColor: 'grey',
-              backgroundColor: theme.colors.primary
+              backgroundColor: theme.colors.secondaryContainer,
             },
           ]}
         >
@@ -90,12 +89,11 @@ export default function Menulist() {
 
     return theItem ? (
       <View style={[styles.itemcontainer]}>
-
         <View>
           <Text>{item.item_title}</Text>
           <Text style={{ fontStyle: 'italic' }}>${item.price}</Text>
         </View>
-        <Image source={item.image} style={{width: 100, height: 50}}/>
+        <Image source={item.image} style={{ width: 100, height: 50 }} />
       </View>
     ) : null;
   };
