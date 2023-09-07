@@ -87,7 +87,13 @@ export default function ReservationPage({ navigation }) {
     getValues,
     reset,
     watch,
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      isPartySize: '',
+      date: '',
+      time: '',
+    },
+  });
 
   const watchAllFields = watch();
 
@@ -230,7 +236,7 @@ export default function ReservationPage({ navigation }) {
   }, [watchAllFields]);
 
   const restReservations = () => {
-    reset(INITAL_STATE);
+    reset({ isPartySize: '', date: '', time: '' });
     setVisibleDate(false);
     setVisibleTime(false);
   };
@@ -257,7 +263,6 @@ export default function ReservationPage({ navigation }) {
         <View>
           <Controller
             name='isPartySize'
-            defaultValue={INITAL_STATE.partySize}
             rules={{
               required: {
                 value: true,
@@ -272,6 +277,7 @@ export default function ReservationPage({ navigation }) {
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
                 onChangeText={(number) => onChange(number)}
+                value={value}
                 mode='outlined'
                 textAlign='center'
                 keyboardType='number-pad'
@@ -302,7 +308,6 @@ export default function ReservationPage({ navigation }) {
         >
           <Controller
             name='date'
-            defaultValue={INITAL_STATE.date}
             rules={{
               required: {
                 value: true,
@@ -368,7 +373,6 @@ export default function ReservationPage({ navigation }) {
         >
           <Controller
             name='time'
-            defaultValue={INITAL_STATE.time}
             rules={{
               required: {
                 value: true,
