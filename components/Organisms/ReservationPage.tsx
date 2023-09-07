@@ -6,7 +6,14 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
-import { useEffect, useState, useCallback, useRef, useContext } from 'react';
+import {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  useContext,
+  useReducer,
+} from 'react';
 import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates';
 import { en, registerTranslation } from 'react-native-paper-dates';
 registerTranslation('en', en);
@@ -26,16 +33,27 @@ import Header from '../Atoms/Header';
 import { useForm, Controller, useFormState } from 'react-hook-form';
 import { Motion } from '@legendapp/motion';
 import { AuthContext } from '../../context/AuthContext';
-
-
-
-
+import {
+  ReservationState,
+  ReservationReducer,
+  ReducerAction,
+} from '../../context/ReservationReducer';
+import { formatTime, formatDate } from '../../javascript/time_date';
 
 export default function ReservationPage({ navigation }) {
+  const INITAL_STATE: ReservationState = {
+    partySize: null,
+    date: '',
+    time: '',
+    isVisibleTime: false,
+    isVisibleDate: false,
+  };
+
+  const [state, dispatch] = useReducer(ReservationReducer, INITAL_STATE);
 
   //@ts-ignore
-  const {isUserData} = useContext(AuthContext)
-  const theme = useTheme()
+  const { isUserData } = useContext(AuthContext);
+  const theme = useTheme();
 
   // input data that is store in state
 
@@ -67,6 +85,7 @@ export default function ReservationPage({ navigation }) {
     handleSubmit,
     formState: { errors },
     getValues,
+    reset,
     watch,
   } = useForm();
 
@@ -95,12 +114,13 @@ export default function ReservationPage({ navigation }) {
   );
 
   const submitForm = async (data: any) => {
-
-
     try {
       setVisibleModal(true);
       const formData = {
-        full_name: isUserData?.isUserData?.first_name + " " + isUserData?.isUserData?.last_name,
+        full_name:
+          isUserData?.isUserData?.first_name +
+          ' ' +
+          isUserData?.isUserData?.last_name,
         email: isUserData?.isUserData?.email,
         time: formatTime({
           hours: data.time.hours,
@@ -127,26 +147,10 @@ export default function ReservationPage({ navigation }) {
     }
   };
 
-
-  // Formates the date that is rendered
-  function formatDate(dateString) {
-    const date = new Date(dateString);
-    const options = { month: 'long', day: 'numeric', year: 'numeric' };
-    //@ts-ignore
-    const formattedDate = date.toLocaleDateString('en-US', options);
-    return formattedDate;
-  }
-
-  function formatTime({ hours, minutes }) {
-    const paddedHours = hours.toString().padStart(2, '0');
-    const paddedMinutes = minutes.toString().padStart(2, '0');
-    return `${paddedHours}:${paddedMinutes}:00`;
-  }
-
   // MODAL FUNCTION for render
   function renderFormData() {
     const data = getValues();
-    const  date = formatDate(data.date?.date)
+    const date = formatDate(data.date?.date);
     return (
       <View>
         <Text>Full Name: {data.firstName}</Text>
@@ -174,16 +178,13 @@ export default function ReservationPage({ navigation }) {
   function renderDateData() {
     const data = getValues();
 
-    const  date = formatDate(data.date?.date)
+    const date = formatDate(data.date?.date);
     return (
       <View>
-        <Text>
-         Date: {date}
-        </Text>
+        <Text>Date: {date}</Text>
       </View>
     );
   }
-  
 
   // PROGRESS BAR
   const progressBar = () => {
@@ -208,6 +209,8 @@ export default function ReservationPage({ navigation }) {
 
     if (isProgress === 1) {
       setProgressColor('green');
+    } else {
+      setProgressColor('red');
     }
   };
 
@@ -215,249 +218,260 @@ export default function ReservationPage({ navigation }) {
     progressBar();
 
     const getTime = getValues('time');
-    const getDate = getValues('date');
 
     if (Object.keys(getTime).length > 1) {
       setVisibleTime(true);
     }
 
-    if (Object.keys(getDate).length > 0) {
+    const getDate = getValues('date');
+    if (Object.keys(getDate) && Object.keys(getDate).length > 0) {
       setVisibleDate(true);
     }
-    console.log(getDate)
   }, [watchAllFields]);
 
-
+  const restReservations = () => {
+    reset(INITAL_STATE);
+    setVisibleDate(false);
+    setVisibleTime(false);
+  };
 
   return (
-    
-      <View style={[styles.mainContainer, {backgroundColor: theme.colors.background}]}>
-        
+    <View
+      style={[
+        styles.mainContainer,
+        { backgroundColor: theme.colors.background },
+      ]}
+    >
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}
+      >
+        <Text style={{ fontWeight: '300', fontSize: 24, paddingBottom: 10 }}>
+          {' '}
+          Enter Party Amount
+        </Text>
+        <View>
+          <Controller
+            name='isPartySize'
+            defaultValue={INITAL_STATE.partySize}
+            rules={{
+              required: {
+                value: true,
+                message: 'Party is required',
+              },
+              pattern: {
+                value: /^\d{1,2}$/,
+                message: 'Party Number is invalid',
+              },
+            }}
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                onChangeText={(number) => onChange(number)}
+                mode='outlined'
+                textAlign='center'
+                keyboardType='number-pad'
+                maxLength={2}
+                error={!!errors.isPartySize}
+                style={{ width: 75, alignSelf: 'center', paddingLeft: 10 }}
+              />
+            )}
+          />
+
+          <Text
+            style={
+              errors.isPartySize ? { color: 'black' } : { color: 'transparent' }
+            }
+          >
+            This is required.
+          </Text>
+        </View>
+      </View>
+
+      <View style={{ flex: 1, height: 250, justifyContent: 'space-around' }}>
+        <View
+          style={{
+            paddingBottom: 20,
+            justifyContent: 'space-around',
+            flexDirection: 'row',
+          }}
+        >
+          <Controller
+            name='date'
+            defaultValue={INITAL_STATE.date}
+            rules={{
+              required: {
+                value: true,
+                message: 'Date is required',
+              },
+            }}
+            control={control}
+            render={({ field: { onChange } }) => (
+              <Motion.View animate={{ x: visibleDate ? -25 : 30 }}>
+                <Button
+                  icon='calendar-month'
+                  onPress={() => setOpen(true)}
+                  uppercase={false}
+                  mode='outlined'
+                  textColor={errors.date ? 'red' : null}
+                  style={[
+                    {
+                      height: 50,
+                      justifyContent: 'center',
+                      alignContent: 'center',
+                      paddingLeft: 15,
+                    },
+                    visibleDate ? { width: 1 } : { width: 250 },
+                  ]}
+                >
+                  {visibleDate ? null : 'Pick a Date'}
+                </Button>
+
+                <DatePickerModal
+                  locale='en'
+                  mode='single'
+                  visible={open}
+                  onDismiss={onDismissSingle}
+                  date={date}
+                  onConfirm={(data) => {
+                    onChange(data);
+                    setOpen(false);
+                  }}
+                />
+              </Motion.View>
+            )}
+          />
+          <Motion.View animate={{ x: visibleDate ? -45 : 100 }}>
+            <Chip
+              mode='outlined'
+              elevated={true}
+              style={[
+                { height: 50, paddingTop: 15 },
+                visibleDate ? { width: 200 } : { width: 10 },
+              ]}
+            >
+              {renderDateData()}
+            </Chip>
+          </Motion.View>
+        </View>
+
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'row',
+          }}
+        >
+          <Controller
+            name='time'
+            defaultValue={INITAL_STATE.time}
+            rules={{
+              required: {
+                value: true,
+                message: 'Date is required',
+              },
+            }}
+            control={control}
+            render={({ field: { onChange } }) => (
+              <Motion.View animate={{ x: visibleTime ? -75 : 0 }}>
+                <Button
+                  icon='clock'
+                  onPress={() => setVisible(true)}
+                  uppercase={false}
+                  mode='outlined'
+                  style={[
+                    { height: 50, justifyContent: 'center', paddingLeft: 15 },
+                    visibleTime ? { width: 1 } : { width: 250 },
+                  ]}
+                  textColor={errors.time ? 'red' : null}
+                >
+                  {visibleTime ? null : 'Pick a Time'}
+                </Button>
+                <TimePickerModal
+                  visible={visible}
+                  onDismiss={onDismiss}
+                  label='Select a Time'
+                  use24HourClock={false}
+                  onConfirm={(data) => {
+                    onChange(data);
+                    setVisible(false);
+                  }}
+                  hours={12}
+                  minutes={14}
+                />
+              </Motion.View>
+            )}
+          ></Controller>
+          <Motion.View animate={{ x: visibleTime ? 0 : 100 }}>
+            <Chip
+              mode='outlined'
+              elevated={true}
+              style={[
+                { height: 50, alignItems: 'center', paddingTop: 10 },
+                visibleTime ? { width: 200 } : { width: 10 },
+              ]}
+            >
+              {renderTimeData()}
+            </Chip>
+          </Motion.View>
+        </View>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            flex: 1,
+            margin: 10,
+          }}
+        ></View>
+        <Button onPress={restReservations}>Reset</Button>
         <ProgressBar
           color={isProgressColor}
           progress={isProgress}
-          style={{ margin: 5} }
+          style={{ margin: 10 }}
         />
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-        >
-          <Text style={{ fontWeight: '300' }}> Enter Party Amount</Text>
-          <View>
-            <Controller
-              name='isPartySize'
-              defaultValue=''
-              rules={{
-                required: {
-                  value: true,
-                  message: 'Party is required',
-                },
-                pattern: {
-                  value: /^\d{1,2}$/,
-                  message: 'Party Number is invalid',
-                },
-              }}
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  onChangeText={(number: any) => onChange(number)}
-                  mode='outlined'
-                  textAlign='center'
-                  keyboardType='number-pad'
-                  maxLength={2}
-                  error={!!errors.isPartySize}
-                  style={{ width: 75, alignSelf: 'center', marginBottom: 10 }}
-                />
-              )}
-            />
 
-            <Text
-              style={
-                errors.isPartySize
-                  ? { color: 'black' }
-                  : { color: 'transparent' }
-              }
-            >
-              This is required.
-            </Text>
-          </View>
-        </View>
-
-        <View style={{ flex: 1, height: 250, justifyContent: 'space-around', }}>
-          <View
-            style={{
-              paddingBottom: 20,
-              justifyContent: 'space-around',
-              flexDirection: 'row'
-            }}
-          >
-            <Controller
-              name='date'
-              defaultValue=''
-              rules={{
-                required: {
-                  value: true,
-                  message: 'Date is required',
-                },
-              }}
-              control={control}
-              render={({ field: { onChange } }) => (
-                <Motion.View animate={{ x: visibleDate ? -25 : 30 }}>
-                  <Button
-                    icon='calendar-month'
-                    onPress={() => setOpen(true)}
-                    uppercase={false}
-                    mode='outlined'
-                    textColor={errors.date ? 'red' : null}
-                    style={[
-                      { height: 40 },
-                      visibleDate ? { width: 1 } : { width: 250 },
-                    ]}
-                  >
-                     {visibleDate ? null : 'Pick a Date'}
-                  </Button>
-
-                  <DatePickerModal
-                    locale='en'
-                    mode='single'
-                    visible={open}
-                    onDismiss={onDismissSingle}
-                    date={date}
-                    onConfirm={(data) => {
-                      onChange(data);
-                      setOpen(false);
-                    }}
-                  />
-                </Motion.View>
-              )}
-              
-            />
-                <Motion.View animate={{ x: visibleDate ? -45 : 100 }}>
-              <Chip
-                mode='outlined'
-                elevated={true}
-                style={[
-                  { height: 50, alignItems: 'center' },
-                  visibleDate ? { width: 200 } : { width: 10 },
-                ]}
-              >
-                {renderDateData()}
-              </Chip>
-            </Motion.View>
-            
-          </View>
-
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'row',
-            }}
-          >
-            <Controller
-              name='time'
-              defaultValue=''
-              rules={{
-                required: {
-                  value: true,
-                  message: 'Date is required',
-                },
-              }}
-              control={control}
-              render={({ field: { onChange } }) => (
-                <Motion.View animate={{ x: visibleTime ? -75 : 0 }}>
-                  <Button
-                    icon='clock'
-                    onPress={() => setVisible(true)}
-                    uppercase={false}
-                    mode='outlined'
-                    style={[
-                      { height: 40 },
-                      visibleTime ? { width: 1 } : { width: 250 },
-                    ]}
-                    textColor={errors.time ? 'red' : null}
-                  >
-                    {visibleTime ? null : 'Pick a Time'}
-                  </Button>
-                  <TimePickerModal
-                    visible={visible}
-                    onDismiss={onDismiss}
-                    label='Select a Time'
-                    use24HourClock={false}
-                    onConfirm={(data) => {
-                      onChange(data);
-                      setVisible(false);
-                    }}
-                    hours={12}
-                    minutes={14}
-                  />
-                </Motion.View>
-              )}></Controller>
-            <Motion.View animate={{ x: visibleTime ? 0 : 100 }}>
-              <Chip
-                mode='outlined'
-                elevated={true}
-                style={[
-                  { height: 50, alignItems: 'center' },
-                  visibleTime ? { width: 200 } : { width: 10 },
-                ]}
-              >
-                {renderTimeData()}
-              </Chip>
-            </Motion.View>
-          </View>
-
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-evenly',
-              flex: 1,
+        {/* RESERVATION CONFIRMATION MODAL */}
+        <Portal>
+          <Modal
+            visible={visibleModal}
+            onDismiss={() => setVisibleModal(false)}
+            contentContainerStyle={{
+              backgroundColor: theme.colors.background,
+              padding: 20,
               margin: 10,
             }}
-          ></View>
-
-          {/* RESERVATION CONFIRMATION MODAL */}
-          <Portal>
-            <Modal
-              visible={visibleModal}
-              onDismiss={() => setVisibleModal(false)}
-              contentContainerStyle={{
-                backgroundColor: 'white',
-                padding: 20,
-                margin: 10,
+          >
+            <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+              RESERVATION CONFIRMED
+            </Text>
+            <Divider bold={true} style={{ margin: 10 }} />
+            {renderFormData()}
+            <Divider bold={true} style={{ margin: 10 }} />
+            <Button
+              onPress={() => {
+                navigation.navigate('HomeScreen');
+                setVisibleModal(false);
+                restReservations();
               }}
             >
-              <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
-                RESERVATION CONFIRMED
-              </Text>
-              <Divider bold={true} style={{ margin: 10 }} />
-              {renderFormData()}
-              <Divider bold={true} style={{ margin: 10 }} />
-              <Button
-                onPress={() => {
-                  navigation.navigate('HomeScreen');
-                }}
-              >
-                Back to Home Screen
-              </Button>
-            </Modal>
-          </Portal>
-
-          <Divider bold={true} />
-
-          {/* Submit BUTTON */}
-          <View style={{ flex: 2, justifyContent: 'center', padding: 10 }}>
-            <Button mode='contained' onPress={handleSubmit(submitForm)}>
-              Confirm Reservation
+              Back to Home Screen
             </Button>
-          </View>
+          </Modal>
+        </Portal>
+
+        {/* Submit BUTTON */}
+        <View style={{ flex: 2, justifyContent: 'center', padding: 10 }}>
+          <Button mode='contained' onPress={handleSubmit(submitForm)}>
+            Confirm Reservation
+          </Button>
         </View>
       </View>
-    
+    </View>
   );
 }
 
@@ -465,8 +479,6 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     marginTop: 10,
-
-    
   },
   dataTexts: {
     flex: 1,
@@ -474,5 +486,3 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
 });
-
-
