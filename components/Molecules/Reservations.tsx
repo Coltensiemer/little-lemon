@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, FlatList } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { Button, Divider, Text, useTheme } from 'react-native-paper';
@@ -11,6 +11,10 @@ export function formatDate(dateString) {
   const formattedDate = date.toLocaleDateString('en-US', options);
   return formattedDate;
 }
+
+
+
+
 
 export default function Reservations({ navigation }) {
   //@ts-ignore
@@ -42,6 +46,9 @@ export default function Reservations({ navigation }) {
     }
   };
 
+
+
+
   useEffect(() => {
     getReservations();
   }, [isUserData.isUserData]);
@@ -50,9 +57,9 @@ export default function Reservations({ navigation }) {
   function ReservationDisplay({ reservation }) {
     const comparisonResults = dateComparison(reservation.date);
 
-    if (comparisonResults === 'Past') {
-      return null;
-    }
+   
+    if ( comparisonResults === 'Past') return null
+
     let containerStyle;
     if (comparisonResults === 'Future') {
       containerStyle = styles.future;
@@ -83,15 +90,35 @@ export default function Reservations({ navigation }) {
           {comparisonResults === 'Today' && (
             <Text>Your Reservation for the day.</Text>
           )}
+          {comparisonResults === 'Past' && (
+            <Text>Previous Reservation</Text>
+          )}
         </View>
+    
+    
       </View>
     );
   }
 
+
+  const sortedResults = reservationData.sort((a,b) => { 
+    const dateA = dateComparison(a.date)
+    const dateB = dateComparison(b.date)
+
+    if (dateA === dateB){ 
+      return a - b
+    } else { 
+      return dateA.localeCompare(dateB)
+    }
+  })
+
+
+
+
   return (
     <View>
       <Divider bold={true} />
-      {reservationData.length > 0 ? (
+      {sortedResults.length > 0 ? (
         reservationData.map((reservation, index) => (
           <ReservationDisplay key={index} reservation={reservation} />
         ))
@@ -107,6 +134,9 @@ export default function Reservations({ navigation }) {
           </Button>
         </View>
       )}
+      <View>
+        <Button>See Previous</Button>
+      </View>
       <Divider bold={true} />
     </View>
   );
