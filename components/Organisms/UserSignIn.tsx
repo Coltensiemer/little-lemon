@@ -84,7 +84,6 @@ export default function UserSignIn({ navigation }) {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <Header />
       <View style={{ flex: 1, justifyContent: 'flex-end', margin: 20 }}>
         <Text
           style={{

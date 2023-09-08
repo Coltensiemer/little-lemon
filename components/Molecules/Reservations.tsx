@@ -19,7 +19,8 @@ export function formatDate(dateString) {
 export default function Reservations({ navigation }) {
   //@ts-ignore
   const { isUserData } = useContext(AuthContext);
-
+  const [pastResVisible, setPastResVisible] = useState(false)
+  const theme = useTheme()
   const [reservationData, setReservationData] = useState([]);
 
   const getReservations = async () => {
@@ -51,14 +52,14 @@ export default function Reservations({ navigation }) {
 
   useEffect(() => {
     getReservations();
-  }, [isUserData.isUserData]);
+  }, []);
 
   // Function componenet for reservations
-  function ReservationDisplay({ reservation }) {
+  function ReservationDisplay({ reservation}) {
     const comparisonResults = dateComparison(reservation.date);
 
    
-    if ( comparisonResults === 'Past') return null
+    if (!pastResVisible && comparisonResults === 'Past') return null
 
     let containerStyle;
     if (comparisonResults === 'Future') {
@@ -73,25 +74,28 @@ export default function Reservations({ navigation }) {
           containerStyle,
           {
             padding: 10,
+            marginTop: 10,
+            borderBottomWidth: 1,
+            borderColor: theme.colors.primary,
             flexDirection: 'row',
             justifyContent: 'space-between',
           },
         ]}
       >
         <View>
-          <Text>You have a Reservation for {reservation.group_total}</Text>
-          <Text>Date: {formatDate(reservation.date)}</Text>
-          <Text>Time: {reservation.time}</Text>
+          <Text style={{color: theme.colors.onSecondary}}>You have a Reservation for {reservation.group_total}</Text>
+          <Text style={{color: theme.colors.onSecondary}}>Date: {formatDate(reservation.date)}</Text>
+          <Text style={{color: theme.colors.onSecondary}}>Time: {reservation.time}</Text>
         </View>
         <View style={{ justifyContent: 'center' }}>
           {comparisonResults === 'Future' && (
-            <Text style={{ fontSize: 24 }}>Upcoming</Text>
+            <Text style={{ fontSize: 24, color: theme.colors.onSecondary}}>Upcoming</Text>
           )}
           {comparisonResults === 'Today' && (
-            <Text>Your Reservation for the day.</Text>
+            <Text style={{ fontSize: 24, color: theme.colors.onSecondary}}>Your Reservation for the day.</Text>
           )}
           {comparisonResults === 'Past' && (
-            <Text>Previous Reservation</Text>
+            <Text style={{ fontSize: 24, color: theme.colors.onSecondary}}>Previous Reservation</Text>
           )}
         </View>
     
@@ -134,9 +138,7 @@ export default function Reservations({ navigation }) {
           </Button>
         </View>
       )}
-      <View>
-        <Button>See Previous</Button>
-      </View>
+       <Button mode={'contained-tonal'} style={{width: 150, height:40, alignSelf: 'center',}} onPress={() => {setPastResVisible(!pastResVisible)}}>See Previous</Button>
       <Divider bold={true} />
     </View>
   );
@@ -149,9 +151,9 @@ const styles = {
     justifyContent: 'space-between',
   },
   future: {
-    backgroundColor: 'green', // Example: set a green background for future reservations
+    backgroundColor: '#3f506b', // Example: set a green background for future reservations
   },
   today: {
-    backgroundColor: 'blue', // Example: set a blue background for today's reservations
+    backgroundColor: '#041a24',
   },
 };
