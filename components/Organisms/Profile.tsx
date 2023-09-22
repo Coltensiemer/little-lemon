@@ -103,7 +103,7 @@ export default function Profile({ navigation }) {
       );
       console.log('Notifications updated');
 
-     await updateUser(formData)
+      await updateUser(formData);
 
       try {
         console.log('Getting update user info successful');
@@ -178,12 +178,17 @@ export default function Profile({ navigation }) {
           <Switch
             style={styles.switch}
             value={stateProfile.dark_mode}
-            onValueChange={(e) =>
+            onValueChange={(e) => {
               dispatchProfile({
                 type: ReducerAction.setDarkMode,
                 payload: !stateProfile.dark_mode,
-              })
-            }
+              });
+              handleChanges();
+
+
+
+              
+            }}
           ></Switch>
         </View>
         <View style={styles.switchContainer}>

@@ -95,7 +95,7 @@ export default function Reservations({ navigation }) {
             <Text style={{ fontSize: 24, color: theme.colors.onSecondary}}>Your Reservation for the day.</Text>
           )}
           {comparisonResults === 'Past' && (
-            <Text style={{ fontSize: 24, color: theme.colors.onSecondary}}>Previous Reservation</Text>
+            <Text style={{ fontSize: 16, color: theme.colors.onSecondary}}>Previous Reservation</Text>
           )}
         </View>
     
