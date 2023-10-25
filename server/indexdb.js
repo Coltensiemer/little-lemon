@@ -43,7 +43,6 @@ app.post('/reservations', async (req, res) => {
 });
 
 // Get all Reservations
-
 app.get('/getAllReservations', async (req, res) => {
   try {
     const getReservations = await pool.query('SELECT * FROM reservations');
@@ -69,6 +68,8 @@ app.get('/getreservation', async (req, res) => {
   }
 });
 
+
+//Gets all itdeas from menu
 app.get('/menu', async (req, res) => {
   try {
     const getMenu = await pool.query('SELECT * From menu');
@@ -77,6 +78,8 @@ app.get('/menu', async (req, res) => {
     console.log(`You have an error: ${error.message}`);
   }
 });
+
+
 
 app.get('/menu_items', async (req, res) => {
   try {

@@ -1,6 +1,5 @@
-import { useEffect, useState, useRef, useDebugValue } from 'react';
+import { useEffect, useState,} from 'react';
 import {
-  FlatList,
   SectionList,
   StyleSheet,
   View,
@@ -8,20 +7,14 @@ import {
   Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-import { CartIcon } from '../../Atoms/Icons';
 import MenuHeaders from '../../Atoms/MenuHeaders';
-import Header from '../../Atoms/Header';
-import { ThemeProvider, useTheme, Text } from 'react-native-paper';
-import { useAuthContext } from '../../../context/AuthContext';
+import {  useTheme, Text } from 'react-native-paper';
 import { getMenu } from '../../../javascript/menuList';
 
 // function to edit data into array for State to be reneder in FlatList
 
 export default function Menulist() {
   const theme = useTheme();
-
-  //@ts-ignore
 
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState(true);

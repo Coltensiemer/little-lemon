@@ -184,10 +184,6 @@ export default function Profile({ navigation }) {
                 payload: !stateProfile.dark_mode,
               });
               handleChanges();
-
-
-
-              
             }}
           ></Switch>
         </View>
